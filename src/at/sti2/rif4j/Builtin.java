@@ -47,7 +47,7 @@ public enum Builtin {
 
 	IS_LITERAL_DATETIME(Namespaces.RIF_PRED, "is-literal-dateTime"),
 
-	IS_LITERAL_DATETIMESTAMPE(Namespaces.RIF_PRED, "is-literal-dateTimeStamp"),
+	IS_LITERAL_DATETIMESTAMP(Namespaces.RIF_PRED, "is-literal-dateTimeStamp"),
 
 	IS_LITERAL_DOUBLE(Namespaces.RIF_PRED, "is-literal-double"),
 
@@ -60,6 +60,8 @@ public enum Builtin {
 	IS_LITERAL_INTEGER(Namespaces.RIF_PRED, "is-literal-integer"),
 
 	IS_LITERAL_LONG(Namespaces.RIF_PRED, "is-literal-long"),
+
+	IS_LITERAL_INT(Namespaces.RIF_PRED, "is-literal-int"),
 
 	IS_LITERAL_SHORT(Namespaces.RIF_PRED, "is-literal-short"),
 
@@ -85,8 +87,6 @@ public enum Builtin {
 	IS_LITERAL_NEGATIVEINTEGER(Namespaces.RIF_PRED,
 			"is-literal-negativeInteger"),
 
-	IS_LITERAL_PLAINLITERAL(Namespaces.RIF_PRED, "is-literal-PlainLiteral"),
-
 	IS_LITERAL_STRING(Namespaces.RIF_PRED, "is-literal-string"),
 
 	IS_LITERAL_NORMALIZEDSTRING(Namespaces.RIF_PRED,
@@ -109,6 +109,8 @@ public enum Builtin {
 
 	IS_LITERAL_YEARMONTHDURATION(Namespaces.RIF_PRED,
 			"is-literal-yearMonthDuration"),
+
+	IS_LITERAL_PLAINLITERAL(Namespaces.RIF_PRED, "is-literal-PlainLiteral"),
 
 	IS_LITERAL_XMLLITERAL(Namespaces.RIF_PRED, "is-literal-XMLLiteral"),
 
@@ -168,9 +170,6 @@ public enum Builtin {
 	IS_LITERAL_NOT_NEGATIVEINTEGER(Namespaces.RIF_PRED,
 			"is-literal-not-negativeInteger"),
 
-	IS_LITERAL_NOT_PLAINLITERAL(Namespaces.RIF_PRED,
-			"is-literal-not-PlainLiteral"),
-
 	IS_LITERAL_NOT_STRING(Namespaces.RIF_PRED, "is-literal-not-string"),
 
 	IS_LITERAL_NOT_NORMALIZEDSTRING(Namespaces.RIF_PRED,
@@ -193,6 +192,9 @@ public enum Builtin {
 
 	IS_LITERAL_NOT_YEARMONTHDURATION(Namespaces.RIF_PRED,
 			"is-literal-not-yearMonthDuration"),
+
+	IS_LITERAL_NOT_PLAINLITERAL(Namespaces.RIF_PRED,
+			"is-literal-not-PlainLiteral"),
 
 	IS_LITERAL_NOT_XMLLITERAL(Namespaces.RIF_PRED, "is-literal-not-XMLLiteral"),
 
