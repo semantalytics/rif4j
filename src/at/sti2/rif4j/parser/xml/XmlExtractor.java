@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -55,7 +56,7 @@ import at.sti2.rif4j.rule.Clause;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.ForallFormula;
 import at.sti2.rif4j.rule.Group;
-import at.sti2.rif4j.rule.Implies;
+import at.sti2.rif4j.rule.ImpliesFormula;
 import at.sti2.rif4j.rule.Import;
 import at.sti2.rif4j.rule.Rule;
 
@@ -71,10 +72,13 @@ class XmlExtractor {
 
 	private static XPath xPath;
 
+	private static NamespaceContext namespaceContext;
+
 	static {
 		factory = XPathFactory.newInstance();
 		xPath = factory.newXPath();
-		xPath.setNamespaceContext(new RifNamespaceContext());
+		namespaceContext = new RifNamespaceContext();
+		xPath.setNamespaceContext(namespaceContext);
 	}
 
 	public XmlExtractor() {
@@ -88,14 +92,19 @@ class XmlExtractor {
 
 	private NodeList queryNodeList(Node context, String query) {
 		if (isSimpleQuery(query)) {
-			// Remove namespace.
 			int index = query.indexOf(":");
 
+			String namespace = null;
+			String localName = query;
+
 			if (index >= 0) {
-				query = query.substring(index + 1);
+				localName = query.substring(index + 1);
+
+				String prefix = query.substring(0, index);
+				namespace = namespaceContext.getNamespaceURI(prefix);
 			}
 
-			NodeFilter filter = new NodeFilter(context, query);
+			NodeFilter filter = new NodeFilter(context, localName, namespace);
 			return new FilteredNodeList(filter);
 		}
 
@@ -278,7 +287,7 @@ class XmlExtractor {
 			return null;
 		}
 
-		Implies implies = extractImplies(context);
+		ImpliesFormula implies = extractImplies(context);
 		if (implies != null) {
 			return implies;
 		}
@@ -291,7 +300,7 @@ class XmlExtractor {
 		return null;
 	}
 
-	public Implies extractImplies(Node context) {
+	public ImpliesFormula extractImplies(Node context) {
 		if (context == null) {
 			return null;
 		}
@@ -319,7 +328,7 @@ class XmlExtractor {
 
 		thenFormulas.addAll(extractAtomicFormulas(thenNode));
 
-		Implies implies = new Implies(ifFormula, thenFormulas);
+		ImpliesFormula implies = new ImpliesFormula(ifFormula, thenFormulas);
 
 		setMetadata(impliesNode, implies);
 
@@ -987,7 +996,7 @@ class XmlExtractor {
 			}
 
 			String text = queryString(constNode, "normalize-space(text())");
-
+			
 			Constant constant = new Constant(type, language, text);
 
 			setMetadata(constNode, constant);
