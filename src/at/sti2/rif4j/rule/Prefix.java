@@ -30,6 +30,9 @@ public class Prefix {
 	private Constant iri;
 
 	public Prefix(String name, Constant iri) {
+		Assertions.notNull("name", name);
+		Assertions.notNull("iri", iri);
+		
 		this.name = name;
 		this.iri = iri;
 	}
