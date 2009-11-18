@@ -24,7 +24,7 @@ import java.util.Map;
  * 
  * @author Adrian Marte
  */
-public enum XsdDatatype {
+public enum XmlSchemaDatatype {
 
 	// Primitive data types.
 
@@ -124,7 +124,7 @@ public enum XsdDatatype {
 
 	private String uri;
 
-	private XsdDatatype(String uri) {
+	private XmlSchemaDatatype(String uri) {
 		this.uri = uri;
 	}
 
@@ -132,7 +132,7 @@ public enum XsdDatatype {
 		return this.uri;
 	}
 
-	public static XsdDatatype forUri(String uri) {
+	public static XmlSchemaDatatype forUri(String uri) {
 		return Lookup.table.get(uri);
 	}
 
@@ -145,12 +145,12 @@ public enum XsdDatatype {
 	 */
 	private static class Lookup {
 
-		private static final Map<String, XsdDatatype> table;
+		private static final Map<String, XmlSchemaDatatype> table;
 
 		static {
-			table = new HashMap<String, XsdDatatype>();
+			table = new HashMap<String, XmlSchemaDatatype>();
 
-			for (XsdDatatype builtin : XsdDatatype.values()) {
+			for (XmlSchemaDatatype builtin : XmlSchemaDatatype.values()) {
 				table.put(builtin.getUri(), builtin);
 			}
 		}

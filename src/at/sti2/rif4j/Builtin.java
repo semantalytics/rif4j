@@ -22,10 +22,12 @@ import java.util.Map;
 /**
  * Defines the list of built-ins from RIF DTB 1.0, except the built-ins for
  * datatype conversion and casting, which are basically identified by the XML
- * Schema datatype URIs defined in {@link XsdDatatype}.
+ * Schema and RDF datatype URIs defined in {@link XmlSchemaDatatype} and
+ * {@link RdfDatatype}.
  * 
  * @author Adrian Marte
- * @see XsdDatatype
+ * @see XmlSchemaDatatype
+ * @see RdfDatatype
  */
 public enum Builtin {
 
@@ -192,8 +194,7 @@ public enum Builtin {
 	IS_LITERAL_NOT_YEARMONTHDURATION(Namespaces.RIF_PRED,
 			"is-literal-not-yearMonthDuration"),
 
-	IS_LITERAL_NOT_XMLLITERAL(Namespaces.RIF_PRED,
-			"is-literal-not-XMLLiteral"),
+	IS_LITERAL_NOT_XMLLITERAL(Namespaces.RIF_PRED, "is-literal-not-XMLLiteral"),
 
 	IRI_STRING(Namespaces.RIF_PRED, "iri-string"),
 
@@ -342,8 +343,7 @@ public enum Builtin {
 
 	ADD_DAYTIMEDURATIONS(Namespaces.RIF_FUNC, "add-dayTimeDurations"),
 
-	SUBTRACT_DAYTIMEDURATIONS(Namespaces.RIF_FUNC,
-			"subtract-dayTimeDurations"),
+	SUBTRACT_DAYTIMEDURATIONS(Namespaces.RIF_FUNC, "subtract-dayTimeDurations"),
 
 	MULTIPLY_DAYTIMEDURATION(Namespaces.RIF_FUNC, "multiply-dayTimeDuration"),
 
@@ -404,8 +404,7 @@ public enum Builtin {
 
 	DURATION_EQUAL(Namespaces.RIF_PRED, "duration-equal"),
 
-	DAYTIMEDURATION_LESS_THAN(Namespaces.RIF_PRED,
-			"dayTimeDuration-less-than"),
+	DAYTIMEDURATION_LESS_THAN(Namespaces.RIF_PRED, "dayTimeDuration-less-than"),
 
 	DAYTIMEDURATION_GREATER_THAN(Namespaces.RIF_PRED,
 			"dayTimeDuration-greater-than"),
@@ -596,6 +595,10 @@ public enum Builtin {
 	 */
 	public static boolean isBuiltIn(String uri) {
 		return from(uri) != null;
+	}
+
+	public static boolean isDatatypeCast(String uri) {
+		return RdfDatatype.isDatatype(uri) || XmlSchemaDatatype.isDatatype(uri);
 	}
 
 	/**
