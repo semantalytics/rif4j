@@ -33,6 +33,8 @@ public class NodeFilter implements Iterable<Node> {
 
 	private String localName;
 
+	private String namespace;
+
 	/**
 	 * Creates a new node filter.
 	 * 
@@ -40,8 +42,20 @@ public class NodeFilter implements Iterable<Node> {
 	 * @param localName The local name of the child nodes to filter.
 	 */
 	public NodeFilter(Node context, String localName) {
+		this(context, localName, null);
+	}
+
+	/**
+	 * Creates a new namespace-aware node filter.
+	 * 
+	 * @param context The node whose child nodes are to be filtered.
+	 * @param localName The local name of the child nodes to filter.
+	 * @param namespace The namespace of the child nodes to filter.
+	 */
+	public NodeFilter(Node context, String localName, String namespace) {
 		this.context = context;
 		this.localName = localName;
+		this.namespace = namespace;
 	}
 
 	/**
@@ -102,6 +116,11 @@ public class NodeFilter implements Iterable<Node> {
 
 				if (childNode.getNodeType() == Node.ELEMENT_NODE
 						&& childNode.getLocalName().equals(localName)) {
+					if (namespace != null
+							&& !namespace.equals(childNode.getNamespaceURI())) {
+						continue;
+					}
+
 					next = childNode;
 					break;
 				}
