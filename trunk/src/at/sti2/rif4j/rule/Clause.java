@@ -22,7 +22,7 @@ import at.sti2.rif4j.condition.AtomicFormula;
  * A clause can either be a implies formula or an atomic formula.
  * 
  * @author Adrian Marte
- * @see Implies
+ * @see ImpliesFormula
  * @see AtomicFormula
  */
 public interface Clause extends Rule {
