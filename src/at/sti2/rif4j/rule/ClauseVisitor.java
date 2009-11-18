@@ -30,7 +30,7 @@ public interface ClauseVisitor {
 	 * 
 	 * @param implies The implies formula to visit.
 	 */
-	public void visit(Implies implies);
+	public void visit(ImpliesFormula implies);
 
 	/**
 	 * Visit an atomic formula.

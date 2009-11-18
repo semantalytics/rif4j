@@ -35,7 +35,7 @@ import at.sti2.rif4j.condition.Formula;
  * @see Formula
  * @see AtomicFormula
  */
-public class Implies extends AbstractDescribable implements Clause, Describable {
+public class ImpliesFormula extends AbstractDescribable implements Clause, Describable {
 
 	private List<AtomicFormula> head;
 
@@ -47,7 +47,7 @@ public class Implies extends AbstractDescribable implements Clause, Describable 
 	 * @param body The body of the implies formula, i.e. the "if" part.
 	 * @param head The head of the implies formula, i.e. the "then" part.
 	 */
-	public Implies(Formula body, List<AtomicFormula> head) {
+	public ImpliesFormula(Formula body, List<AtomicFormula> head) {
 		this.head = head;
 		this.body = body;
 	}
