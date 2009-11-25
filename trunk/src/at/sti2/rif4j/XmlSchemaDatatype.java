@@ -45,6 +45,8 @@ public enum XmlSchemaDatatype {
 	YEARMONTHDURATION(Namespaces.XSD_NAMESPACE + "yearMonthDuration"),
 
 	DATETIME(Namespaces.XSD_NAMESPACE + "dateTime"),
+	
+	DATETIMESTAMP(Namespaces.XSD_NAMESPACE + "dateTimeStamp"),
 
 	TIME(Namespaces.XSD_NAMESPACE + "time"),
 
