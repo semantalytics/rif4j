@@ -23,13 +23,14 @@ import java.util.Map;
  * Defines the list of built-ins from RIF DTB 1.0, except the built-ins for
  * datatype conversion and casting, which are basically identified by the XML
  * Schema and RDF datatype URIs defined in {@link XmlSchemaDatatype} and
- * {@link RdfDatatype}.
+ * {@link RdfDatatype}. See <a href="http://www.w3.org/2005/rules/wiki/DTB">RIF
+ * Datatypes and Built-Ins</a> for more information.
  * 
  * @author Adrian Marte
  * @see XmlSchemaDatatype
  * @see RdfDatatype
  */
-public enum Builtin {
+public enum RifBuiltIn {
 
 	// Comparison for literals.
 
@@ -522,7 +523,7 @@ public enum Builtin {
 	 */
 	private String name;
 
-	private Builtin(String namespace, String name) {
+	private RifBuiltIn(String namespace, String name) {
 		this.namespace = namespace;
 		this.name = name;
 	}
@@ -585,7 +586,7 @@ public enum Builtin {
 	 * @return The corresponding built-in for the specified URI, or
 	 *         <code>null</code> if no such built-in can be found.
 	 */
-	public static Builtin from(String uri) {
+	public static RifBuiltIn from(String uri) {
 		return Lookup.table.get(uri);
 	}
 
@@ -608,12 +609,12 @@ public enum Builtin {
 	 */
 	private static class Lookup {
 
-		private static final Map<String, Builtin> table;
+		private static final Map<String, RifBuiltIn> table;
 
 		static {
-			table = new HashMap<String, Builtin>();
+			table = new HashMap<String, RifBuiltIn>();
 
-			for (Builtin builtin : Builtin.values()) {
+			for (RifBuiltIn builtin : RifBuiltIn.values()) {
 				table.put(builtin.getUri(), builtin);
 			}
 		}
