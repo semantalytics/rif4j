@@ -24,14 +24,18 @@ import java.util.Map;
  */
 public enum RdfDatatype {
 
-	PLAIN_LITERAL(Namespaces.RDF_NAMESPACE + "PlainLiteral"),
+	PLAIN_LITERAL("PlainLiteral"),
 
-	XML_LITERAL(Namespaces.RDF_NAMESPACE + "XMLLiteral");
+	XML_LITERAL("XMLLiteral");
 
 	private String uri;
 
-	private RdfDatatype(String uri) {
-		this.uri = uri;
+	private RdfDatatype(String name) {
+		this(Namespaces.RDF_NAMESPACE, name);
+	}
+
+	private RdfDatatype(String namespace, String name) {
+		this.uri = namespace + name;
 	}
 
 	public String getUri() {
@@ -62,5 +66,5 @@ public enum RdfDatatype {
 		}
 
 	}
-	
+
 }

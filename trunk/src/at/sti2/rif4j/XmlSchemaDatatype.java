@@ -28,106 +28,110 @@ public enum XmlSchemaDatatype {
 
 	// Primitive data types.
 
-	STRING(Namespaces.XSD_NAMESPACE + "string"),
+	STRING("string"),
 
-	BOOLEAN(Namespaces.XSD_NAMESPACE + "boolean"),
+	BOOLEAN("boolean"),
 
-	DECIMAL(Namespaces.XSD_NAMESPACE + "decimal"),
+	DECIMAL("decimal"),
 
-	FLOAT(Namespaces.XSD_NAMESPACE + "float"),
+	FLOAT("float"),
 
-	DOUBLE(Namespaces.XSD_NAMESPACE + "double"),
+	DOUBLE("double"),
 
-	DURATION(Namespaces.XSD_NAMESPACE + "duration"),
+	DURATION("duration"),
 
-	DAYTIMEDURATION(Namespaces.XSD_NAMESPACE + "dayTimeDuration"),
+	DAYTIMEDURATION("dayTimeDuration"),
 
-	YEARMONTHDURATION(Namespaces.XSD_NAMESPACE + "yearMonthDuration"),
+	YEARMONTHDURATION("yearMonthDuration"),
 
-	DATETIME(Namespaces.XSD_NAMESPACE + "dateTime"),
-	
-	DATETIMESTAMP(Namespaces.XSD_NAMESPACE + "dateTimeStamp"),
+	DATETIME("dateTime"),
 
-	TIME(Namespaces.XSD_NAMESPACE + "time"),
+	DATETIMESTAMP("dateTimeStamp"),
 
-	DATE(Namespaces.XSD_NAMESPACE + "date"),
+	TIME("time"),
 
-	GYEARMONTH(Namespaces.XSD_NAMESPACE + "gYearMonth"),
+	DATE("date"),
 
-	GYEAR(Namespaces.XSD_NAMESPACE + "gYear"),
+	GYEARMONTH("gYearMonth"),
 
-	GMONTHDAY(Namespaces.XSD_NAMESPACE + "gMonthDay"),
+	GYEAR("gYear"),
 
-	GDAY(Namespaces.XSD_NAMESPACE + "gDay"),
+	GMONTHDAY("gMonthDay"),
 
-	GMONTH(Namespaces.XSD_NAMESPACE + "gMonth"),
+	GDAY("gDay"),
 
-	HEXBINARY(Namespaces.XSD_NAMESPACE + "hexBinary"),
+	GMONTH("gMonth"),
 
-	BASE64BINARY(Namespaces.XSD_NAMESPACE + "base64Binary"),
+	HEXBINARY("hexBinary"),
 
-	ANYURI(Namespaces.XSD_NAMESPACE + "anyUri"),
+	BASE64BINARY("base64Binary"),
 
-	QNAME(Namespaces.XSD_NAMESPACE + "QName"),
+	ANYURI("anyUri"),
 
-	NOTATION(Namespaces.XSD_NAMESPACE + "NOTATION"),
+	QNAME("QName"),
+
+	NOTATION("NOTATION"),
 
 	// Derived data types.
 
-	NORMALIZED_STRING(Namespaces.XSD_NAMESPACE + "normalizedString"),
+	NORMALIZED_STRING("normalizedString"),
 
-	TOKEN(Namespaces.XSD_NAMESPACE + "token"),
+	TOKEN("token"),
 
-	LANGUAGE(Namespaces.XSD_NAMESPACE + "language"),
+	LANGUAGE("language"),
 
-	NMTOKEN(Namespaces.XSD_NAMESPACE + "NMTOKEN"),
+	NMTOKEN("NMTOKEN"),
 
-	NMTOKENS(Namespaces.XSD_NAMESPACE + "NMTOKENS"),
+	NMTOKENS("NMTOKENS"),
 
-	NAME(Namespaces.XSD_NAMESPACE + "Name"),
+	NAME("Name"),
 
-	NCNAME(Namespaces.XSD_NAMESPACE + "NCName"),
+	NCNAME("NCName"),
 
-	ID(Namespaces.XSD_NAMESPACE + "ID"),
+	ID("ID"),
 
-	IDREF(Namespaces.XSD_NAMESPACE + "IDREF"),
+	IDREF("IDREF"),
 
-	IDREFS(Namespaces.XSD_NAMESPACE + "IDREFS"),
+	IDREFS("IDREFS"),
 
-	ENTITY(Namespaces.XSD_NAMESPACE + "ENTITY"),
+	ENTITY("ENTITY"),
 
-	ENTITIES(Namespaces.XSD_NAMESPACE + "ENTITIES"),
+	ENTITIES("ENTITIES"),
 
-	INTEGER(Namespaces.XSD_NAMESPACE + "integer"),
+	INTEGER("integer"),
 
-	NON_POSITIVE_INTEGER(Namespaces.XSD_NAMESPACE + "nonPositiveInteger"),
+	NON_POSITIVE_INTEGER("nonPositiveInteger"),
 
-	NEGATIVE_INTEGER(Namespaces.XSD_NAMESPACE + "negativeInteger"),
+	NEGATIVE_INTEGER("negativeInteger"),
 
-	LONG(Namespaces.XSD_NAMESPACE + "long"),
+	LONG("long"),
 
-	INT(Namespaces.XSD_NAMESPACE + "int"),
+	INT("int"),
 
-	SHORT(Namespaces.XSD_NAMESPACE + "short"),
+	SHORT("short"),
 
-	BYTE(Namespaces.XSD_NAMESPACE + "byte"),
+	BYTE("byte"),
 
-	NON_NEGATIVE_INTEGER(Namespaces.XSD_NAMESPACE + "nonNegativeInteger"),
+	NON_NEGATIVE_INTEGER("nonNegativeInteger"),
 
-	UNSIGNED_LONG(Namespaces.XSD_NAMESPACE + "unsignedLong"),
+	UNSIGNED_LONG("unsignedLong"),
 
-	UNSIGNED_INT(Namespaces.XSD_NAMESPACE + "unsignedInt"),
+	UNSIGNED_INT("unsignedInt"),
 
-	UNSIGNED_SHORT(Namespaces.XSD_NAMESPACE + "unsignedShort"),
+	UNSIGNED_SHORT("unsignedShort"),
 
-	UNSIGNED_BYTE(Namespaces.XSD_NAMESPACE + "unsignedByte"),
+	UNSIGNED_BYTE("unsignedByte"),
 
-	POSITIVE_INTEGER(Namespaces.XSD_NAMESPACE + "positiveInteger");
+	POSITIVE_INTEGER("positiveInteger");
 
 	private String uri;
 
-	private XmlSchemaDatatype(String uri) {
-		this.uri = uri;
+	private XmlSchemaDatatype(String name) {
+		this(Namespaces.XSD_NAMESPACE, name);
+	}
+
+	private XmlSchemaDatatype(String namespace, String name) {
+		this.uri = namespace + name;
 	}
 
 	public String getUri() {
