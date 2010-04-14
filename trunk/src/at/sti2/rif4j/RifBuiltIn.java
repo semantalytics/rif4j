@@ -128,7 +128,7 @@ public enum RifBuiltIn {
 
 	IS_LITERAL_NOT_DATETIME(Namespaces.RIF_PRED, "is-literal-not-dateTime"),
 
-	IS_LITERAL_NOT_DATETIMESTAMPE(Namespaces.RIF_PRED,
+	IS_LITERAL_NOT_DATETIMESTAMP(Namespaces.RIF_PRED,
 			"is-literal-not-dateTimeStamp"),
 
 	IS_LITERAL_NOT_DOUBLE(Namespaces.RIF_PRED, "is-literal-not-double"),
