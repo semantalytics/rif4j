@@ -1,4 +1,0 @@
-Changes for release 0.1
------------------------
-
-First prototype of a Java object model and a XML parser for RIF BLD.
