@@ -160,7 +160,7 @@ public class RifToWsmlConstantMapper {
 				return dataFactory.createYearMonthDuration(duration.getYears(),
 						duration.getMonths());
 			}
-		} else if (type.equals(RDFDataType.RDF_TEXT)) {
+		} else if (type.equals(RDFDataType.RDF_PLAINLITERAL)) {
 			int position = value.lastIndexOf("@");
 
 			if (position >= 0) {
@@ -171,7 +171,7 @@ public class RifToWsmlConstantMapper {
 					lang = value.substring(position + 1);
 				}
 
-				return dataFactory.createText(text, lang);
+				return dataFactory.createPlainLiteral(text, lang);
 			}
 		} else if (type.equals(RDFDataType.RDF_XMLLITERAL)) {
 			// FIXME Set language.
