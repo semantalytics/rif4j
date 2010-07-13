@@ -38,7 +38,7 @@ import at.sti2.wsmo4j.translator.rif.RifToWsmlTranslator;
 /**
  * @author Adrian Marte
  */
-public class TranslationTest {
+public class TestTranslation {
 
 	private XmlParser parser;
 
