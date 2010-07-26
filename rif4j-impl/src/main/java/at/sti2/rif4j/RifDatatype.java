@@ -20,21 +20,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Defines the list of RIF datatypes.
+ * 
  * @author Adrian Marte
  */
-public enum RdfDatatype {
+public enum RifDatatype {
 
-	PLAIN_LITERAL("PlainLiteral"),
-
-	XML_LITERAL("XMLLiteral");
+	IRI("iri");
 
 	private String uri;
 
-	private RdfDatatype(String name) {
-		this(Namespaces.RDF_NAMESPACE, name);
+	private RifDatatype(String name) {
+		this(Namespaces.RIF_NAMESPACE, name);
 	}
 
-	private RdfDatatype(String namespace, String name) {
+	private RifDatatype(String namespace, String name) {
 		this.uri = namespace + name;
 	}
 
@@ -45,13 +45,13 @@ public enum RdfDatatype {
 	public boolean isSameDatatype(String iri) {
 		return getUri().equals(iri);
 	}
-
+	
 	@Override
 	public String toString() {
 		return getUri();
 	}
 
-	public static RdfDatatype forUri(String uri) {
+	public static RifDatatype forUri(String uri) {
 		return Lookup.table.get(uri);
 	}
 
@@ -64,12 +64,12 @@ public enum RdfDatatype {
 	 */
 	private static class Lookup {
 
-		private static final Map<String, RdfDatatype> table;
+		private static final Map<String, RifDatatype> table;
 
 		static {
-			table = new HashMap<String, RdfDatatype>();
+			table = new HashMap<String, RifDatatype>();
 
-			for (RdfDatatype builtin : RdfDatatype.values()) {
+			for (RifDatatype builtin : RifDatatype.values()) {
 				table.put(builtin.getUri(), builtin);
 			}
 		}

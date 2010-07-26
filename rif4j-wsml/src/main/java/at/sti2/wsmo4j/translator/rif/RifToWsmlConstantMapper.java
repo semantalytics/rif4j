@@ -21,12 +21,15 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
 import org.omwg.logicalexpression.terms.Term;
-import org.omwg.ontology.RDFDataType;
 import org.omwg.ontology.XmlSchemaDataType;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
+import org.wsmo.common.IRI;
 import org.wsmo.factory.DataFactory;
 import org.wsmo.factory.FactoryContainer;
+import org.wsmo.factory.WsmoFactory;
 
+import at.sti2.rif4j.RdfDatatype;
+import at.sti2.rif4j.RifDatatype;
 import at.sti2.rif4j.condition.Constant;
 
 /**
@@ -40,6 +43,8 @@ public class RifToWsmlConstantMapper {
 
 	private DataFactory dataFactory;
 
+	private WsmoFactory wsmoFactory;
+
 	public RifToWsmlConstantMapper() {
 		this(new WsmlFactoryContainer());
 	}
@@ -47,6 +52,7 @@ public class RifToWsmlConstantMapper {
 	public RifToWsmlConstantMapper(FactoryContainer factories) {
 		this.factories = factories;
 		dataFactory = factories.getXmlDataFactory();
+		wsmoFactory = factories.getWsmoFactory();
 	}
 
 	/**
@@ -160,7 +166,7 @@ public class RifToWsmlConstantMapper {
 				return dataFactory.createYearMonthDuration(duration.getYears(),
 						duration.getMonths());
 			}
-		} else if (type.equals(RDFDataType.RDF_PLAINLITERAL)) {
+		} else if (RdfDatatype.PLAIN_LITERAL.isSameDatatype(type)) {
 			int position = value.lastIndexOf("@");
 
 			if (position >= 0) {
@@ -173,9 +179,12 @@ public class RifToWsmlConstantMapper {
 
 				return dataFactory.createPlainLiteral(text, lang);
 			}
-		} else if (type.equals(RDFDataType.RDF_XMLLITERAL)) {
+		} else if (RdfDatatype.XML_LITERAL.isSameDatatype(type)) {
 			// FIXME Set language.
 			return dataFactory.createXMLLiteral(value, "");
+		} else if (RifDatatype.IRI.isSameDatatype(type)) {
+			IRI iri = wsmoFactory.createIRI(value);
+			return iri;
 		}
 
 		return null;
