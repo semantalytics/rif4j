@@ -89,7 +89,7 @@ public class RifToWsmlConstantMapper {
 
 			if (date != null) {
 				return dataFactory.createDate(date.year, date.month, date.day,
-						date.tzHour, date.tzMinute);
+						String.valueOf(date.sign), date.tzHour, date.tzMinute);
 			}
 		} else if (type.equals(XmlSchemaDataType.XSD_DATETIME)) {
 			DateTime dateTime = DateTime.parseDateTime(value);
@@ -97,16 +97,17 @@ public class RifToWsmlConstantMapper {
 			if (dateTime != null) {
 				return dataFactory.createDateTime(dateTime.year,
 						dateTime.month, dateTime.day, dateTime.hour,
-						dateTime.minute, dateTime.second, dateTime.tzHour,
+						dateTime.minute, dateTime.second, String
+								.valueOf(dateTime.sign), dateTime.tzHour,
 						dateTime.tzMinute);
 			}
 		} else if (type.equals(XmlSchemaDataType.XSD_DAYTIMEDURATION)) {
 			Duration duration = createDuration(value);
 
 			if (duration != null) {
-				return dataFactory.createDayTimeDuration(duration.getDays(),
-						duration.getHours(), duration.getMinutes(), duration
-								.getSeconds());
+				return dataFactory.createDayTimeDuration(duration.getSign(),
+						duration.getDays(), duration.getHours(), duration
+								.getMinutes(), duration.getSeconds());
 			}
 		} else if (type.equals(XmlSchemaDataType.XSD_DECIMAL)) {
 			return dataFactory.createDecimal(value);
@@ -116,9 +117,10 @@ public class RifToWsmlConstantMapper {
 			Duration duration = createDuration(value);
 
 			if (duration != null) {
-				return dataFactory.createDuration(duration.getYears(), duration
-						.getMonths(), duration.getDays(), duration.getHours(),
-						duration.getMinutes(), duration.getSeconds());
+				return dataFactory.createDuration(duration.getSign(), duration
+						.getYears(), duration.getMonths(), duration.getDays(),
+						duration.getHours(), duration.getMinutes(), duration
+								.getSeconds());
 			}
 		} else if (type.equals(XmlSchemaDataType.XSD_FLOAT)) {
 			return dataFactory.createFloat(value);
@@ -157,14 +159,15 @@ public class RifToWsmlConstantMapper {
 
 			if (time != null) {
 				return dataFactory.createTime(time.hour, time.minute,
-						time.second, time.tzHour, time.tzMinute);
+						time.second, String.valueOf(time.sign), time.tzHour,
+						time.tzMinute);
 			}
 		} else if (type.equals(XmlSchemaDataType.XSD_YEARMONTHDURATION)) {
 			Duration duration = createDuration(value);
 
 			if (duration != null) {
-				return dataFactory.createYearMonthDuration(duration.getYears(),
-						duration.getMonths());
+				return dataFactory.createYearMonthDuration(duration.getSign(),
+						duration.getYears(), duration.getMonths());
 			}
 		} else if (RdfDatatype.PLAIN_LITERAL.isSameDatatype(type)) {
 			int position = value.lastIndexOf("@");
@@ -233,15 +236,20 @@ public class RifToWsmlConstantMapper {
 
 		public String tzMinute;
 
+		// Per default 1, indicating positive time/timezone.
+		public int sign = 1;
+
 		public static DateTime parseDateTime(String value) {
 			DateTime timezone = extractTimezone(value);
 			value = removeTimezone(value);
+			int sign = value.startsWith("-") ? -1 : 1;
 
 			String[] parts = value.split("T");
 
 			if (parts.length >= 2) {
 				DateTime date = parseDate(parts[0]);
 				DateTime time = parseTime(parts[1]);
+				timezone.sign = sign;
 
 				if (date != null && time != null) {
 					timezone.year = date.year;
@@ -262,9 +270,12 @@ public class RifToWsmlConstantMapper {
 			DateTime timezone = extractTimezone(value);
 			value = removeTimezone(value);
 
+			int sign = value.startsWith("-") ? -1 : 1;
+
 			String[] parts = value.split("-");
 
 			if (parts.length == 3) {
+				timezone.sign = sign;
 				timezone.year = parts[0];
 				timezone.month = parts[1];
 				timezone.day = parts[2];
@@ -279,9 +290,12 @@ public class RifToWsmlConstantMapper {
 			DateTime timezone = extractTimezone(value);
 			value = removeTimezone(value);
 
+			int sign = value.startsWith("-") ? -1 : 1;
+
 			String[] parts = value.split(":");
 
 			if (parts.length == 3) {
+				timezone.sign = sign;
 				timezone.hour = parts[0];
 				timezone.minute = parts[1];
 				timezone.second = parts[2];
@@ -305,18 +319,24 @@ public class RifToWsmlConstantMapper {
 			int indexOfMinus = value.lastIndexOf("-");
 
 			String timezonePart = null;
+			
+			// FIXME Prepend sign to values?
 			String sign = "";
+
+			int theSign = 1;
 
 			if (indexOfPlus >= 0) {
 				timezonePart = value.substring(indexOfPlus + 1);
 			} else if (indexOfMinus >= 0) {
 				timezonePart = value.substring(indexOfMinus + 1);
+				theSign = -1;
 				sign = "-";
 			} else {
 				return dateTime;
 			}
 
 			String[] parts = timezonePart.split(":");
+			dateTime.sign = theSign;
 
 			if (parts.length == 2) {
 				dateTime.tzHour = sign + parts[0];
