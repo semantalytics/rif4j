@@ -406,13 +406,14 @@ class XmlExtractor {
 		for (int i = 0; i < memberNodes.getLength(); i++) {
 			Node memberNode = memberNodes.item(i);
 
-			Node classNode = queryNode(memberNode, "rif:class");
-			java.util.List<Term> classTerms = extractTerms(classNode);
-			Term classTerm = classTerms.iterator().next();
 
 			Node instanceNode = queryNode(memberNode, "rif:instance");
 			java.util.List<Term> instanceTerms = extractTerms(instanceNode);
-			Term instanceTerm = instanceTerms.iterator().next();
+			Term instanceTerm = instanceTerms.get(0);
+			
+			Node classNode = queryNode(memberNode, "rif:class");
+			java.util.List<Term> classTerms = extractTerms(classNode);
+			Term classTerm = classTerms.get(0);
 
 			MemberAtom memberAtom = new MemberAtom(instanceTerm, classTerm);
 			setMetadata(memberNode, memberAtom);
@@ -460,7 +461,7 @@ class XmlExtractor {
 		if (context == null) {
 			return atoms;
 		}
-
+		
 		NodeList atomNodes = queryNodeList(context, "rif:Atom");
 
 		if (atomNodes == null) {
@@ -468,7 +469,7 @@ class XmlExtractor {
 		}
 
 		for (int i = 0; i < atomNodes.getLength(); i++) {
-			Node atomNode = queryNode(context, "rif:Atom");
+			Node atomNode = atomNodes.item(i);
 
 			if (atomNode == null) {
 				return null;
@@ -658,7 +659,7 @@ class XmlExtractor {
 			Node externalNode = externalNodes.item(i);
 			Node contentNode = queryNode(externalNode, "rif:content");
 			java.util.List<Atom> atoms = extractAtoms(contentNode);
-			Atom atom = atoms.iterator().next();
+			Atom atom = atoms.get(0);
 
 			ExternalFormula formula = new ExternalFormula(atom);
 			setMetadata(externalNode, formula);
