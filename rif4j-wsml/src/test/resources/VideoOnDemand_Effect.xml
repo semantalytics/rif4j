@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- RIF Abstract Syntax 
+And (?Customer[<http://example.org/onto#hasService>->?Service]#<http://example.org/onto#Customer>
+	?Service#<http://example.org/onto#VideoOnDemandSubscription>)
+
+which corresponds to
+
+And (?Customer#<http://example.org/onto#Customer>
+	?Customer[<http://example.org/onto#hasService>->?Service]
+	?Service#<http://example.org/onto#VideoOnDemandSubscription>)
+-->
+
+<!-- WSML Abstract Syntax
+?Customer memberOf _"http://example.org/onto#Customer"
+ and ?Customer[_"http://example.org/onto#hasService" hasValue ?Service]
+ and ?Service memberOf _"http://example.org/onto#VideoOnDemandSubscription". 
+ 
+which corresponds to
+
+?Customer[_"http://example.org/onto#hasService" hasValue ?Service] memberOf _"http://example.org/onto#Customer"
+ and ?Service memberOf _"http://example.org/onto#VideoOnDemandSubscription". 
+-->
+
+<And xmlns="http://www.w3.org/2007/rif#">
+	<formula>
+		<Member>
+			<instance>
+				<Var>?Customer</Var>
+			</instance>
+			<class>
+				<Const type="http://www.w3.org/2007/rif#iri">http://example.org/onto#Customer
+				</Const>
+			</class>
+		</Member>
+	</formula>
+	<formula>
+		<Frame>
+			<object>
+				<Var>Customer</Var>
+			</object>
+			<slot ordered="yes">
+				<Const type="http://www.w3.org/2007/rif#iri">http://example.org/onto#hasService
+				</Const>
+				<Var>Service</Var>
+			</slot>
+		</Frame>
+	</formula>
+	<formula>
+		<Member>
+			<instance>
+				<Var>Service</Var>
+			</instance>
+			<class>
+				<Const type="http://www.w3.org/2007/rif#iri">http://example.org/onto#VideoOnDemandSubscription
+				</Const>
+			</class>
+		</Member>
+	</formula>
+</And>
