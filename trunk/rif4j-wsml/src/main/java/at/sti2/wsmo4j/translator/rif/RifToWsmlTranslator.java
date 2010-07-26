@@ -23,6 +23,7 @@ import org.omwg.logicalexpression.LogicalExpression;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsmo.factory.FactoryContainer;
 
+import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.Group;
 import at.sti2.rif4j.rule.Rule;
@@ -63,8 +64,19 @@ public class RifToWsmlTranslator {
 			wsmlRules.add(transformer.getExpression());
 		}
 
-		if (transformer.getExpressions() != null) {
-			wsmlRules.addAll(transformer.getExpressions());
+		return wsmlRules;
+	}
+	
+	public List<LogicalExpression> translate(Formula formula) {
+		RifEntityTransformer transformer = new RifEntityTransformer(factories);
+		formula.accept(transformer);
+
+		List<LogicalExpression> wsmlRules = new ArrayList<LogicalExpression>();
+
+		// TODO Check if terms are also needed.
+
+		if (transformer.getExpression() != null) {
+			wsmlRules.add(transformer.getExpression());
 		}
 
 		return wsmlRules;
