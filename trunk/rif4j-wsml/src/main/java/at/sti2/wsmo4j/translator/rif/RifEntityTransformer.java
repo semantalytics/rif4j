@@ -160,7 +160,7 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 		return disjunction;
 	}
 
-	private Set<org.omwg.ontology.Variable> convertVariables(
+	protected Set<org.omwg.ontology.Variable> convertVariables(
 			Collection<Variable> variables) {
 		RifEntityTransformer transformer = new RifEntityTransformer(factories);
 
@@ -310,15 +310,20 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 
 	@Override
 	public void visit(ExistsFormula existsFormula) {
-		Set<org.omwg.ontology.Variable> wsmlVariables = convertVariables(existsFormula
-				.getVariables());
 		java.util.List<LogicalExpression> wsmlFormulas = convertFormulas(existsFormula
 				.getFormulas());
 		LogicalExpression wsmlClause = makeConjunction(wsmlFormulas);
 
 		if (wsmlClause != null) {
-			expression = factories.getLogicalExpressionFactory()
-					.createUniversalQuantification(wsmlVariables, wsmlClause);
+			expression = wsmlClause;
+
+			// TODO Respect existential quanitfication.
+			// Set<org.omwg.ontology.Variable> wsmlVariables =
+			// convertVariables(existsFormula
+			// .getVariables());
+
+			// expression = factories.getLogicalExpressionFactory()
+			// .createExistentialQuantification(wsmlVariables, wsmlClause);
 		}
 	}
 
@@ -329,17 +334,21 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 
 	@Override
 	public void visit(ForallFormula forallFormula) {
-		Set<org.omwg.ontology.Variable> wsmlVariables = convertVariables(forallFormula
-				.getVariables());
-
 		RifEntityTransformer transformer = new RifEntityTransformer(factories);
 		forallFormula.getClause().accept((ClauseVisitor) transformer);
 
 		LogicalExpression wsmlClause = transformer.getExpression();
 
 		if (wsmlClause != null) {
-			expression = factories.getLogicalExpressionFactory()
-					.createUniversalQuantification(wsmlVariables, wsmlClause);
+			expression = wsmlClause;
+
+			// TODO Respect universal quanitfication.
+			// Set<org.omwg.ontology.Variable> wsmlVariables =
+			// convertVariables(forallFormula
+			// .getVariables());
+
+			// expression = factories.getLogicalExpressionFactory()
+			// .createUniversalQuantification(wsmlVariables, wsmlClause);
 		}
 	}
 
