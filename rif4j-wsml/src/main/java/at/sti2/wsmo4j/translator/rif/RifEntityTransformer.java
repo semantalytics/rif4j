@@ -101,6 +101,10 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 		expressions = null;
 	}
 
+	public org.omwg.ontology.Variable getVariable() {
+		return variable;
+	}
+
 	public Term getTerm() {
 		return term;
 	}
@@ -228,11 +232,13 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 		boolean isDatatypeCast = RifBuiltIn.isDatatypeCast(operatorIri)
 				&& wsmlOperatorIri != null;
 
-		if (isDatatypeCast) {
-			org.omwg.ontology.Variable variable = createUniqueVariable();
-			wsmlTerms.add(variable);
-			this.variable = variable;
-		}
+		// if (isDatatypeCast) {
+		org.omwg.ontology.Variable variable = createUniqueVariable();
+		wsmlTerms.add(variable);
+		this.variable = variable;
+		// }
+
+		java.util.List<LogicalExpression> tempExpressions = new ArrayList<LogicalExpression>();
 
 		// Use argument as argument for atom ignoring the name of the argument.
 		for (Argument argument : expression.getArguments()) {
@@ -240,14 +246,27 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 			argument.getValue().accept(transformer);
 
 			Term wsmlTerm = transformer.getTerm();
+			org.omwg.ontology.Variable wsmlVariable = transformer.getVariable();
+			LogicalExpression wsmlExpression = transformer.getExpression();
 
 			if (wsmlTerm != null) {
 				wsmlTerms.add(wsmlTerm);
+			} else if (wsmlVariable != null) {
+				wsmlTerms.add(wsmlVariable);
+
+				if (wsmlExpression != null) {
+					tempExpressions.add(wsmlExpression);
+				}
 			}
 		}
 
 		this.expression = factories.getLogicalExpressionFactory().createAtom(
 				wsmlId, wsmlTerms);
+
+		if (tempExpressions.size() > 0) {
+			tempExpressions.add(0, this.expression);
+			this.expression = makeConjunction(tempExpressions);
+		}
 	}
 
 	public void visit(ExternalExpression externalExpression) {
@@ -451,6 +470,8 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 		java.util.List<Term> wsmlFirstTerms = transformer.getTerms();
 		LogicalExpression wsmlFirstLogicalExpression = transformer
 				.getExpression();
+		org.omwg.ontology.Variable wsmlFirstVariable = transformer
+				.getVariable();
 
 		transformer.reset();
 		secondTerm.accept(transformer);
@@ -459,6 +480,8 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 		java.util.List<Term> wsmlSecondTerms = transformer.getTerms();
 		LogicalExpression wsmlSecondLogicalExpression = transformer
 				.getExpression();
+		org.omwg.ontology.Variable wsmlSecondVariable = transformer
+				.getVariable();
 
 		java.util.List<Term> wsmlTerms = new ArrayList<Term>();
 
@@ -470,12 +493,20 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 			wsmlTerms.addAll(wsmlFirstTerms);
 		}
 
+		if (wsmlFirstVariable != null) {
+			wsmlTerms.add(wsmlFirstVariable);
+		}
+
 		if (wsmlSecondTerm != null) {
 			wsmlTerms.add(wsmlSecondTerm);
 		}
 
 		if (wsmlSecondTerms != null) {
 			wsmlTerms.addAll(wsmlSecondTerms);
+		}
+
+		if (wsmlSecondVariable != null) {
+			wsmlTerms.add(wsmlSecondVariable);
 		}
 
 		// In this case we have a simple equality relation, where we put the
@@ -486,6 +517,21 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 				|| (wsmlSecondTerm != null && wsmlFirstTerms != null)) {
 			expression = factories.getLogicalExpressionFactory().createAtom(
 					equalId, wsmlTerms);
+		} else if ((wsmlFirstVariable != null && wsmlFirstLogicalExpression != null)
+				&& wsmlSecondTerm != null) {
+			java.util.List<Term> wsmlFirstAtomTerms = new ArrayList<Term>();
+
+			// Add a new variable as first term of the atom.
+			wsmlFirstAtomTerms.add(wsmlFirstVariable);
+			wsmlFirstAtomTerms.add(wsmlSecondTerm);
+
+			LogicalExpression variableEquality = factories
+					.getLogicalExpressionFactory().createAtom(equalId,
+							wsmlFirstAtomTerms);
+
+			// Create a conjunction of the three expressions.
+			expression = makeConjunction(variableEquality,
+					wsmlFirstLogicalExpression);
 		}
 		// In this case we put the results of two expressions in an equality
 		// relation. Since in WSML such an assignment is not possible we create
