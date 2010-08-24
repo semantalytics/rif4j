@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.wsmo.common.BuiltIn;
 
-import at.sti2.rif4j.RifBuiltIn;
 import at.sti2.rif4j.RdfDatatype;
 import at.sti2.rif4j.XmlSchemaDatatype;
 
@@ -100,61 +99,66 @@ public class RifToWsmlBuiltinMapper {
 		//
 		// addMapping(BuiltIn.NUMERIC_MODULUS, RifBuiltIn.NUMERIC_MOD);
 
-		addMapping(BuiltIn.NUMERIC_GREATER_THAN,
-				RifBuiltIn.NUMERIC_GREATER_THAN);
-		addMapping(BuiltIn.NUMERIC_LESS_THAN, RifBuiltIn.NUMERIC_LESS_THAN);
-		addMapping(BuiltIn.GREATER_EQUAL,
-				RifBuiltIn.NUMERIC_GREATER_THAN_OR_EQUAL);
-		addMapping(BuiltIn.LESS_EQUAL, RifBuiltIn.NUMERIC_LESS_THAN_OR_EQUAL);
-		addMapping(BuiltIn.NUMERIC_ADD, RifBuiltIn.NUMERIC_ADD);
-		addMapping(BuiltIn.NUMERIC_SUBTRACT, RifBuiltIn.NUMERIC_SUBTRACT);
-		addMapping(BuiltIn.NUMERIC_MULTIPLY, RifBuiltIn.NUMERIC_MULTIPLY);
-		addMapping(BuiltIn.NUMERIC_DIVIDE, RifBuiltIn.NUMERIC_DIVIDE);
-		addMapping(BuiltIn.NUMERIC_EQUAL, RifBuiltIn.NUMERIC_EQUAL);
-		addMapping(BuiltIn.NUMERIC_INEQUAL, RifBuiltIn.NUMERIC_NOT_EQUAL);
-		addMapping(BuiltIn.DATETIME_INEQUAL, RifBuiltIn.DATETIME_NOT_EQUAL);
-		addMapping(BuiltIn.DATETIME_EQUAL, RifBuiltIn.DATETIME_EQUAL);
-		addMapping(BuiltIn.DATETIME_LESS_THAN, RifBuiltIn.DATETIME_LESS_THAN);
-		addMapping(BuiltIn.DATETIME_GREATER_THAN,
-				RifBuiltIn.DATETIME_GREATER_THAN);
-		addMapping(BuiltIn.DATE_INEQUAL, RifBuiltIn.DATE_NOT_EQUAL);
-		addMapping(BuiltIn.DATE_EQUAL, RifBuiltIn.DATE_EQUAL);
-		addMapping(BuiltIn.DATE_LESS_THAN, RifBuiltIn.DATE_LESS_THAN);
-		addMapping(BuiltIn.DATE_GREATER_THAN, RifBuiltIn.DATE_GREATER_THAN);
-		addMapping(BuiltIn.TIME_INEQUAL, RifBuiltIn.TIME_NOT_EQUAL);
-		addMapping(BuiltIn.TIME_EQUAL, RifBuiltIn.TIME_EQUAL);
-		addMapping(BuiltIn.TIME_LESS_THAN, RifBuiltIn.TIME_LESS_THAN);
-		addMapping(BuiltIn.TIME_GREATER_THAN, RifBuiltIn.TIME_GREATER_THAN);
-		addMapping(BuiltIn.DURATION_EQUAL, RifBuiltIn.DURATION_EQUAL);
-		addMapping(BuiltIn.DURATION_INEQUAL, RifBuiltIn.DURATION_NOT_EQUAL);
-		addMapping(BuiltIn.DAYTIMEDURATION_LESS_THAN,
-				RifBuiltIn.DAYTIMEDURATION_LESS_THAN);
-		addMapping(BuiltIn.DAYTIMEDURATION_GREATER_THAN,
-				RifBuiltIn.DAYTIMEDURATION_GREATER_THAN);
-		addMapping(BuiltIn.YEARMONTHDURATION_LESS_THAN,
-				RifBuiltIn.YEARMONTHDURATION_LESS_THAN);
-		addMapping(BuiltIn.YEARMONTHDURATION_GREATER_THAN,
-				RifBuiltIn.YEARMONTHDURATION_GREATER_THAN);
-		addMapping(BuiltIn.LESS_EQUAL, RifBuiltIn.DATETIME_LESS_THAN_OR_EQUAL);
-		addMapping(BuiltIn.GREATER_EQUAL,
-				RifBuiltIn.DATETIME_GREATER_THAN_OR_EQUAL);
-		addMapping(BuiltIn.LESS_EQUAL, RifBuiltIn.DATE_LESS_THAN_OR_EQUAL);
-		addMapping(BuiltIn.GREATER_EQUAL, RifBuiltIn.DATE_GREATER_THAN_OR_EQUAL);
-		addMapping(BuiltIn.LESS_EQUAL, RifBuiltIn.TIME_LESS_THAN_OR_EQUAL);
-		addMapping(BuiltIn.GREATER_EQUAL, RifBuiltIn.TIME_GREATER_THAN_OR_EQUAL);
-		addMapping(BuiltIn.LESS_EQUAL,
-				RifBuiltIn.DAYTIMEDURATION_LESS_THAN_OR_EQUAL);
-		addMapping(BuiltIn.GREATER_EQUAL,
-				RifBuiltIn.DAYTIMEDURATION_GREATER_THAN_OR_EQUAL);
-		addMapping(BuiltIn.LESS_EQUAL,
-				RifBuiltIn.YEARMONTHDURATION_LESS_THAN_OR_EQUAL);
-		addMapping(BuiltIn.GREATER_EQUAL,
-				RifBuiltIn.YEARMONTHDURATION_GREATER_THAN_OR_EQUAL);
-
-		addMapping(BuiltIn.EQUAL, RifBuiltIn.XMLLITERAL_EQUAL);
-		addMapping(BuiltIn.INEQUAL, RifBuiltIn.XMLLITERAL_NOT_EQUAL);
-
-		addMapping(BuiltIn.EQUAL, RifBuiltIn.BOOLEAN_EQUAL);
+		// addMapping(BuiltIn.NUMERIC_GREATER_THAN,
+		// RifBuiltIn.NUMERIC_GREATER_THAN);
+		// addMapping(BuiltIn.NUMERIC_LESS_THAN, RifBuiltIn.NUMERIC_LESS_THAN);
+		// addMapping(BuiltIn.GREATER_EQUAL,
+		// RifBuiltIn.NUMERIC_GREATER_THAN_OR_EQUAL);
+		// addMapping(BuiltIn.LESS_EQUAL,
+		// RifBuiltIn.NUMERIC_LESS_THAN_OR_EQUAL);
+		// addMapping(BuiltIn.NUMERIC_ADD, RifBuiltIn.NUMERIC_ADD);
+		// addMapping(BuiltIn.NUMERIC_SUBTRACT, RifBuiltIn.NUMERIC_SUBTRACT);
+		// addMapping(BuiltIn.NUMERIC_MULTIPLY, RifBuiltIn.NUMERIC_MULTIPLY);
+		// addMapping(BuiltIn.NUMERIC_DIVIDE, RifBuiltIn.NUMERIC_DIVIDE);
+		// addMapping(BuiltIn.NUMERIC_EQUAL, RifBuiltIn.NUMERIC_EQUAL);
+		// addMapping(BuiltIn.NUMERIC_INEQUAL, RifBuiltIn.NUMERIC_NOT_EQUAL);
+		// addMapping(BuiltIn.DATETIME_INEQUAL, RifBuiltIn.DATETIME_NOT_EQUAL);
+		// addMapping(BuiltIn.DATETIME_EQUAL, RifBuiltIn.DATETIME_EQUAL);
+		// addMapping(BuiltIn.DATETIME_LESS_THAN,
+		// RifBuiltIn.DATETIME_LESS_THAN);
+		// addMapping(BuiltIn.DATETIME_GREATER_THAN,
+		// RifBuiltIn.DATETIME_GREATER_THAN);
+		// addMapping(BuiltIn.DATE_INEQUAL, RifBuiltIn.DATE_NOT_EQUAL);
+		// addMapping(BuiltIn.DATE_EQUAL, RifBuiltIn.DATE_EQUAL);
+		// addMapping(BuiltIn.DATE_LESS_THAN, RifBuiltIn.DATE_LESS_THAN);
+		// addMapping(BuiltIn.DATE_GREATER_THAN, RifBuiltIn.DATE_GREATER_THAN);
+		// addMapping(BuiltIn.TIME_INEQUAL, RifBuiltIn.TIME_NOT_EQUAL);
+		// addMapping(BuiltIn.TIME_EQUAL, RifBuiltIn.TIME_EQUAL);
+		// addMapping(BuiltIn.TIME_LESS_THAN, RifBuiltIn.TIME_LESS_THAN);
+		// addMapping(BuiltIn.TIME_GREATER_THAN, RifBuiltIn.TIME_GREATER_THAN);
+		// addMapping(BuiltIn.DURATION_EQUAL, RifBuiltIn.DURATION_EQUAL);
+		// addMapping(BuiltIn.DURATION_INEQUAL, RifBuiltIn.DURATION_NOT_EQUAL);
+		// addMapping(BuiltIn.DAYTIMEDURATION_LESS_THAN,
+		// RifBuiltIn.DAYTIMEDURATION_LESS_THAN);
+		// addMapping(BuiltIn.DAYTIMEDURATION_GREATER_THAN,
+		// RifBuiltIn.DAYTIMEDURATION_GREATER_THAN);
+		// addMapping(BuiltIn.YEARMONTHDURATION_LESS_THAN,
+		// RifBuiltIn.YEARMONTHDURATION_LESS_THAN);
+		// addMapping(BuiltIn.YEARMONTHDURATION_GREATER_THAN,
+		// RifBuiltIn.YEARMONTHDURATION_GREATER_THAN);
+		// addMapping(BuiltIn.LESS_EQUAL,
+		// RifBuiltIn.DATETIME_LESS_THAN_OR_EQUAL);
+		// addMapping(BuiltIn.GREATER_EQUAL,
+		// RifBuiltIn.DATETIME_GREATER_THAN_OR_EQUAL);
+		// addMapping(BuiltIn.LESS_EQUAL, RifBuiltIn.DATE_LESS_THAN_OR_EQUAL);
+		// addMapping(BuiltIn.GREATER_EQUAL,
+		// RifBuiltIn.DATE_GREATER_THAN_OR_EQUAL);
+		// addMapping(BuiltIn.LESS_EQUAL, RifBuiltIn.TIME_LESS_THAN_OR_EQUAL);
+		// addMapping(BuiltIn.GREATER_EQUAL,
+		// RifBuiltIn.TIME_GREATER_THAN_OR_EQUAL);
+		// addMapping(BuiltIn.LESS_EQUAL,
+		// RifBuiltIn.DAYTIMEDURATION_LESS_THAN_OR_EQUAL);
+		// addMapping(BuiltIn.GREATER_EQUAL,
+		// RifBuiltIn.DAYTIMEDURATION_GREATER_THAN_OR_EQUAL);
+		// addMapping(BuiltIn.LESS_EQUAL,
+		// RifBuiltIn.YEARMONTHDURATION_LESS_THAN_OR_EQUAL);
+		// addMapping(BuiltIn.GREATER_EQUAL,
+		// RifBuiltIn.YEARMONTHDURATION_GREATER_THAN_OR_EQUAL);
+		//
+		// addMapping(BuiltIn.EQUAL, RifBuiltIn.XMLLITERAL_EQUAL);
+		// addMapping(BuiltIn.INEQUAL, RifBuiltIn.XMLLITERAL_NOT_EQUAL);
+		//
+		// addMapping(BuiltIn.EQUAL, RifBuiltIn.BOOLEAN_EQUAL);
 
 		// FIXME Complete the list of data type cast mappings.
 		// Establish data type cast mappings.
@@ -221,9 +225,10 @@ public class RifToWsmlBuiltinMapper {
 		}
 	}
 
-	private static void addMapping(BuiltIn wsmlBuiltin, RifBuiltIn rifBuiltin) {
-		addMapping(wsmlBuiltin.getFullName(), rifBuiltin.getUri());
-	}
+	// private static void addMapping(BuiltIn wsmlBuiltin, RifBuiltIn
+	// rifBuiltin) {
+	// addMapping(wsmlBuiltin.getFullName(), rifBuiltin.getUri());
+	// }
 
 	private static void addMapping(String wsmlBuiltin, String rifBuiltin) {
 		wsmlToRif.put(wsmlBuiltin, rifBuiltin);
