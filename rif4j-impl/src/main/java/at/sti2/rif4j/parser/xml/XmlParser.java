@@ -16,9 +16,11 @@
  */
 package at.sti2.rif4j.parser.xml;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -129,10 +131,20 @@ public class XmlParser {
 		return null;
 	}
 
+	static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+
+	static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+
 	private org.w3c.dom.Document parseXml(Reader reader)
 			throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
+
+		try {
+			factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
+		} catch (IllegalArgumentException x) {
+			// Happens if the parser does not support JAXP 1.2
+		}
 
 		InputSource source = new InputSource(reader);
 
@@ -144,30 +156,32 @@ public class XmlParser {
 
 	private void validate(org.w3c.dom.Document document) throws SAXException,
 			IOException {
-		// FIXME Validation does somehow not work yet.
-
 		SchemaFactory factory = SchemaFactory
 				.newInstance("http://www.w3.org/2001/XMLSchema");
 
-		InputStream condSchemaInput = openSchema("BLDCond.xsd");
-		InputStream ruleSchemaInput = openSchema("BLDRule.xsd");
-		Source condSchema = new StreamSource(condSchemaInput);
-		Source ruleSchema = new StreamSource(ruleSchemaInput);
+		File condSchemaFile = openSchema("BLDCond.xsd");
+		File ruleSchemaFile = openSchema("BLDRule.xsd");
+		Source condSchema = new StreamSource(condSchemaFile);
+		Source ruleSchema = new StreamSource(ruleSchemaFile);
 
-		try {
-			Schema schema = factory.newSchema(new Source[] { condSchema,
-					ruleSchema });
-			Validator validator = schema.newValidator();
-			validator.validate(new DOMSource(document));
-		} finally {
-			condSchemaInput.close();
-			ruleSchemaInput.close();
-		}
+		Schema schema = factory
+				.newSchema(new Source[] { ruleSchema, condSchema });
+		Validator validator = schema.newValidator();
+		validator.validate(new DOMSource(document));
 	}
 
-	private InputStream openSchema(String fileName) {
-		InputStream input = getClass().getResourceAsStream(fileName);
-		return input;
+	private File openSchema(String fileName) {
+		URL url = getClass().getClassLoader().getResource(fileName);
+
+		if (url != null) {
+			try {
+				return new File(url.toURI());
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return null;
 	}
 
 }

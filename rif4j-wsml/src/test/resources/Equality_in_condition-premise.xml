@@ -12,7 +12,9 @@
       <sentence>
         <Forall>
           <declare>
+          <foo>
             <Var>x</Var>
+            </foo>
           </declare>
           <formula>
             <Implies>

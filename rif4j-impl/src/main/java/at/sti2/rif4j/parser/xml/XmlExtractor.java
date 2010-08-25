@@ -18,7 +18,6 @@ package at.sti2.rif4j.parser.xml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.namespace.NamespaceContext;
@@ -65,8 +64,93 @@ import at.sti2.rif4j.rule.Rule;
  * RIF.
  * 
  * @author Adrian Marte
+ * FIXME This class has great optimization potential.
  */
 class XmlExtractor {
+
+	public static final String RIF_VAR = "rif:Var";
+
+	public static final String RIF_ATOM = "rif:Atom";
+
+	public static final String RIF_SUB = "rif:sub";
+
+	public static final String RIF_SUPER = "rif:super";
+
+	public static final String RIF_SUBCLASS = "rif:Subclass";
+
+	public static final String RIF_CLASS = "rif:class";
+
+	public static final String RIF_INSTANCE = "rif:instance";
+
+	public static final String RIF_MEMBER = "rif:Member";
+
+	public static final String RIF_RIGHT = "rif:right";
+
+	public static final String RIF_LEFT = "rif:left";
+
+	public static final String RIF_EQUAL = "rif:Equal";
+
+	public static final String RIF_THEN = "rif:then";
+
+	public static final String RIF_IF = "rif:if";
+
+	public static final String RIF_IMPLIES = "rif:Implies";
+
+	public static final String RIF_FORALL = "rif:Forall";
+
+	public static final String RIF_SENTENCE = "rif:sentence";
+
+	public static final String RIF_GROUP = "rif:Group";
+
+	public static final String RIF_DIRECTIVE = "rif:directive";
+
+	public static final String RIF_PAYLOAD = "rif:payload";
+
+	public static final String RIF_DOCUMENT = "rif:Document";
+
+	public static final String RIF_CONST = "rif:Const";
+
+	public static final String RIF_PROFILE = "rif:profile";
+
+	public static final String RIF_LOCATION = "rif:location";
+
+	public static final String RIF_IMPORT = "rif:Import";
+
+	public static final String RIF_OBJECT = "rif:object";
+
+	public static final String RIF_FRAME = "rif:Frame";
+
+	public static final String RIF_META = "rif:meta";
+
+	public static final String RIF_ID = "rif:id";
+
+	public static final String RIF_NAME = "rif:Name";
+
+	public static final String RIF_OP = "rif:op";
+
+	public static final String RIF_SLOT = "rif:slot";
+
+	public static final String RIF_ARGS = "rif:args";
+
+	public static final String RIF_EXPR = "rif:Expr";
+
+	public static final String RIF_REST = "rif:rest";
+
+	public static final String RIF_LIST = "rif:List";
+
+	public static final String RIF_CONTENT = "rif:content";
+
+	public static final String RIF_EXTERNAL = "rif:External";
+
+	public static final String RIF_DECLARE = "rif:declare";
+
+	public static final String RIF_EXISTS = "rif:Exists";
+
+	public static final String RIF_OR = "rif:Or";
+
+	public static final String RIF_FORMULA = "rif:formula";
+
+	public static final String RIF_AND = "rif:And";
 
 	private static XPathFactory factory;
 
@@ -174,10 +258,10 @@ class XmlExtractor {
 	}
 
 	public Document extractDocument(Node context) {
-		Node documentNode = queryNode(context, "rif:Document");
+		Node documentNode = queryNode(context, RIF_DOCUMENT);
 
-		Node payloadNode = queryNode(documentNode, "rif:payload");
-		NodeList directiveNodes = queryNodeList(documentNode, "rif:directive");
+		Node payloadNode = queryNode(documentNode, RIF_PAYLOAD);
+		NodeList directiveNodes = queryNodeList(documentNode, RIF_DIRECTIVE);
 
 		java.util.List<Import> imports = extractImports(directiveNodes);
 		Group group = extractGroup(payloadNode);
@@ -196,7 +280,7 @@ class XmlExtractor {
 			return null;
 		}
 
-		Node groupNode = queryNode(context, "rif:Group");
+		Node groupNode = queryNode(context, RIF_GROUP);
 
 		if (groupNode == null) {
 			return null;
@@ -205,7 +289,7 @@ class XmlExtractor {
 		java.util.List<Rule> rules = new ArrayList<Rule>();
 		java.util.List<Group> groups = new ArrayList<Group>();
 
-		NodeList sentenceNodes = queryNodeList(groupNode, "rif:sentence");
+		NodeList sentenceNodes = queryNodeList(groupNode, RIF_SENTENCE);
 
 		for (int i = 0; i < sentenceNodes.getLength(); i++) {
 			Node sentenceNode = sentenceNodes.item(i);
@@ -254,7 +338,7 @@ class XmlExtractor {
 			return forallFormulas;
 		}
 
-		NodeList forallNodes = queryNodeList(context, "rif:Forall");
+		NodeList forallNodes = queryNodeList(context, RIF_FORALL);
 
 		if (forallNodes == null) {
 			return forallFormulas;
@@ -263,12 +347,12 @@ class XmlExtractor {
 		for (int i = 0; i < forallNodes.getLength(); i++) {
 			Node forallNode = forallNodes.item(i);
 
-			Node formulaNode = queryNode(forallNode, "rif:formula");
+			Node formulaNode = queryNode(forallNode, RIF_FORMULA);
 			Clause clause = extractClause(formulaNode);
 
 			java.util.List<Variable> variables = new ArrayList<Variable>();
 
-			NodeList declareNodes = queryNodeList(forallNode, "rif:declare");
+			NodeList declareNodes = queryNodeList(forallNode, RIF_DECLARE);
 			for (int j = 0; j < declareNodes.getLength(); j++) {
 				Node declareNode = declareNodes.item(j);
 				variables.addAll(extractVariables(declareNode));
@@ -305,22 +389,22 @@ class XmlExtractor {
 			return null;
 		}
 
-		Node impliesNode = queryNode(context, "rif:Implies");
+		Node impliesNode = queryNode(context, RIF_IMPLIES);
 
 		if (impliesNode == null) {
 			return null;
 		}
 
-		Node ifNode = queryNode(impliesNode, "rif:if");
+		Node ifNode = queryNode(impliesNode, RIF_IF);
 		java.util.List<Formula> ifFormulas = extractFormulas(ifNode);
 		Formula ifFormula = ifFormulas.iterator().next();
 
 		java.util.List<AtomicFormula> thenFormulas = new ArrayList<AtomicFormula>();
 
-		Node thenNode = queryNode(impliesNode, "rif:then");
+		Node thenNode = queryNode(impliesNode, RIF_THEN);
 
-		NodeList formulaNodes = queryNodeList(impliesNode,
-				"rif:then/rif:And/rif:formula");
+		NodeList formulaNodes = queryNodeList(impliesNode, RIF_THEN + "/"
+				+ RIF_AND + "/" + RIF_FORMULA);
 		for (int i = 0; i < formulaNodes.getLength(); i++) {
 			Node formulaNode = formulaNodes.item(i);
 			thenFormulas.addAll(extractAtomicFormulas(formulaNode));
@@ -363,7 +447,7 @@ class XmlExtractor {
 			return equalAtoms;
 		}
 
-		NodeList equalNodes = queryNodeList(context, "rif:Equal");
+		NodeList equalNodes = queryNodeList(context, RIF_EQUAL);
 
 		if (equalNodes == null) {
 			return equalAtoms;
@@ -372,10 +456,10 @@ class XmlExtractor {
 		for (int i = 0; i < equalNodes.getLength(); i++) {
 			Node equalNode = equalNodes.item(i);
 
-			Node leftNode = queryNode(equalNode, "rif:left");
+			Node leftNode = queryNode(equalNode, RIF_LEFT);
 			java.util.List<Term> leftTerms = extractTerms(leftNode);
 
-			Node rightNode = queryNode(equalNode, "rif:right");
+			Node rightNode = queryNode(equalNode, RIF_RIGHT);
 			java.util.List<Term> rightTerms = extractTerms(rightNode);
 
 			java.util.List<Term> terms = new ArrayList<Term>();
@@ -397,7 +481,7 @@ class XmlExtractor {
 			return memberAtoms;
 		}
 
-		NodeList memberNodes = queryNodeList(context, "rif:Member");
+		NodeList memberNodes = queryNodeList(context, RIF_MEMBER);
 
 		if (memberNodes == null) {
 			return memberAtoms;
@@ -406,12 +490,11 @@ class XmlExtractor {
 		for (int i = 0; i < memberNodes.getLength(); i++) {
 			Node memberNode = memberNodes.item(i);
 
-
-			Node instanceNode = queryNode(memberNode, "rif:instance");
+			Node instanceNode = queryNode(memberNode, RIF_INSTANCE);
 			java.util.List<Term> instanceTerms = extractTerms(instanceNode);
 			Term instanceTerm = instanceTerms.get(0);
-			
-			Node classNode = queryNode(memberNode, "rif:class");
+
+			Node classNode = queryNode(memberNode, RIF_CLASS);
 			java.util.List<Term> classTerms = extractTerms(classNode);
 			Term classTerm = classTerms.get(0);
 
@@ -430,7 +513,7 @@ class XmlExtractor {
 			return subclassAtoms;
 		}
 
-		NodeList subclassNodes = queryNodeList(context, "rif:Subclass");
+		NodeList subclassNodes = queryNodeList(context, RIF_SUBCLASS);
 
 		if (subclassNodes == null) {
 			return subclassAtoms;
@@ -439,11 +522,11 @@ class XmlExtractor {
 		for (int i = 0; i < subclassNodes.getLength(); i++) {
 			Node subclassNode = subclassNodes.item(i);
 
-			Node superNode = queryNode(subclassNode, "rif:super");
+			Node superNode = queryNode(subclassNode, RIF_SUPER);
 			java.util.List<Term> superTerms = extractTerms(superNode);
 			Term superTerm = superTerms.iterator().next();
 
-			Node subNode = queryNode(subclassNode, "rif:sub");
+			Node subNode = queryNode(subclassNode, RIF_SUB);
 			java.util.List<Term> subTerms = extractTerms(subNode);
 			Term subTerm = subTerms.iterator().next();
 
@@ -461,8 +544,8 @@ class XmlExtractor {
 		if (context == null) {
 			return atoms;
 		}
-		
-		NodeList atomNodes = queryNodeList(context, "rif:Atom");
+
+		NodeList atomNodes = queryNodeList(context, RIF_ATOM);
 
 		if (atomNodes == null) {
 			return atoms;
@@ -497,7 +580,7 @@ class XmlExtractor {
 			return variables;
 		}
 
-		NodeList variableNodes = queryNodeList(context, "rif:Var");
+		NodeList variableNodes = queryNodeList(context, RIF_VAR);
 		for (int i = 0; i < variableNodes.getLength(); i++) {
 			Node variableNode = variableNodes.item(i);
 
@@ -545,7 +628,7 @@ class XmlExtractor {
 			return andFormulas;
 		}
 
-		NodeList andNodes = queryNodeList(context, "rif:And");
+		NodeList andNodes = queryNodeList(context, RIF_AND);
 
 		if (andNodes == null) {
 			return andFormulas;
@@ -556,7 +639,7 @@ class XmlExtractor {
 
 			java.util.List<Formula> formulas = new ArrayList<Formula>();
 
-			NodeList formulaNodes = queryNodeList(andNode, "rif:formula");
+			NodeList formulaNodes = queryNodeList(andNode, RIF_FORMULA);
 			for (int j = 0; j < formulaNodes.getLength(); j++) {
 				Node formulaNode = formulaNodes.item(j);
 				formulas.addAll(extractFormulas(formulaNode));
@@ -577,7 +660,7 @@ class XmlExtractor {
 			return orFormulas;
 		}
 
-		NodeList orNodes = queryNodeList(context, "rif:Or");
+		NodeList orNodes = queryNodeList(context, RIF_OR);
 
 		if (orNodes == null) {
 			return orFormulas;
@@ -588,7 +671,7 @@ class XmlExtractor {
 
 			java.util.List<Formula> formulas = new ArrayList<Formula>();
 
-			NodeList formulaNodes = queryNodeList(orNode, "rif:formula");
+			NodeList formulaNodes = queryNodeList(orNode, RIF_FORMULA);
 			for (int j = 0; j < formulaNodes.getLength(); j++) {
 				Node formulaNode = formulaNodes.item(j);
 				formulas.addAll(extractFormulas(formulaNode));
@@ -609,7 +692,7 @@ class XmlExtractor {
 			return existsFormulas;
 		}
 
-		NodeList existsNodes = queryNodeList(context, "rif:Exists");
+		NodeList existsNodes = queryNodeList(context, RIF_EXISTS);
 
 		if (existsNodes == null) {
 			return existsFormulas;
@@ -620,7 +703,7 @@ class XmlExtractor {
 
 			java.util.List<Formula> formulas = new ArrayList<Formula>();
 
-			NodeList formulaNodes = queryNodeList(existsNode, "rif:formula");
+			NodeList formulaNodes = queryNodeList(existsNode, RIF_FORMULA);
 			for (int j = 0; j < formulaNodes.getLength(); j++) {
 				Node formulaNode = formulaNodes.item(j);
 				formulas.addAll(extractFormulas(formulaNode));
@@ -628,7 +711,7 @@ class XmlExtractor {
 
 			java.util.List<Variable> variables = new ArrayList<Variable>();
 
-			NodeList declareNodes = queryNodeList(existsNode, "rif:declare");
+			NodeList declareNodes = queryNodeList(existsNode, RIF_DECLARE);
 			for (int j = 0; j < declareNodes.getLength(); j++) {
 				Node declareNode = declareNodes.item(j);
 				variables.addAll(extractVariables(declareNode));
@@ -649,7 +732,7 @@ class XmlExtractor {
 			return formulas;
 		}
 
-		NodeList externalNodes = queryNodeList(context, "rif:External");
+		NodeList externalNodes = queryNodeList(context, RIF_EXTERNAL);
 
 		if (externalNodes == null) {
 			return formulas;
@@ -657,7 +740,7 @@ class XmlExtractor {
 
 		for (int i = 0; i < externalNodes.getLength(); i++) {
 			Node externalNode = externalNodes.item(i);
-			Node contentNode = queryNode(externalNode, "rif:content");
+			Node contentNode = queryNode(externalNode, RIF_CONTENT);
 			java.util.List<Atom> atoms = extractAtoms(contentNode);
 			Atom atom = atoms.get(0);
 
@@ -677,10 +760,10 @@ class XmlExtractor {
 			Node context, Map<Object, Integer> positions) {
 		java.util.List<ExternalExpression> externalTerms = new ArrayList<ExternalExpression>();
 
-		NodeList externalNodes = queryNodeList(context, "rif:External");
+		NodeList externalNodes = queryNodeList(context, RIF_EXTERNAL);
 		for (int i = 0; i < externalNodes.getLength(); i++) {
 			Node externalNode = externalNodes.item(i);
-			Node contentNode = queryNode(externalNode, "rif:content");
+			Node contentNode = queryNode(externalNode, RIF_CONTENT);
 
 			java.util.List<Expression> expressions = extractExpressions(contentNode);
 			Expression expression = expressions.iterator().next();
@@ -704,7 +787,7 @@ class XmlExtractor {
 			Map<Object, Integer> positions) {
 		java.util.List<List> lists = new ArrayList<List>();
 
-		NodeList listNodes = queryNodeList(context, "rif:List");
+		NodeList listNodes = queryNodeList(context, RIF_LIST);
 
 		if (listNodes == null) {
 			return lists;
@@ -717,7 +800,7 @@ class XmlExtractor {
 			java.util.List<Term> listTerms = extractTerms(listNode);
 			terms.addAll(listTerms);
 
-			Node restNode = queryNode(listNode, "rif:rest");
+			Node restNode = queryNode(listNode, RIF_REST);
 			java.util.List<Term> restTerms = extractTerms(restNode);
 			terms.addAll(restTerms);
 
@@ -740,7 +823,7 @@ class XmlExtractor {
 			Map<Object, Integer> positions) {
 		java.util.List<Expression> expressions = new ArrayList<Expression>();
 
-		NodeList exprNodes = queryNodeList(context, "rif:Expr");
+		NodeList exprNodes = queryNodeList(context, RIF_EXPR);
 
 		for (int i = 0; i < exprNodes.getLength(); i++) {
 			Node exprNode = exprNodes.item(i);
@@ -760,7 +843,7 @@ class XmlExtractor {
 	}
 
 	public Uniterm extractUniterm(Node context) {
-		Node argsNode = queryNode(context, "rif:args");
+		Node argsNode = queryNode(context, RIF_ARGS);
 		java.util.List<Term> argsTerms = extractTerms(argsNode);
 
 		java.util.List<Argument> arguments = new ArrayList<Argument>();
@@ -771,7 +854,7 @@ class XmlExtractor {
 			arguments.add(argument);
 		}
 
-		NodeList slotNodes = queryNodeList(context, "rif:slot");
+		NodeList slotNodes = queryNodeList(context, RIF_SLOT);
 		for (int j = 0; j < slotNodes.getLength(); j++) {
 			Node slotNode = slotNodes.item(j);
 			Argument argument = extractArgument(slotNode);
@@ -781,7 +864,7 @@ class XmlExtractor {
 			}
 		}
 
-		Node opNode = queryNode(context, "rif:op");
+		Node opNode = queryNode(context, RIF_OP);
 		Constant operator = extractConstant(opNode);
 
 		return new SimpleUniterm(operator, arguments);
@@ -792,7 +875,7 @@ class XmlExtractor {
 			return null;
 		}
 
-		Node nameNode = queryNode(context, "rif:Name");
+		Node nameNode = queryNode(context, RIF_NAME);
 
 		if (nameNode == null) {
 			return null;
@@ -860,7 +943,7 @@ class XmlExtractor {
 	}
 
 	public Metadata extractMetadata(Node context) {
-		Node idNode = queryNode(context, "rif:id");
+		Node idNode = queryNode(context, RIF_ID);
 
 		Constant id = null;
 		if (idNode != null) {
@@ -869,11 +952,11 @@ class XmlExtractor {
 
 		java.util.List<Frame> allFrames = new ArrayList<Frame>();
 
-		Node metaNode = queryNode(context, "rif:meta");
+		Node metaNode = queryNode(context, RIF_META);
 
 		if (metaNode != null) {
-			NodeList formulaNodes = queryNodeList(metaNode,
-					"rif:And/rif:formula");
+			NodeList formulaNodes = queryNodeList(metaNode, RIF_AND + "/"
+					+ RIF_FORMULA);
 			for (int i = 0; i < formulaNodes.getLength(); i++) {
 				Node formulaNode = formulaNodes.item(i);
 
@@ -895,7 +978,7 @@ class XmlExtractor {
 			return frames;
 		}
 
-		NodeList frameNodes = queryNodeList(context, "rif:Frame");
+		NodeList frameNodes = queryNodeList(context, RIF_FRAME);
 
 		if (frameNodes == null) {
 			return frames;
@@ -904,22 +987,21 @@ class XmlExtractor {
 		for (int i = 0; i < frameNodes.getLength(); i++) {
 			Node frameNode = frameNodes.item(i);
 
-			Node objectNode = queryNode(frameNode, "rif:object");
+			Node objectNode = queryNode(frameNode, RIF_OBJECT);
 			java.util.List<Term> objectTerms = extractTerms(objectNode);
 			Term object = objectTerms.iterator().next();
 
 			java.util.List<Attribute> attributes = new ArrayList<Attribute>();
 
-			NodeList slotNodes = queryNodeList(frameNode, "rif:slot");
+			NodeList slotNodes = queryNodeList(frameNode, RIF_SLOT);
 			if (slotNodes != null) {
 				for (int j = 0; j < slotNodes.getLength(); j++) {
 					Node slotNode = slotNodes.item(j);
 					java.util.List<Term> slotTerms = extractTerms(slotNode);
 
 					if (slotTerms.size() == 2) {
-						Iterator<Term> iterator = slotTerms.iterator();
-						Term name = iterator.next();
-						Term value = iterator.next();
+						Term name = slotTerms.get(0);
+						Term value = slotTerms.get(0);
 
 						Attribute attribute = new Attribute(name, value);
 						attributes.add(attribute);
@@ -954,12 +1036,12 @@ class XmlExtractor {
 	}
 
 	public Import extractImport(Node context) {
-		Node importNode = queryNode(context, "rif:Import");
+		Node importNode = queryNode(context, RIF_IMPORT);
 
-		Node locationNode = queryNode(importNode, "rif:location");
+		Node locationNode = queryNode(importNode, RIF_LOCATION);
 		Constant location = extractConstant(locationNode);
 
-		Node profileNode = queryNode(importNode, "rif:profile");
+		Node profileNode = queryNode(importNode, RIF_PROFILE);
 		Constant profile = extractConstant(profileNode);
 
 		Import importt = new Import(location, profile);
@@ -980,7 +1062,7 @@ class XmlExtractor {
 			return constants;
 		}
 
-		NodeList constantNodes = queryNodeList(context, "rif:Const");
+		NodeList constantNodes = queryNodeList(context, RIF_CONST);
 		for (int i = 0; i < constantNodes.getLength(); i++) {
 			Node constNode = constantNodes.item(i);
 
@@ -997,7 +1079,7 @@ class XmlExtractor {
 			}
 
 			String text = queryString(constNode, "normalize-space(text())");
-			
+
 			Constant constant = new Constant(type, language, text);
 
 			setMetadata(constNode, constant);
