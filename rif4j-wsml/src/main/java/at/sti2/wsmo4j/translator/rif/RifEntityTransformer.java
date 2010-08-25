@@ -20,17 +20,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
-import org.omwg.logicalexpression.Atom;
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.logicalexpression.terms.Term;
 import org.wsmo.common.BuiltIn;
 import org.wsmo.common.Identifier;
 import org.wsmo.factory.FactoryContainer;
 
-import at.sti2.rif4j.RifBuiltIn;
 import at.sti2.rif4j.condition.AndFormula;
 import at.sti2.rif4j.condition.Argument;
 import at.sti2.rif4j.condition.AtomicFormula;
@@ -74,12 +71,6 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 
 	private java.util.List<LogicalExpression> expressions;
 
-	/**
-	 * Is set only if this transformer creates a new variable, e.g. when
-	 * transforming an expressions which represents a data type cast.
-	 */
-	private org.omwg.ontology.Variable variable;
-
 	private static int uniqueVariableCounter = 0;
 
 	private FactoryContainer factories;
@@ -99,10 +90,6 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 		terms = null;
 		expression = null;
 		expressions = null;
-	}
-
-	public org.omwg.ontology.Variable getVariable() {
-		return variable;
 	}
 
 	public Term getTerm() {
@@ -144,11 +131,12 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 		return conjunction;
 	}
 
-	private LogicalExpression makeConjunction(LogicalExpression... expressions) {
+	protected LogicalExpression makeConjunction(
+			LogicalExpression... expressions) {
 		return makeConjunction(Arrays.asList(expressions));
 	}
 
-	private LogicalExpression makeDisjunction(
+	protected LogicalExpression makeDisjunction(
 			Collection<LogicalExpression> expressions) {
 		LogicalExpression disjunction = null;
 
@@ -209,7 +197,7 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 
 		if (wsmlTerm == null) {
 			wsmlTerm = factories.getXmlDataFactory().createString(
-					constant.getText());
+					constant.getText().trim());
 		}
 
 		term = wsmlTerm;
@@ -229,43 +217,41 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 
 		RifEntityTransformer transformer = new RifEntityTransformer(factories);
 
-		boolean isDatatypeCast = RifBuiltIn.isDatatypeCast(operatorIri)
-				&& wsmlOperatorIri != null;
-
-		// if (isDatatypeCast) {
+		// Create a unique variable representing the result of the expression.
 		org.omwg.ontology.Variable variable = createUniqueVariable();
 		wsmlTerms.add(variable);
-		this.variable = variable;
-		// }
+		this.term = variable;
 
-		java.util.List<LogicalExpression> tempExpressions = new ArrayList<LogicalExpression>();
+		// A list for additional expressions, which are conjuncted with the
+		// WSML atom representation of this expression. For instance,
+		// http://atomUri(xsd#string(1^^xsd#integer), "foo") is
+		// transformed to _"http://atomUri"(?uniqueVarName, "foo")
+		// and _"toString"(?uniqueVarName, 1).
+		java.util.List<LogicalExpression> wsmlExpressions = new ArrayList<LogicalExpression>();
 
-		// Use argument as argument for atom ignoring the name of the argument.
 		for (Argument argument : expression.getArguments()) {
 			transformer.reset();
 			argument.getValue().accept(transformer);
 
-			Term wsmlTerm = transformer.getTerm();
-			org.omwg.ontology.Variable wsmlVariable = transformer.getVariable();
-			LogicalExpression wsmlExpression = transformer.getExpression();
+			if (transformer.getTerm() != null) {
+				wsmlTerms.add(transformer.getTerm());
+			}
 
-			if (wsmlTerm != null) {
-				wsmlTerms.add(wsmlTerm);
-			} else if (wsmlVariable != null) {
-				wsmlTerms.add(wsmlVariable);
+			if (transformer.getTerms() != null) {
+				wsmlTerms.addAll(transformer.getTerms());
+			}
 
-				if (wsmlExpression != null) {
-					tempExpressions.add(wsmlExpression);
-				}
+			if (transformer.getExpression() != null) {
+				wsmlExpressions.add(transformer.getExpression());
 			}
 		}
 
 		this.expression = factories.getLogicalExpressionFactory().createAtom(
 				wsmlId, wsmlTerms);
 
-		if (tempExpressions.size() > 0) {
-			tempExpressions.add(0, this.expression);
-			this.expression = makeConjunction(tempExpressions);
+		if (wsmlExpressions.size() > 0) {
+			wsmlExpressions.add(0, this.expression);
+			this.expression = makeConjunction(wsmlExpressions);
 		}
 	}
 
@@ -276,18 +262,34 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 	public void visit(List list) {
 		terms = new ArrayList<Term>();
 
+		RifEntityTransformer transformer = new RifEntityTransformer(factories);
+
+		java.util.List<Term> wsmlTerms = new ArrayList<Term>();
+		java.util.List<LogicalExpression> wsmlExpressions = new ArrayList<LogicalExpression>();
+
 		for (at.sti2.rif4j.condition.Term element : list.getElements()) {
-			RifEntityTransformer transformer = new RifEntityTransformer(
-					factories);
+			transformer.reset();
 			element.accept(transformer);
 
 			if (transformer.getTerm() != null) {
-				terms.add(transformer.getTerm());
+				wsmlTerms.add(transformer.getTerm());
 			}
 
 			if (transformer.getTerms() != null) {
-				terms.addAll(transformer.getTerms());
+				wsmlTerms.addAll(transformer.getTerms());
 			}
+
+			if (transformer.getExpression() != null) {
+				wsmlExpressions.add(transformer.getExpression());
+			}
+		}
+
+		// FIXME Use a list data type, if available.
+		this.terms = wsmlTerms;
+
+		if (wsmlExpressions.size() > 0) {
+			wsmlExpressions.add(0, this.expression);
+			this.expression = makeConjunction(wsmlExpressions);
 		}
 	}
 
@@ -404,23 +406,59 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 
 			at.sti2.rif4j.condition.Term value = argument.getValue();
 
-			// An external expression represents a data type cast.
-			if (value instanceof ExternalExpression) {
-				Expression expression = ((ExternalExpression) value)
-						.getExpression();
+			value.accept(transformer);
 
-				expression.accept(transformer);
-
-				if (transformer.variable != null
-						&& transformer.getExpression() != null) {
-					wsmlTerms.add(transformer.variable);
-					wsmlExpressions.add(transformer.getExpression());
-
-					continue;
-				}
-
-				transformer.reset();
+			if (transformer.getTerm() != null) {
+				wsmlTerms.add(transformer.getTerm());
 			}
+
+			if (transformer.getTerms() != null) {
+				wsmlTerms.addAll(transformer.getTerms());
+			}
+
+			if (transformer.getExpression() != null) {
+				wsmlExpressions.add(transformer.getExpression());
+			}
+		}
+
+		this.expression = factories.getLogicalExpressionFactory().createAtom(
+				wsmlId, wsmlTerms);
+
+		if (wsmlExpressions.size() > 0) {
+			wsmlExpressions.add(0, this.expression);
+			this.expression = makeConjunction(wsmlExpressions);
+		}
+	}
+
+	@Override
+	public void visit(EqualAtom equalAtom) {
+		// An EqualAtom currently has exactly 2 terms. If one of the two terms
+		// is an expression, we assume that the expression represents a function
+		// built-in, otherwise the equals/assignment makes no sense. If both
+		// terms are expressions, we assume that both represent a function
+		// built-in and we put the results of both functions in an equality
+		// relation.
+
+		if (equalAtom.getTerms().size() != 2) {
+			return;
+		}
+
+		// The identifier for WSML's equal.
+		Identifier equalId = factories.getWsmoFactory().createIRI(
+				BuiltIn.EQUAL.getFullName());
+
+		RifEntityTransformer transformer = new RifEntityTransformer(factories);
+		java.util.List<Term> wsmlTerms = new ArrayList<Term>();
+
+		// A list for additional expressions, which are conjuncted with the
+		// WSML atom representation of this atom. For instance,
+		// http://atomUri(xsd#string(1^^xsd#integer), "foo") is
+		// transformed to _"http://atomUri"(?uniqueVarName, "foo")
+		// and _"toString"(?uniqueVarName, 1).
+		java.util.List<LogicalExpression> wsmlExpressions = new ArrayList<LogicalExpression>();
+
+		for (at.sti2.rif4j.condition.Term value : equalAtom.getTerms()) {
+			transformer.reset();
 
 			value.accept(transformer);
 
@@ -431,191 +469,18 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 			if (transformer.getTerms() != null) {
 				wsmlTerms.addAll(transformer.getTerms());
 			}
+
+			if (transformer.getExpression() != null) {
+				wsmlExpressions.add(transformer.getExpression());
+			}
 		}
 
-		expression = factories.getLogicalExpressionFactory().createAtom(wsmlId,
-				wsmlTerms);
+		this.expression = factories.getLogicalExpressionFactory().createAtom(
+				equalId, wsmlTerms);
 
 		if (wsmlExpressions.size() > 0) {
-			wsmlExpressions.add(0, expression);
-			expression = makeConjunction(wsmlExpressions);
-		}
-	}
-
-	@Override
-	public void visit(EqualAtom equalAtom) {
-		// An EqualAtom currently has exactly 2 terms. If one of the two terms
-		// is an expression, we assume that the expression represents a function
-		// built-in, otherwise the equals/assignment makes no sense. If both
-		// terms are epxressions, we assume that both represent a function
-		// built-in and we put the results of both functions in an equality
-		// relation.
-
-		if (equalAtom.getTerms().size() != 2) {
-			return;
-		}
-
-		Identifier equalId = factories.getWsmoFactory().createIRI(
-				BuiltIn.EQUAL.getFullName());
-
-		Iterator<at.sti2.rif4j.condition.Term> equalAtomTerms = equalAtom
-				.getTerms().iterator();
-		at.sti2.rif4j.condition.Term firstTerm = equalAtomTerms.next();
-		at.sti2.rif4j.condition.Term secondTerm = equalAtomTerms.next();
-
-		RifEntityTransformer transformer = new RifEntityTransformer(factories);
-		firstTerm.accept(transformer);
-
-		Term wsmlFirstTerm = transformer.getTerm();
-		java.util.List<Term> wsmlFirstTerms = transformer.getTerms();
-		LogicalExpression wsmlFirstLogicalExpression = transformer
-				.getExpression();
-		org.omwg.ontology.Variable wsmlFirstVariable = transformer
-				.getVariable();
-
-		transformer.reset();
-		secondTerm.accept(transformer);
-
-		Term wsmlSecondTerm = transformer.getTerm();
-		java.util.List<Term> wsmlSecondTerms = transformer.getTerms();
-		LogicalExpression wsmlSecondLogicalExpression = transformer
-				.getExpression();
-		org.omwg.ontology.Variable wsmlSecondVariable = transformer
-				.getVariable();
-
-		java.util.List<Term> wsmlTerms = new ArrayList<Term>();
-
-		if (wsmlFirstTerm != null) {
-			wsmlTerms.add(wsmlFirstTerm);
-		}
-
-		if (wsmlFirstTerms != null) {
-			wsmlTerms.addAll(wsmlFirstTerms);
-		}
-
-		if (wsmlFirstVariable != null) {
-			wsmlTerms.add(wsmlFirstVariable);
-		}
-
-		if (wsmlSecondTerm != null) {
-			wsmlTerms.add(wsmlSecondTerm);
-		}
-
-		if (wsmlSecondTerms != null) {
-			wsmlTerms.addAll(wsmlSecondTerms);
-		}
-
-		if (wsmlSecondVariable != null) {
-			wsmlTerms.add(wsmlSecondVariable);
-		}
-
-		// In this case we have a simple equality relation, where we put the
-		// terms of the left and the terms of the right side in an equality
-		// relation.
-		if ((wsmlFirstTerm != null && wsmlSecondTerm != null)
-				|| (wsmlFirstTerm != null && wsmlSecondTerms != null)
-				|| (wsmlSecondTerm != null && wsmlFirstTerms != null)) {
-			expression = factories.getLogicalExpressionFactory().createAtom(
-					equalId, wsmlTerms);
-		} else if ((wsmlFirstVariable != null && wsmlFirstLogicalExpression != null)
-				&& wsmlSecondTerm != null) {
-			java.util.List<Term> wsmlFirstAtomTerms = new ArrayList<Term>();
-
-			// Add a new variable as first term of the atom.
-			wsmlFirstAtomTerms.add(wsmlFirstVariable);
-			wsmlFirstAtomTerms.add(wsmlSecondTerm);
-
-			LogicalExpression variableEquality = factories
-					.getLogicalExpressionFactory().createAtom(equalId,
-							wsmlFirstAtomTerms);
-
-			// Create a conjunction of the three expressions.
-			expression = makeConjunction(variableEquality,
-					wsmlFirstLogicalExpression);
-		}
-		// In this case we put the results of two expressions in an equality
-		// relation. Since in WSML such an assignment is not possible we create
-		// two new variables representing the results of the expression and then
-		// put these two variables in an equality relation.
-		else if (wsmlFirstLogicalExpression != null
-				&& wsmlSecondLogicalExpression != null) {
-			if (wsmlFirstLogicalExpression instanceof Atom
-					&& wsmlSecondLogicalExpression instanceof Atom) {
-				Atom wsmlFirstAtom = (Atom) wsmlFirstLogicalExpression;
-				Atom wsmlSecondAtom = (Atom) wsmlSecondLogicalExpression;
-
-				// We assume here, that both Atoms represent built-ins.
-
-				org.omwg.ontology.Variable firstVariable = factories
-						.getLogicalExpressionFactory().createVariable(
-								"tempVarForAtom1Result");
-				org.omwg.ontology.Variable secondVariable = factories
-						.getLogicalExpressionFactory().createVariable(
-								"tempVarForAtom2Result");
-
-				java.util.List<Term> wsmlFirstAtomTerms = new ArrayList<Term>();
-
-				// Add a new variable as first term of the atom.
-				wsmlFirstAtomTerms.add(firstVariable);
-
-				for (int i = 0; i < wsmlFirstAtom.getArity(); i++) {
-					wsmlFirstAtomTerms.add(wsmlFirstAtom.getParameter(i));
-				}
-
-				java.util.List<Term> wsmlSecondAtomTerms = new ArrayList<Term>();
-
-				// Add a new variable as first term of the atom.
-				wsmlSecondAtomTerms.add(secondVariable);
-
-				for (int i = 0; i < wsmlSecondAtom.getArity(); i++) {
-					wsmlSecondAtomTerms.add(wsmlSecondAtom.getParameter(i));
-				}
-
-				LogicalExpression firstExpression = factories
-						.getLogicalExpressionFactory().createAtom(
-								wsmlFirstAtom.getIdentifier(),
-								wsmlFirstAtomTerms);
-				LogicalExpression secondExpression = factories
-						.getLogicalExpressionFactory().createAtom(
-								wsmlSecondAtom.getIdentifier(),
-								wsmlSecondAtomTerms);
-
-				// Establish an equality relation between the two variables.
-				java.util.List<Term> variables = Arrays.asList(new Term[] {
-						firstVariable, secondVariable });
-				LogicalExpression variableEquality = factories
-						.getLogicalExpressionFactory().createAtom(equalId,
-								variables);
-
-				// Create a conjunction of the three expressions.
-				expression = makeConjunction(firstExpression, secondExpression,
-						variableEquality);
-			}
-		}
-		// In this case we put the result of an atom in an equality
-		// relation with a term. Therefore we have to insert the term as first
-		// argument of the atom.
-		else if (wsmlFirstLogicalExpression != null
-				|| wsmlSecondLogicalExpression != null) {
-			// For compactness we assign the first expression to the second to
-			// avoid writing the same code for the other case.
-			if (wsmlFirstLogicalExpression != null) {
-				wsmlSecondLogicalExpression = wsmlFirstLogicalExpression;
-			}
-
-			if (wsmlSecondLogicalExpression instanceof Atom) {
-				Atom wsmlAtom = (Atom) wsmlSecondLogicalExpression;
-				java.util.List<Term> wsmlAtomTerms = new ArrayList<Term>();
-
-				for (int i = 0; i < wsmlAtom.getArity(); i++) {
-					wsmlAtomTerms.add(wsmlAtom.getParameter(i));
-				}
-
-				// Add the first term as the first argument of the atom.
-				wsmlAtomTerms.addAll(0, wsmlTerms);
-				expression = factories.getLogicalExpressionFactory()
-						.createAtom(wsmlAtom.getIdentifier(), wsmlAtomTerms);
-			}
+			wsmlExpressions.add(0, this.expression);
+			this.expression = makeConjunction(wsmlExpressions);
 		}
 	}
 
