@@ -22,7 +22,7 @@ public class XmlParserTest {
 
 	@Before
 	public void setUp() throws Exception {
-		parser = new XmlParser();
+		parser = new XmlParser(true);
 	}
 
 	private Reader openTestFile(String fileName) {
