@@ -16,19 +16,15 @@
  */
 package at.sti2.rif4j.parser.xml;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
@@ -159,29 +155,18 @@ public class XmlParser {
 		SchemaFactory factory = SchemaFactory
 				.newInstance("http://www.w3.org/2001/XMLSchema");
 
-		File condSchemaFile = openSchema("BLDCond.xsd");
-		File ruleSchemaFile = openSchema("BLDRule.xsd");
-		Source condSchema = new StreamSource(condSchemaFile);
-		Source ruleSchema = new StreamSource(ruleSchemaFile);
+		// Its enough to load the BLD Rule Schema.
+		// URL condSchemaUrl = openSchema("BLDCond.xsd");
+		URL ruleSchemaUrl = openSchema("BLDRule.xsd");
 
-		Schema schema = factory
-				.newSchema(new Source[] { ruleSchema, condSchema });
+		Schema schema = factory.newSchema(ruleSchemaUrl);
 		Validator validator = schema.newValidator();
 		validator.validate(new DOMSource(document));
 	}
 
-	private File openSchema(String fileName) {
+	private URL openSchema(String fileName) {
 		URL url = getClass().getClassLoader().getResource(fileName);
-
-		if (url != null) {
-			try {
-				return new File(url.toURI());
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return null;
+		return url;
 	}
 
 }
