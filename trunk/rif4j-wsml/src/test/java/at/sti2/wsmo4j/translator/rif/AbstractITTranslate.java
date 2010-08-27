@@ -27,22 +27,27 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.omwg.logicalexpression.LogicalExpression;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
-import at.sti2.wsmo4j.translator.rif.RifToWsmlTranslator;
 
 /**
+ * A generic test to translate RIF rules to WSML.
+ * 
  * @author Adrian Marte
  */
-public class TestTranslation {
+public abstract class AbstractITTranslate {
 
-	private XmlParser parser;
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 
-	private RifToWsmlTranslator translator;
+	protected XmlParser parser;
+
+	protected RifToWsmlTranslator translator;
 
 	@Before
 	public void setUp() throws Exception {
@@ -54,36 +59,12 @@ public class TestTranslation {
 	public void tearDown() throws Exception {
 	}
 
-	private Reader openTestFile(String fileName) {
+	protected Reader openTestFile(String fileName) {
 		return new InputStreamReader(getClass().getClassLoader()
 				.getResourceAsStream(fileName));
 	}
 
-	@Test
-	public void testAllBuiltins() throws SAXException, IOException,
-			ParserConfigurationException {
-		assertNumberOfExpressions(1, "All_Builtins.xml");
-	}
-
-	@Test
-	public void testFactorialForwardChaining() throws SAXException,
-			IOException, ParserConfigurationException {
-		assertNumberOfExpressions(2, "Factorial_Forward_Chaining.xml");
-	}
-
-	@Test
-	public void testClassMembership() throws SAXException, IOException,
-			ParserConfigurationException {
-		assertNumberOfExpressions(4, "Class_Membership.xml");
-	}
-
-	@Test
-	public void testClassificationNonInheritance() throws SAXException,
-			IOException, ParserConfigurationException {
-		assertNumberOfExpressions(2, "Classification_non-inheritance.xml");
-	}
-
-	private void assertNumberOfExpressions(int amount, String fileName)
+	protected void assertNumberOfExpressions(int amount, String fileName)
 			throws SAXException, IOException, ParserConfigurationException {
 		Reader reader = openTestFile(fileName);
 
@@ -91,8 +72,32 @@ public class TestTranslation {
 
 		List<LogicalExpression> expressions = translator.translate(document);
 
-		for (LogicalExpression expression : expressions) {
-			System.out.println(expression);
+		if (expressions.size() != amount) {
+			logger.debug("Problematic expressions");
+			for (LogicalExpression expression : expressions) {
+				logger.debug(expression.toString());
+			}
+		}
+
+		Assert.assertNotNull("Expressions must not be null.", expressions);
+		Assert.assertEquals("Wrong number of resulting expressions.", amount,
+				expressions.size());
+	}
+
+	protected void assertNumberOfExpressionsOfFormula(int amount,
+			String fileName) throws SAXException, IOException,
+			ParserConfigurationException {
+		Reader reader = openTestFile(fileName);
+
+		Formula formula = parser.parseFormula(reader);
+
+		List<LogicalExpression> expressions = translator.translate(formula);
+
+		if (expressions.size() != amount) {
+			logger.debug("Problematic expressions");
+			for (LogicalExpression expression : expressions) {
+				logger.debug(expression.toString());
+			}
 		}
 
 		Assert.assertNotNull("Expressions must not be null.", expressions);
