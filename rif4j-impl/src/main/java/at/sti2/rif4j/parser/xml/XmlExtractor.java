@@ -1001,7 +1001,7 @@ class XmlExtractor {
 
 					if (slotTerms.size() == 2) {
 						Term name = slotTerms.get(0);
-						Term value = slotTerms.get(0);
+						Term value = slotTerms.get(1);
 
 						Attribute attribute = new Attribute(name, value);
 						attributes.add(attribute);
