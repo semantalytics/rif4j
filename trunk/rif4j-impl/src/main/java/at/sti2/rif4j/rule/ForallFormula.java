@@ -18,12 +18,12 @@ package at.sti2.rif4j.rule;
 
 import java.util.List;
 
-
 import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
 import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.condition.FormulaVisitor;
 import at.sti2.rif4j.condition.Variable;
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * @author Adrian Marte
@@ -70,4 +70,10 @@ public class ForallFormula extends AbstractDescribable implements Formula, Rule 
 		visitor.visit(this);
 	}
 
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept((FormulaVisitor) serializer);
+		return serializer.getString();
+	}
 }

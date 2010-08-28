@@ -21,6 +21,7 @@ import java.util.List;
 
 import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * @author Adrian Marte
@@ -62,6 +63,13 @@ abstract class AbstractExpression extends AbstractDescribable implements Term,
 		Assertions.notNull("arguments", arguments);
 
 		this.arguments = arguments;
+	}
+
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept(serializer);
+		return serializer.getString();
 	}
 
 }

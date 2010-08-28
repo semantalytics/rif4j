@@ -17,6 +17,7 @@
 package at.sti2.rif4j.condition;
 
 import at.sti2.rif4j.AbstractDescribable;
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * @author Adrian Marte
@@ -34,12 +35,12 @@ public class Constant extends AbstractDescribable implements Term {
 			type = "";
 		}
 		this.type = type;
-		
+
 		if (language == null) {
 			language = "";
 		}
 		this.language = language;
-		
+
 		if (text == null) {
 			text = "";
 		}
@@ -72,6 +73,13 @@ public class Constant extends AbstractDescribable implements Term {
 
 	public void accept(TermVisitor visitor) {
 		visitor.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept(serializer);
+		return serializer.getString();
 	}
 
 }

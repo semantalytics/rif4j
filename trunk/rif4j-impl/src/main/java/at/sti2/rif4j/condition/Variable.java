@@ -18,6 +18,7 @@ package at.sti2.rif4j.condition;
 
 import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * @author Adrian Marte
@@ -42,13 +43,15 @@ public class Variable extends AbstractDescribable implements Term {
 		this.name = name;
 	}
 
-	@Override
-	public String toString() {
-		return "?" + name;
-	}
-
 	public void accept(TermVisitor visitor) {
 		visitor.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept(serializer);
+		return serializer.getString();
 	}
 
 }

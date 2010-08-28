@@ -61,9 +61,9 @@ public class XmlParser {
 	 * value of <code>isValidating</code> the parser also validates the XML
 	 * document against the XML schemo of the RIF XML syntax.
 	 * 
-	 * @param isValidating
-	 *            If set to <code>true</code>, the parser first validates the
-	 *            specified XML document against the XML schemo of RIF XML.
+	 * @param isValidating If set to <code>true</code>, the parser first
+	 *            validates the specified XML document against the XML schemo of
+	 *            RIF XML.
 	 */
 	public XmlParser(boolean isValidating) {
 		this.isValidating = isValidating;
@@ -72,15 +72,11 @@ public class XmlParser {
 	/**
 	 * Parses a RIF Document using the specified reader.
 	 * 
-	 * @param reader
-	 *            The reader which serves the document.
+	 * @param reader The reader which serves the document.
 	 * @return A Document object representing the specified RIF document.
-	 * @throws SAXException
-	 *             If a SAX error or warning occurs.
-	 * @throws IOException
-	 *             If an I/O error or waring occurs.
-	 * @throws ParserConfigurationException
-	 *             Indicates a configuration error.
+	 * @throws SAXException If a SAX error or warning occurs.
+	 * @throws IOException If an I/O error or waring occurs.
+	 * @throws ParserConfigurationException Indicates a configuration error.
 	 */
 	public Document parseDocument(Reader reader) throws SAXException,
 			IOException, ParserConfigurationException {
@@ -99,15 +95,11 @@ public class XmlParser {
 	/**
 	 * Parses a RIF Formula using the specified reader.
 	 * 
-	 * @param reader
-	 *            The reader which serves the formula.
+	 * @param reader The reader which serves the formula.
 	 * @return A Formula object representing the specified RIF formula.
-	 * @throws SAXException
-	 *             If a SAX error or warning occurs.
-	 * @throws IOException
-	 *             If an I/O error or waring occurs.
-	 * @throws ParserConfigurationException
-	 *             Indicates a configuration error.
+	 * @throws SAXException If a SAX error or warning occurs.
+	 * @throws IOException If an I/O error or waring occurs.
+	 * @throws ParserConfigurationException Indicates a configuration error.
 	 */
 	public Formula parseFormula(Reader reader)
 			throws ParserConfigurationException, SAXException, IOException {

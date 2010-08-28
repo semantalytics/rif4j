@@ -21,6 +21,7 @@ import java.util.List;
 
 import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * A composite formula is a formula consisting of multiple formulas.
@@ -72,6 +73,13 @@ abstract class AbstractCompositeFormula extends AbstractDescribable implements
 		Assertions.notNull("formulas", formulas);
 
 		this.formulas = formulas;
+	}
+
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept((CompositeFormulaVisitor) serializer);
+		return serializer.getString();
 	}
 
 }
