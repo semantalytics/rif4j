@@ -22,6 +22,7 @@ import java.util.List;
 import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
 import at.sti2.rif4j.Describable;
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * A group consists of rules and groups. To retrieve all rules contained in this
@@ -138,6 +139,17 @@ public class Group extends AbstractDescribable implements Describable {
 		for (Group childGroup : group.getGroups()) {
 			addRulesFromGroup(childGroup, rules);
 		}
+	}
+
+	public void accept(DocumentVisitor visitor) {
+		visitor.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept(serializer);
+		return serializer.getString();
 	}
 
 }

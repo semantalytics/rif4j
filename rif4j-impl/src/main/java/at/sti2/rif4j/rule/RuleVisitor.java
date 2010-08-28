@@ -16,7 +16,6 @@
  */
 package at.sti2.rif4j.rule;
 
-
 /**
  * @author Adrian Marte
  */

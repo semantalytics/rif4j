@@ -18,12 +18,12 @@ package at.sti2.rif4j.rule;
 
 import java.util.List;
 
-
 import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
 import at.sti2.rif4j.Describable;
 import at.sti2.rif4j.condition.AtomicFormula;
 import at.sti2.rif4j.condition.Formula;
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * Represents an implies formula (implication). An implies formula consists of a
@@ -35,7 +35,8 @@ import at.sti2.rif4j.condition.Formula;
  * @see Formula
  * @see AtomicFormula
  */
-public class ImpliesFormula extends AbstractDescribable implements Clause, Describable {
+public class ImpliesFormula extends AbstractDescribable implements Clause,
+		Describable {
 
 	private List<AtomicFormula> head;
 
@@ -106,5 +107,12 @@ public class ImpliesFormula extends AbstractDescribable implements Clause, Descr
 
 	public void accept(RuleVisitor visitor) {
 		visitor.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept((RuleVisitor) serializer);
+		return serializer.getString();
 	}
 }

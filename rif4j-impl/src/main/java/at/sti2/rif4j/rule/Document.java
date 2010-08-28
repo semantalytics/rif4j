@@ -19,10 +19,10 @@ package at.sti2.rif4j.rule;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
 import at.sti2.rif4j.condition.Constant;
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * Represents a RIF document. A document consists of a base path, prefixes,
@@ -87,6 +87,17 @@ public class Document extends AbstractDescribable {
 	 */
 	public void setGroup(Group group) {
 		this.group = group;
+	}
+
+	public void accept(DocumentVisitor visitor) {
+		visitor.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept(serializer);
+		return serializer.getString();
 	}
 
 }

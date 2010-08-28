@@ -19,11 +19,11 @@ package at.sti2.rif4j.condition;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
 import at.sti2.rif4j.rule.ClauseVisitor;
 import at.sti2.rif4j.rule.RuleVisitor;
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * @author Adrian Marte
@@ -80,6 +80,13 @@ public class Atom extends AbstractDescribable implements AtomicFormula, Uniterm 
 
 	public void accept(RuleVisitor visitor) {
 		visitor.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept((AtomicFormulaVisitor) serializer);
+		return serializer.getString();
 	}
 
 }

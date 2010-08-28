@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * @author Adrian Marte
@@ -50,6 +51,13 @@ public class List extends AbstractDescribable implements Term {
 
 	public void accept(TermVisitor visitor) {
 		visitor.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept(serializer);
+		return serializer.getString();
 	}
 
 }

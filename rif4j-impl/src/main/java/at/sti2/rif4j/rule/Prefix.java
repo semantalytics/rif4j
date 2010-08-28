@@ -16,9 +16,9 @@
  */
 package at.sti2.rif4j.rule;
 
-
 import at.sti2.rif4j.Assertions;
 import at.sti2.rif4j.condition.Constant;
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * @author Adrian Marte
@@ -32,7 +32,7 @@ public class Prefix {
 	public Prefix(String name, Constant iri) {
 		Assertions.notNull("name", name);
 		Assertions.notNull("iri", iri);
-		
+
 		this.name = name;
 		this.iri = iri;
 	}
@@ -55,6 +55,17 @@ public class Prefix {
 		Assertions.notNull("iri", iri);
 
 		this.iri = iri;
+	}
+
+	public void accept(DocumentVisitor visitor) {
+		visitor.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept(serializer);
+		return serializer.getString();
 	}
 
 }
