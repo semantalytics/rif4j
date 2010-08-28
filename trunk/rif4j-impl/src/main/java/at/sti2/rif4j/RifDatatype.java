@@ -26,7 +26,9 @@ import java.util.Map;
  */
 public enum RifDatatype {
 
-	IRI("iri");
+	IRI("iri"),
+
+	LOCAL("local");
 
 	private String uri;
 
@@ -45,7 +47,7 @@ public enum RifDatatype {
 	public boolean isSameDatatype(String iri) {
 		return getUri().equals(iri);
 	}
-	
+
 	@Override
 	public String toString() {
 		return getUri();
