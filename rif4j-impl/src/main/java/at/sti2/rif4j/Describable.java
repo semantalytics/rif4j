@@ -49,8 +49,9 @@ public interface Describable {
 	public void setId(Constant id);
 
 	/**
-	 * Returns the meta data of this RIF element represented as a list of
-	 * Frames, or <code>null</code> if no meta data is set.
+	 * Returns the meta data of this RIF element represented as a list of Frames
+	 * interpreted as a conjunction of Frames, or <code>null</code> if no meta
+	 * data is set.
 	 * 
 	 * @return The meta data of this RIF element represented as a list of
 	 *         Frames, or <code>null</code> if no meta data is set.
@@ -58,8 +59,9 @@ public interface Describable {
 	public List<Frame> getMetadata();
 
 	/**
-	 * Sets the meta data of this RIF element represented as a list of Frames.
-	 * <code>null</code> values are interpreted as non-present meta data.
+	 * Sets the meta data of this RIF element represented as a list of Frames
+	 * interpreted as a conjunction of Frames. <code>null</code> values are
+	 * interpreted as non-present meta data.
 	 * 
 	 * @param metadata The meta data of this RIF element represented as a list
 	 *            of Frames.
