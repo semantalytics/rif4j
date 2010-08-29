@@ -26,7 +26,7 @@ which corresponds to
 	<formula>
 		<Member>
 			<instance>
-				<Var>?Customer</Var>
+				<Var>Customer</Var>
 			</instance>
 			<class>
 				<Const type="http://www.w3.org/2007/rif#iri">http://example.org/onto#Customer
