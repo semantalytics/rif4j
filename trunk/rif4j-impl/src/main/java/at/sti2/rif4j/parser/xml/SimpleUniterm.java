@@ -18,6 +18,7 @@ package at.sti2.rif4j.parser.xml;
 
 import java.util.List;
 
+import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.condition.Argument;
 import at.sti2.rif4j.condition.Constant;
 import at.sti2.rif4j.condition.Uniterm;
@@ -29,7 +30,7 @@ import at.sti2.rif4j.condition.Uniterm;
  * 
  * @author Adrian Marte
  */
-class SimpleUniterm implements Uniterm {
+class SimpleUniterm extends AbstractDescribable implements Uniterm {
 
 	private Constant operator;
 
