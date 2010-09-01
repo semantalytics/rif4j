@@ -16,6 +16,7 @@
  */
 package at.sti2.rif4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import at.sti2.rif4j.condition.Constant;
@@ -32,6 +33,10 @@ public abstract class AbstractDescribable implements Describable {
 
 	private List<Frame> data;
 
+	public AbstractDescribable() {
+		data = new ArrayList<Frame>();
+	}
+	
 	public Constant getId() {
 		return id;
 	}
