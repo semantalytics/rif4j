@@ -18,10 +18,12 @@ package at.sti2.rif4j.condition;
 
 import java.util.List;
 
+import at.sti2.rif4j.Describable;
+
 /**
  * @author Adrian Marte
  */
-public interface Uniterm {
+public interface Uniterm extends Describable {
 
 	public List<Argument> getArguments();
 
