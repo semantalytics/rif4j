@@ -40,9 +40,9 @@ public class EqualAtom extends AbstractDescribable implements AtomicFormula {
 	}
 
 	private void checkSize(List<Term> terms) {
-		if (terms.size() < 2) {
+		if (terms.size() != 2) {
 			throw new IllegalArgumentException(
-					"Number of terms must be greater or equal 2");
+					"Number of terms must be 2");
 		}
 	}
 
