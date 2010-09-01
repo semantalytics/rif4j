@@ -65,18 +65,20 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 
 	private static final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 	private final DocumentBuilder builder;
-//	private org.w3c.dom.Element current = null;
 	private org.w3c.dom.Document document;
-	private final Stack<Element> current;
+	private final Stack<Element> elementStack;
 
 	public XmlSerializer() throws ParserConfigurationException {
-		current = new Stack<Element>();
+		elementStack = new Stack<Element>();
 		
 		builder = builderFactory.newDocumentBuilder();
 		this.document = builder.newDocument();
 	}
 	
 	public String getString() {
+		assert elementStack.size() == 1 : "There must be exactly one element on stack representing the root node";
+		document.appendChild(pop());
+		
 		Writer result = new StringWriter();
         Transformer xformer;
 		try {
@@ -97,17 +99,13 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 			xformer.transform(new DOMSource(document), new StreamResult(result));
 			result.flush();
 		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("Error when serializing the XML DOM", e);
 		} catch (TransformerFactoryConfigurationError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("Error when serializing the XML DOM", e);
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("Error when serializing the XML DOM", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("Error when serializing the XML DOM", e);
 		}
 		
 		return result.toString();
@@ -156,21 +154,23 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 		
 		// create root node
 		Element root = this.document.createElement("Document");
-		this.document.appendChild(root);
 		push(root);
 
 		// handle iri and meta data
 		visitDescribable(document);
 		
-		// handle directive, i.e. imports
-		appendAndPush("directive");
 		
-		for(Import rifImport : document.getImports())
+		// handle directive, i.e. imports
+		for(Import rifImport : document.getImports()) {
+			appendAndPush("directive");
 			rifImport.accept(this);
+			pop();
+		}
+		
+		// TODO prefixes are not allowed in xml
 		for(Prefix prefix : document.getPrefixes())
 			prefix.accept(this);
 		
-		pop();
 		
 		// handle payload
 		appendAndPush("payload");
@@ -180,7 +180,7 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 		
 		
 		// final assertions
-		assert current.size() == 1;
+		assert elementStack.size() == 1;
 		assert peek().equals(root);
 	}
 
@@ -195,6 +195,43 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 		      <xs:element ref="meta" minOccurs="0" maxOccurs="1"/>
 		    </xs:sequence>
 		  </xs:group>
+		  
+		  <xs:element name="id">
+		    <xs:complexType>
+		      <xs:sequence>
+		        <xs:element name="Const" type="IRICONST.type"/>
+		      </xs:sequence>
+		    </xs:complexType>
+		  </xs:element>
+		 
+		  <xs:element name="meta">
+		    <xs:complexType>
+		     <xs:choice>
+		       <xs:element ref="Frame"/>
+		       <xs:element name="And" type="And-meta.type"/>
+		     </xs:choice>
+		    </xs:complexType>
+		  </xs:element>
+		  
+		  <xs:complexType name="And-meta.type">
+		  <!-- sensitive to meta (Frame) context-->
+		    <xs:sequence>
+		      <xs:element name="formula" type="formula-meta.type" minOccurs="0" maxOccurs="unbounded"/>
+		    </xs:sequence>
+		  </xs:complexType>
+		 
+		  <xs:complexType name="formula-meta.type">
+		    <!-- sensitive to meta (Frame) context-->
+		    <xs:sequence>
+		      <xs:element ref="Frame"/>
+		    </xs:sequence>
+		  </xs:complexType>
+		  
+		  <xs:complexType name="IRICONST.type" mixed="true">
+		    <!-- sensitive to location/id context-->
+		    <xs:sequence/>
+		    <xs:attribute name="type" type="xs:anyURI" use="required" fixed="http://www.w3.org/2007/rif#iri"/>
+		  </xs:complexType>
 		 */
 		
 		Constant id;
@@ -207,8 +244,14 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 		java.util.List<Frame> metadataList = describable.getMetadata();
 		if (!metadataList.isEmpty()) {
 			appendAndPush("meta");
-			for (Frame metaData : metadataList) {
-				metaData.accept((AtomicFormulaVisitor) this);
+			if (metadataList.size() == 1) {
+				metadataList.get(0).accept((AtomicFormulaVisitor) this);
+			} else { // (metadataList.size() > 1)
+				appendAndPush("And");
+				for (Frame metaData : metadataList) {
+					metaData.accept((AtomicFormulaVisitor) this);
+				}
+				pop();
 			}
 			pop();
 		}
@@ -243,24 +286,62 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 		
 		visitDescribable(group);
 		
-		for (Rule rule : group.getRules())
+		for (Rule rule : group.getRules()) {
+			appendAndPush("sentence");
 			rule.accept(this);
-		for (Group subGroup : group.getGroups())
+			pop();
+		}
+		
+		for (Group subGroup : group.getGroups()) {
+			appendAndPush("sentence");
 			subGroup.accept(this);
+			pop();
+		}
 		
 		pop();
 	}
 
 	@Override
 	public void visit(Import imprt) {
-		// TODO Auto-generated method stub
+		/*
+		  <xs:element name="Import">
+		    <!--
+		  Import    ::= IRIMETA? 'Import' '(' LOCATOR PROFILE? ')'
+		  LOCATOR   ::= ANGLEBRACKIRI
+		  PROFILE   ::= ANGLEBRACKIRI
+		    -->
+		    <xs:complexType>
+		      <xs:sequence>
+		        <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/> 
+		        <xs:element ref="location"/>
+		        <xs:element ref="profile" minOccurs="0" maxOccurs="1"/>
+		      </xs:sequence>
+		    </xs:complexType>
+		  </xs:element>
+		 
+		  <xs:element name="location" type="xs:anyURI"/>
+		 
+		  <xs:element name="profile" type="xs:anyURI"/>
+		 */
 		
+		appendAndPush("Import");
+			
+			visitDescribable(imprt);
+			
+			appendAndPush("location");
+				imprt.getLocation().accept(this);
+			pop();
+			
+			appendAndPush("profile");
+				imprt.getProfile().accept(this);
+			pop();
+			
+		pop();
 	}
 
 	@Override
 	public void visit(Prefix prefix) {
-		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("Prefixes not allowed in XML serialization");
 	}
 
 	@Override
@@ -285,7 +366,9 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 			visitDescribable(constant);
 			
 			peek().setAttribute("type", constant.getType());
-			// TODO constant.getLanguage();
+			String language = null;
+			if (!(language = constant.getLanguage()).isEmpty())
+				peek().setAttribute("xml:lang", language);
 			peek().setTextContent(constant.getText());
 		
 		
@@ -322,6 +405,13 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 		    <xs:sequence>
 		      <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
 		      <xs:element name="content" type="content-FORMULA.type"/>
+		    </xs:sequence>
+		  </xs:complexType>
+		  
+		  <xs:complexType name="content-FORMULA.type">
+		    <!-- sensitive to FORMULA (Atom) context-->
+		    <xs:sequence>
+		      <xs:element ref="Atom"/>
 		    </xs:sequence>
 		  </xs:complexType>
 		 */
@@ -480,11 +570,22 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 				implies.getBody().accept(this);
 			pop();
 			
+			java.util.List<AtomicFormula> headFormulas = implies.getHead();
+			
 			appendAndPush("then");
-				for (AtomicFormula headFormula : implies.getHead()) {
-					headFormula.accept((AtomicFormulaVisitor) this); // TODO check that
+			if (headFormulas.size() == 1) {
+				headFormulas.get(0).accept((AtomicFormulaVisitor) this);
+			} else if (headFormulas.size() > 1) {
+				appendAndPush("And");
+				for (AtomicFormula headFormula : headFormulas) {
+					appendAndPush("formula");
+					headFormula.accept((AtomicFormulaVisitor) this);
+					pop();
 				}
+				pop();
+			}
 			pop();
+			
 		
 		pop();
 	}
@@ -587,15 +688,61 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 		      <xs:group ref="CLAUSE"/>
 		    </xs:choice>
 		  </xs:group>
+		  
+		  <xs:element name="Forall">
+		    <xs:complexType>
+		      <xs:sequence>
+		        <xs:group ref="IRIMETA" minOccurs="0" maxOccurs="1"/>
+		        <xs:element ref="declare" minOccurs="1" maxOccurs="unbounded"/>
+		        <!-- different from formula in And, Or and Exists -->
+		        <xs:element name="formula">
+		          <xs:complexType>
+		            <xs:group ref="CLAUSE"/>
+		          </xs:complexType>
+		        </xs:element>
+		      </xs:sequence>
+		    </xs:complexType>
+		  </xs:element>
+		 
+		  <xs:group name="CLAUSE">  
+		    <!--
+		  CLAUSE   ::= Implies | ATOMIC
+		    -->
+		    <xs:choice>
+		      <xs:element ref="Implies"/>
+		      <xs:group ref="ATOMIC"/>
+		    </xs:choice>
+		  </xs:group>
+		  
+		  <xs:element name="declare">
+		    <xs:complexType>
+		      <xs:sequence>
+		        <xs:element ref="Var"/>
+		      </xs:sequence>
+		    </xs:complexType>
+		  </xs:element>
 		 */
 		
-		appendAndPush("Forall");
+		java.util.List<Variable> variables = forallFormula.getVariables();
+		if (variables.size() > 0) { // Forall
+			appendAndPush("Forall");
+			
+			visitDescribable(forallFormula);
+			
+			for(Variable variable : variables) {
+				appendAndPush("declare");
+				variable.accept(this);
+				pop();
+			}
+				appendAndPush("formula");
+					forallFormula.getClause().accept((ClauseVisitor) this);
+				pop();
+			
+			pop();
+		} else { // Clause
+			forallFormula.getClause().accept((ClauseVisitor) this);
+		}
 		
-		for(Variable variable : forallFormula.getVariables())
-			variable.accept(this);
-		forallFormula.getClause().accept((ClauseVisitor) this);
-		
-		pop();
 	}
 
 	@Override
@@ -896,10 +1043,18 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 		appendAndPush("And");
 		
 		visitDescribable(andFormula);
-		for(Formula formula : andFormula.getFormulas())
-			formula.accept(this);
+		java.util.List<Formula> formulas = andFormula.getFormulas();
+		visitFormulas(formulas);
 		
 		pop();
+	}
+
+	private void visitFormulas(java.util.List<Formula> formulas) {
+		for(Formula formula : formulas) {
+			appendAndPush("formula");
+			formula.accept(this);
+			pop();
+		}
 	}
 
 	@Override
@@ -918,8 +1073,8 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 		appendAndPush("Or");
 		
 		visitDescribable(orFormula);
-		for(Formula formula : orFormula.getFormulas())
-			formula.accept(this);
+		java.util.List<Formula> formulas = orFormula.getFormulas();
+		visitFormulas(formulas);
 		
 		pop();
 	}
@@ -942,15 +1097,15 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 	}
 
 	private void push(Element top) {
-		current.push(top);
+		elementStack.push(top);
 	}
 	
 	private Element peek() {
-		return current.peek();
+		return elementStack.peek();
 	}
 
 	private Element pop() {
-		return current.pop();
+		return elementStack.pop();
 	}
 	
 	private void appendAndPush(Element element) {
