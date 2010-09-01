@@ -3,7 +3,7 @@ package at.sti2.rif4j.serializer.xml;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.List;
+import java.io.StringReader;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -12,9 +12,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
-import at.sti2.rif4j.rule.Rule;
 
 public class XmlSerializerTest {
 
@@ -26,35 +29,29 @@ public class XmlSerializerTest {
 	}
 
 	private Reader openTestFile(String fileName) {
-		return new InputStreamReader(getClass().getClassLoader()
-				.getResourceAsStream(fileName));
+		return new InputStreamReader(getClass().getClassLoader().getResourceAsStream(fileName));
 	}
 
-	// Just tests if parser generates correct number of rules.
 	@Test
-	public void parseClassMembership() throws IOException, SAXException,
+	public void testRoundTrip() throws IOException, SAXException,
 			ParserConfigurationException {
-		Reader reader = openTestFile("Class_Membership.xml");
+		Reader reader = openTestFile("rif-bld-example.xml");
 
 		try {
-			Document document = parser.parseDocument(reader);
+			Document original = parser.parseDocument(reader);
 
-			Assert.assertNotNull("Document must not be null", document);
-			Assert.assertNotNull("Group must not be null", document.getGroup());
-
-			List<Rule> rules = document.getGroup().getAllRules();
-
-			Assert.assertEquals("Incorrect number of rules", 4, rules.size());
-
-			
-			
 			XmlSerializer serializer = new XmlSerializer();
-			document.accept(serializer);
-			System.out.println(serializer.getString());
+			original.accept(serializer);
+			String output = serializer.getString();
+			System.err.println(output);
+
+			parser = new XmlParser(true);
+			Document replica = parser.parseDocument(new StringReader(output));
+			
+			assertEquals(original, replica);
 			
 		} finally {
 			reader.close();
 		}
 	}
-
 }
