@@ -59,5 +59,7 @@ public class List extends AbstractDescribable implements Term {
 		accept(serializer);
 		return serializer.getString();
 	}
+	
+	// TODO am: add rest?!?
 
 }

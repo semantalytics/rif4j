@@ -29,6 +29,7 @@ public class ExistsFormula extends AbstractCompositeFormula implements
 	private List<Variable> variables;
 
 	public ExistsFormula(List<Variable> variables, List<Formula> formulas) {
+		// TODO am: one single formula?
 		super(formulas);
 
 		Assertions.notNull("variables", variables);
@@ -54,5 +55,5 @@ public class ExistsFormula extends AbstractCompositeFormula implements
 	public void accept(FormulaVisitor visitor) {
 		visitor.visit(this);
 	}
-
+	
 }
