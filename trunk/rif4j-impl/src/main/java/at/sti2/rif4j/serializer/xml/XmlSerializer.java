@@ -3,6 +3,7 @@ package at.sti2.rif4j.serializer.xml;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URL;
 import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -16,8 +17,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import at.sti2.rif4j.Describable;
 import at.sti2.rif4j.condition.AndFormula;
@@ -67,34 +72,55 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 	private final DocumentBuilder builder;
 	private org.w3c.dom.Document document;
 	private final Stack<Element> elementStack;
+	private final boolean validate;
 
 	public XmlSerializer() throws ParserConfigurationException {
+		this(false);
+	}
+
+	public XmlSerializer(boolean validate) throws ParserConfigurationException {
 		elementStack = new Stack<Element>();
-		
+		this.validate = validate;
+
 		builder = builderFactory.newDocumentBuilder();
 		this.document = builder.newDocument();
 	}
-	
+
 	public String getString() {
 		assert elementStack.size() == 1 : "There must be exactly one element on stack representing the root node";
-		document.appendChild(pop());
+		Element root = pop();
+		// TODO assert that xmlns is not used with other NS
+		root.setAttribute("xmlns", "http://www.w3.org/2007/rif#");
+		document.appendChild(root);
+
+		// validate generated document
+		if (validate) {
+			try {
+				validate(document);
+			} catch (SAXException e) {
+				throw new ValidationException("Error validating serialized XML document against RIF XML Schema Definition", e);
+			} catch (IOException e) {
+				throw new ValidationException("Error validating serialized XML document against RIF XML Schema Definition", e);
+			}
+		}
+		
 		
 		Writer result = new StringWriter();
-        Transformer xformer;
 		try {
-			xformer = TransformerFactory.newInstance().newTransformer();
+	
+			Transformer xformer = TransformerFactory.newInstance().newTransformer();
 			xformer.setOutputProperty(OutputKeys.ENCODING, "UTF8");
 			xformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			
+
 			/*
-			 * Set standalone="no" since we can not be sure that the XML file is
-			 * standalone unless we parse through it and look for outer references.
+			 * Set standalone="no" since we can not be sure that the XML file is standalone unless we parse through it
+			 * and look for outer references.
 			 * 
-			 * If the property is not set it is set to standalone="no" by
-			 * default anyway (so this property is not omitted if not set).
+			 * If the property is not set it is set to standalone="no" by default anyway (so this property is not
+			 * omitted if not set).
 			 */
 			xformer.setOutputProperty(OutputKeys.STANDALONE, "no");
-			
+
 			xformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 			xformer.transform(new DOMSource(document), new StreamResult(result));
 			result.flush();
@@ -107,7 +133,7 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 		} catch (IOException e) {
 			throw new RuntimeException("Error when serializing the XML DOM", e);
 		}
-		
+
 		return result.toString();
 	}
 	
@@ -1117,5 +1143,20 @@ CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
 		appendAndPush(document.createElement(elementName));
 	}
 
+	private static void validate(org.w3c.dom.Document document) throws SAXException, IOException {
+		SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
 
+		// Its enough to load the BLD Rule Schema.
+		// URL condSchemaUrl = openSchema("BLDCond.xsd");
+		URL ruleSchemaUrl = openSchema("BLDRule.xsd");
+
+		Schema schema = factory.newSchema(ruleSchemaUrl);
+		Validator validator = schema.newValidator();
+		validator.validate(new DOMSource(document));
+	}
+
+	private static URL openSchema(String fileName) {
+		URL url = XmlSerializer.class.getClassLoader().getResource(fileName);
+		return url;
+	}
 }
