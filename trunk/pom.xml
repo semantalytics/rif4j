@@ -44,9 +44,6 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<encoding>${source.encoding}</encoding>
-				</configuration>
 			</plugin>
 
 			<plugin>
@@ -54,7 +51,6 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<encoding>${source.encoding}</encoding>
 					<source>${compiler.version}</source>
 					<target>${compiler.version}</target>
 				</configuration>
