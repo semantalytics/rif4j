@@ -42,112 +42,128 @@ import at.sti2.rif4j.rule.Import;
 import at.sti2.rif4j.rule.Prefix;
 import at.sti2.rif4j.rule.Rule;
 import at.sti2.rif4j.rule.RuleVisitor;
-import at.sti2.rif4j.serializer.Serializer;
 
-public class PresentationSerializer implements DocumentVisitor, TermVisitor,
-		ClauseVisitor, FormulaVisitor, AtomicFormulaVisitor,
-		CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, Serializer {
+public class PresentationSerializer implements DocumentVisitor, TermVisitor, ClauseVisitor, FormulaVisitor, AtomicFormulaVisitor, CompositeFormulaVisitor,
+		RuleVisitor, UnitermVisitor
+{
 
-	public static final String LINE_SEPARATOR = System
-			.getProperty("line.separator");
+	public static final String	LINE_SEPARATOR	= System.getProperty("line.separator");
 
-	private StringBuilder builder;
+	private StringBuilder		builder;
 
-	private int level;
+	private int					level;
 
-	private Map<String, String> prefixMappings;
+	private Map<String, String>	prefixMappings;
 
-	public PresentationSerializer() {
+	public PresentationSerializer()
+	{
 		builder = new StringBuilder();
 		level = 0;
 		prefixMappings = new HashMap<String, String>();
 	}
 
-	private void increaseLevel() {
-		if (builder.length() > 0) {
+	private void increaseLevel()
+	{
+		if (builder.length() > 0)
+		{
 			level++;
 		}
 	}
 
-	private void decreaseLevel() {
-		if (builder.length() > 0) {
+	private void decreaseLevel()
+	{
+		if (builder.length() > 0)
+		{
 			level--;
 		}
 	}
 
-	private void newLine() {
+	private void newLine()
+	{
 		builder.append(LINE_SEPARATOR);
 	}
 
-	private void append(String text) {
+	private void append(String text)
+	{
 		append(text, true);
 	}
 
-	private void append(String text, boolean indent) {
-		if (indent) {
+	private void append(String text, boolean indent)
+	{
+		if (indent)
+		{
 			indent();
 		}
 
 		builder.append(text);
 	}
 
-	private void indent() {
-		if (builder.length() > 0) {
+	private void indent()
+	{
+		if (builder.length() > 0)
+		{
 			newLine();
 		}
 
-		for (int i = 0; i < level; i++) {
+		for (int i = 0; i < level; i++)
+		{
 			builder.append("\t");
 		}
 	}
 
-	private void appendInline(String text) {
+	private void appendInline(String text)
+	{
 		append(text, false);
 	}
 
-	public String getString() {
-		return builder.toString();
-	}
-
-	private void describe(Describable describable) {
+	private void describe(Describable describable)
+	{
 		describe(describable, true);
 	}
 
-	private void describeInline(Describable describable) {
+	private void describeInline(Describable describable)
+	{
 		describe(describable, false);
 	}
 
 	/**
 	 * IRIMETA ::= '(*' IRICONST? (Frame | 'And' '(' Frame* ')')? '*)'
 	 */
-	private void describe(Describable describable, boolean indent) {
-		if (describable.getId() != null
-				|| (describable.getMetadata() != null && describable
-						.getMetadata().size() > 0)) {
+	private void describe(Describable describable, boolean indent)
+	{
+		if (describable.getId() != null || (describable.getMetadata() != null && describable.getMetadata().size() > 0))
+		{
 			append("(* ", indent);
 
-			if (describable.getId() != null) {
+			if (describable.getId() != null)
+			{
 				describable.getId().accept(this);
 				appendInline(" ");
 			}
 
-			if (describable.getMetadata() != null
-					&& describable.getMetadata().size() > 0) {
+			if (describable.getMetadata() != null && describable.getMetadata().size() > 0)
+			{
 				boolean multiple = describable.getMetadata().size() > 1;
 
 				increaseLevel();
 
-				if (multiple) {
+				if (multiple)
+				{
 					append("And(", indent);
 					increaseLevel();
 				}
 
 				int i = 0;
-				for (Frame frame : describable.getMetadata()) {
-					if (indent) {
+				for (Frame frame : describable.getMetadata())
+				{
+					if (indent)
+					{
 						indent();
-					} else {
-						if (i++ > 0) {
+					}
+					else
+					{
+						if (i++ > 0)
+						{
 							appendInline(" ");
 						}
 					}
@@ -155,7 +171,8 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 					frame.accept((AtomicFormulaVisitor) this);
 				}
 
-				if (multiple) {
+				if (multiple)
+				{
 					decreaseLevel();
 					append(")", indent);
 				}
@@ -168,27 +185,32 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(Document document) {
+	public void visit(Document document)
+	{
 		describe(document);
 		append("Document(");
 
 		increaseLevel();
 
-		if (document.getBase() != null) {
+		if (document.getBase() != null)
+		{
 			append("Base(");
 			document.getBase().accept(this);
 			appendInline(")");
 		}
 
-		for (Prefix prefix : document.getPrefixes()) {
+		for (Prefix prefix : document.getPrefixes())
+		{
 			prefix.accept(this);
 		}
 
-		for (Import imprt : document.getImports()) {
+		for (Import imprt : document.getImports())
+		{
 			imprt.accept(this);
 		}
 
-		if (document.getGroup() != null) {
+		if (document.getGroup() != null)
+		{
 			document.getGroup().accept(this);
 		}
 
@@ -198,17 +220,20 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(Group group) {
+	public void visit(Group group)
+	{
 		describe(group);
 		append("Group(");
 
 		increaseLevel();
 
-		for (Rule rule : group.getRules()) {
+		for (Rule rule : group.getRules())
+		{
 			rule.accept(this);
 		}
 
-		for (Group childGroup : group.getGroups()) {
+		for (Group childGroup : group.getGroups())
+		{
 			childGroup.accept(this);
 		}
 
@@ -218,20 +243,24 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(Import imprt) {
+	public void visit(Import imprt)
+	{
+		//TODO Proper serialization of location and profile
 		describe(imprt);
 		append("Import(");
-		imprt.getLocation().accept(this);
+//		imprt.getLocation().accept(this);
 
-		if (imprt.getProfile() != null) {
-			imprt.getProfile().accept(this);
+		if (imprt.getProfile() != null)
+		{
+//			imprt.getProfile().accept(this);
 		}
 
 		appendInline(")");
 	}
 
 	@Override
-	public void visit(Prefix prefix) {
+	public void visit(Prefix prefix)
+	{
 		// Add mapping from prefix to corresponding URI.
 		prefixMappings.put(prefix.getName(), prefix.getIri().getText());
 
@@ -241,11 +270,14 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 		appendInline(")");
 	}
 
-	private String searchPrefix(String iri) {
-		for (String prefix : prefixMappings.keySet()) {
+	private String searchPrefix(String iri)
+	{
+		for (String prefix : prefixMappings.keySet())
+		{
 			String location = prefixMappings.get(prefix);
 
-			if (iri.startsWith(location) && iri.length() > location.length()) {
+			if (iri.startsWith(location) && iri.length() > location.length())
+			{
 				String suffix = iri.substring(location.length());
 				return prefix + ":" + suffix;
 			}
@@ -255,52 +287,69 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(Constant constant) {
+	public void visit(Constant constant)
+	{
 		describeInline(constant);
 		String language = "";
 
-		if (constant.getLanguage() != null
-				&& constant.getLanguage().length() > 0) {
+		if (constant.getLanguage() != null && constant.getLanguage().length() > 0)
+		{
 			language = "@" + constant.getLanguage();
 		}
 
-		if (constant.getType() != null) {
-			if (constant.getType().equals(RifDatatype.IRI.toString())) {
+		if (constant.getType() != null)
+		{
+			if (constant.getType().equals(RifDatatype.IRI.toString()))
+			{
 				// Try to map to prefix.
 				String mapping = searchPrefix(constant.getText());
 
-				if (mapping != null) {
+				if (mapping != null)
+				{
 					appendInline(mapping);
-				} else {
+				}
+				else
+				{
 					appendInline("<" + constant.getText() + ">");
 				}
-			} else if (constant.getType().equals(RifDatatype.LOCAL.toString())) {
+			}
+			else if (constant.getType().equals(RifDatatype.LOCAL.toString()))
+			{
 				appendInline("_" + constant.getText());
-			} else {
+			}
+			else
+			{
 				appendInline("\"" + constant.getText() + language + "\"^^");
 
 				// Try to map to prefix.
 				String mapping = searchPrefix(constant.getType());
 
-				if (mapping != null) {
+				if (mapping != null)
+				{
 					appendInline(mapping);
-				} else {
+				}
+				else
+				{
 					appendInline("<" + constant.getType() + ">");
 				}
 			}
-		} else {
+		}
+		else
+		{
 			appendInline("\"" + constant.getText() + language + "\"");
 		}
 	}
 
 	@Override
-	public void visit(Expression expression) {
+	public void visit(Expression expression)
+	{
 		describeInline(expression);
 		visit((Uniterm) expression);
 	}
 
 	@Override
-	public void visit(ExternalExpression externalExpression) {
+	public void visit(ExternalExpression externalExpression)
+	{
 		describeInline(externalExpression);
 
 		// Expression is a term, therefore, do not indent.
@@ -314,13 +363,16 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(List list) {
+	public void visit(List list)
+	{
 		describeInline(list);
 		appendInline("List(");
 
 		int i = 0;
-		for (Term element : list.getElements()) {
-			if (i++ > 0) {
+		for (Term element : list.getElements())
+		{
+			if (i++ > 0)
+			{
 				appendInline(" ");
 			}
 
@@ -331,25 +383,31 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(Variable variable) {
+	public void visit(Variable variable)
+	{
 		describeInline(variable);
 		appendInline("?" + variable.getName());
 	}
 
 	@Override
-	public void visit(ImpliesFormula implies) {
+	public void visit(ImpliesFormula implies)
+	{
 		describe(implies);
-		if (implies.getHead().size() > 1) {
+		if (implies.getHead().size() > 1)
+		{
 			append("And(");
 
 			increaseLevel();
-			for (AtomicFormula atomicFormula : implies.getHead()) {
+			for (AtomicFormula atomicFormula : implies.getHead())
+			{
 				atomicFormula.accept((AtomicFormulaVisitor) this);
 			}
 			decreaseLevel();
 
 			appendInline(")");
-		} else if (implies.getHead().size() == 1) {
+		}
+		else if (implies.getHead().size() == 1)
+		{
 			implies.getHead().get(0).accept((AtomicFormulaVisitor) this);
 		}
 
@@ -361,16 +419,19 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(AtomicFormula atomicFormula) {
+	public void visit(AtomicFormula atomicFormula)
+	{
 		atomicFormula.accept((AtomicFormulaVisitor) this);
 	}
 
 	@Override
-	public void visit(ExistsFormula existsFormula) {
+	public void visit(ExistsFormula existsFormula)
+	{
 		describe(existsFormula);
 		append("Exists");
 
-		for (Variable variable : existsFormula.getVariables()) {
+		for (Variable variable : existsFormula.getVariables())
+		{
 			appendInline(" ");
 			variable.accept(this);
 		}
@@ -386,7 +447,8 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(ExternalFormula externalFormula) {
+	public void visit(ExternalFormula externalFormula)
+	{
 		describe(externalFormula);
 		append("External(");
 
@@ -398,11 +460,13 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(ForallFormula forallFormula) {
+	public void visit(ForallFormula forallFormula)
+	{
 		describe(forallFormula);
 		append("Forall");
 
-		for (Variable variable : forallFormula.getVariables()) {
+		for (Variable variable : forallFormula.getVariables())
+		{
 			appendInline(" ");
 			variable.accept(this);
 		}
@@ -417,22 +481,27 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(CompositeFormula compositeFormula) {
+	public void visit(CompositeFormula compositeFormula)
+	{
 		compositeFormula.accept((CompositeFormulaVisitor) this);
 	}
 
-	private void visit(Uniterm uniterm) {
+	private void visit(Uniterm uniterm)
+	{
 		uniterm.getOperator().accept(this);
 
 		appendInline("(");
 
 		int i = 0;
-		for (Argument argument : uniterm.getArguments()) {
-			if (i++ > 0) {
+		for (Argument argument : uniterm.getArguments())
+		{
+			if (i++ > 0)
+			{
 				appendInline(" ");
 			}
 
-			if (argument.getName() != null) {
+			if (argument.getName() != null)
+			{
 				appendInline(argument.getName() + "->");
 			}
 			argument.getValue().accept(this);
@@ -442,14 +511,16 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(Atom atom) {
+	public void visit(Atom atom)
+	{
 		describe(atom);
 		indent();
 		visit((Uniterm) atom);
 	}
 
 	@Override
-	public void visit(EqualAtom equalAtom) {
+	public void visit(EqualAtom equalAtom)
+	{
 		describe(equalAtom);
 		indent();
 		equalAtom.getTerms().get(0).accept(this);
@@ -458,14 +529,17 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(Frame frame) {
+	public void visit(Frame frame)
+	{
 		describeInline(frame);
 		frame.getObject().accept(this);
 		appendInline("[");
 
 		int i = 0;
-		for (Attribute attribute : frame.getAttributes()) {
-			if (i++ > 0) {
+		for (Attribute attribute : frame.getAttributes())
+		{
+			if (i++ > 0)
+			{
 				appendInline(" ");
 			}
 
@@ -478,7 +552,8 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(MemberAtom memberAtom) {
+	public void visit(MemberAtom memberAtom)
+	{
 		describe(memberAtom);
 		indent();
 		memberAtom.getInstance().accept(this);
@@ -487,7 +562,8 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(SubclassAtom subclassAtom) {
+	public void visit(SubclassAtom subclassAtom)
+	{
 		describe(subclassAtom);
 		indent();
 		subclassAtom.getSubClass().accept(this);
@@ -496,12 +572,14 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(AndFormula andFormula) {
+	public void visit(AndFormula andFormula)
+	{
 		describe(andFormula);
 		append("And(");
 
 		increaseLevel();
-		for (Formula formula : andFormula.getFormulas()) {
+		for (Formula formula : andFormula.getFormulas())
+		{
 			formula.accept(this);
 		}
 		decreaseLevel();
@@ -510,12 +588,14 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(OrFormula orFormula) {
+	public void visit(OrFormula orFormula)
+	{
 		describe(orFormula);
 		append("Or(");
 
 		increaseLevel();
-		for (Formula formula : orFormula.getFormulas()) {
+		for (Formula formula : orFormula.getFormulas())
+		{
 			formula.accept(this);
 		}
 		decreaseLevel();
@@ -524,12 +604,19 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	}
 
 	@Override
-	public void visit(Clause clause) {
-		if (clause instanceof Frame) {
+	public void visit(Clause clause)
+	{
+		if (clause instanceof Frame)
+		{
 			indent();
 		}
 
 		clause.accept((ClauseVisitor) this);
 	}
 
+
+	public String getString()
+	{
+		return builder.toString();
+	}
 }
