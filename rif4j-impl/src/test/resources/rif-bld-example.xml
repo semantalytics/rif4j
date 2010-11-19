@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE Document [
   <!ENTITY cpt  "http://example.com/concepts#">
@@ -6,10 +7,10 @@
   <!ENTITY func "http://www.w3.org/2007/rif-builtin-function#">
   <!ENTITY pred "http://www.w3.org/2007/rif-builtin-predicate#">
   <!ENTITY xs   "http://www.w3.org/2001/XMLSchema#">
+  <!ENTITY xsi  "http://www.w3.org/2001/XMLSchema-instance">
 ]>
 
-<Document xml:base="http://example.com/people#" xmlns="http://www.w3.org/2007/rif#"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema#">
+<Document xmlns="&rif;">
 	<payload>
 		<Group>
 			<id>
