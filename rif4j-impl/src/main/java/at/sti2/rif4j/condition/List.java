@@ -28,7 +28,8 @@ import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 public class List extends AbstractDescribable implements Term {
 
 	private java.util.List<Term> elements;
-
+	private java.util.List<Term> restElements;
+	
 	public List() {
 		elements = new ArrayList<Term>();
 	}
@@ -59,7 +60,19 @@ public class List extends AbstractDescribable implements Term {
 		accept(serializer);
 		return serializer.getString();
 	}
+
+	public void setRestElements(java.util.List<Term> restElements)
+	{
+		Assertions.notNull("restElements", restElements);
+		this.restElements = restElements;
+	}
+
+	public java.util.List<Term> getRestElements()
+	{
+		return restElements;
+	}
 	
-	// TODO am: add rest?!?
+	// TODO am: add rest?!? - Done
+	// TODO larizgoitia: make the rest transparent to the user of the list class
 
 }
