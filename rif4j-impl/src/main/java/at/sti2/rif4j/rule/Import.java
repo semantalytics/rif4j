@@ -25,46 +25,50 @@ import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 /**
  * @author Adrian Marte
  */
-public class Import extends AbstractDescribable implements Describable {
+public class Import extends AbstractDescribable implements Describable
+{
+	private String location;
+	private String profile;
 
-	private Constant location;
-
-	private Constant profile;
-
-	public Import(Constant location, Constant profile) {
+	public Import(String location, String profile)
+	{
 		this.location = location;
 		this.profile = profile;
 	}
 
-	public Constant getLocation() {
+	public String getLocation()
+	{
 		return location;
 	}
 
-	public void setLocation(Constant location) {
+	public void setLocation(String location)
+	{
 		Assertions.notNull("location", location);
 
 		this.location = location;
 	}
 
-	public Constant getProfile() {
+	public String getProfile()
+	{
 		return profile;
 	}
 
-	public void setProfile(Constant profile) {
+	public void setProfile(String profile)
+	{
 		Assertions.notNull("profile", profile);
-
 		this.profile = profile;
 	}
 
-	public void accept(DocumentVisitor visitor) {
+	public void accept(DocumentVisitor visitor)
+	{
 		visitor.visit(this);
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		PresentationSerializer serializer = new PresentationSerializer();
 		accept(serializer);
 		return serializer.getString();
 	}
-
 }
