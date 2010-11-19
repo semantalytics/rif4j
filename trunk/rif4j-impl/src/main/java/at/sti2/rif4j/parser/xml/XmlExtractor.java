@@ -63,125 +63,131 @@ import at.sti2.rif4j.rule.Rule;
  * Extracts and translates RIF XML elements to a corresponding object model for
  * RIF.
  * 
- * @author Adrian Marte
- * FIXME This class has great optimization potential.
+ * @author Adrian Marte FIXME This class has great optimization potential.
  */
-class XmlExtractor {
+class XmlExtractor
+{
 
-	public static final String RIF_VAR = "rif:Var";
+	public static final String		RIF_VAR			= "rif:Var";
 
-	public static final String RIF_ATOM = "rif:Atom";
+	public static final String		RIF_ATOM		= "rif:Atom";
 
-	public static final String RIF_SUB = "rif:sub";
+	public static final String		RIF_SUB			= "rif:sub";
 
-	public static final String RIF_SUPER = "rif:super";
+	public static final String		RIF_SUPER		= "rif:super";
 
-	public static final String RIF_SUBCLASS = "rif:Subclass";
+	public static final String		RIF_SUBCLASS	= "rif:Subclass";
 
-	public static final String RIF_CLASS = "rif:class";
+	public static final String		RIF_CLASS		= "rif:class";
 
-	public static final String RIF_INSTANCE = "rif:instance";
+	public static final String		RIF_INSTANCE	= "rif:instance";
 
-	public static final String RIF_MEMBER = "rif:Member";
+	public static final String		RIF_MEMBER		= "rif:Member";
 
-	public static final String RIF_RIGHT = "rif:right";
+	public static final String		RIF_RIGHT		= "rif:right";
 
-	public static final String RIF_LEFT = "rif:left";
+	public static final String		RIF_LEFT		= "rif:left";
 
-	public static final String RIF_EQUAL = "rif:Equal";
+	public static final String		RIF_EQUAL		= "rif:Equal";
 
-	public static final String RIF_THEN = "rif:then";
+	public static final String		RIF_THEN		= "rif:then";
 
-	public static final String RIF_IF = "rif:if";
+	public static final String		RIF_IF			= "rif:if";
 
-	public static final String RIF_IMPLIES = "rif:Implies";
+	public static final String		RIF_IMPLIES		= "rif:Implies";
 
-	public static final String RIF_FORALL = "rif:Forall";
+	public static final String		RIF_FORALL		= "rif:Forall";
 
-	public static final String RIF_SENTENCE = "rif:sentence";
+	public static final String		RIF_SENTENCE	= "rif:sentence";
 
-	public static final String RIF_GROUP = "rif:Group";
+	public static final String		RIF_GROUP		= "rif:Group";
 
-	public static final String RIF_DIRECTIVE = "rif:directive";
+	public static final String		RIF_DIRECTIVE	= "rif:directive";
 
-	public static final String RIF_PAYLOAD = "rif:payload";
+	public static final String		RIF_PAYLOAD		= "rif:payload";
 
-	public static final String RIF_DOCUMENT = "rif:Document";
+	public static final String		RIF_DOCUMENT	= "rif:Document";
 
-	public static final String RIF_CONST = "rif:Const";
+	public static final String		RIF_CONST		= "rif:Const";
 
-	public static final String RIF_PROFILE = "rif:profile";
+	public static final String		RIF_PROFILE		= "rif:profile";
 
-	public static final String RIF_LOCATION = "rif:location";
+	public static final String		RIF_LOCATION	= "rif:location";
 
-	public static final String RIF_IMPORT = "rif:Import";
+	public static final String		RIF_IMPORT		= "rif:Import";
 
-	public static final String RIF_OBJECT = "rif:object";
+	public static final String		RIF_OBJECT		= "rif:object";
 
-	public static final String RIF_FRAME = "rif:Frame";
+	public static final String		RIF_FRAME		= "rif:Frame";
 
-	public static final String RIF_META = "rif:meta";
+	public static final String		RIF_META		= "rif:meta";
 
-	public static final String RIF_ID = "rif:id";
+	public static final String		RIF_ID			= "rif:id";
 
-	public static final String RIF_NAME = "rif:Name";
+	public static final String		RIF_NAME		= "rif:Name";
 
-	public static final String RIF_OP = "rif:op";
+	public static final String		RIF_OP			= "rif:op";
 
-	public static final String RIF_SLOT = "rif:slot";
+	public static final String		RIF_SLOT		= "rif:slot";
 
-	public static final String RIF_ARGS = "rif:args";
+	public static final String		RIF_ARGS		= "rif:args";
 
-	public static final String RIF_EXPR = "rif:Expr";
+	public static final String		RIF_EXPR		= "rif:Expr";
 
-	public static final String RIF_REST = "rif:rest";
+	public static final String		RIF_REST		= "rif:rest";
 
-	public static final String RIF_LIST = "rif:List";
+	public static final String		RIF_LIST		= "rif:List";
 
-	public static final String RIF_CONTENT = "rif:content";
+	public static final String		RIF_CONTENT		= "rif:content";
 
-	public static final String RIF_EXTERNAL = "rif:External";
+	public static final String		RIF_EXTERNAL	= "rif:External";
 
-	public static final String RIF_DECLARE = "rif:declare";
+	public static final String		RIF_DECLARE		= "rif:declare";
 
-	public static final String RIF_EXISTS = "rif:Exists";
+	public static final String		RIF_EXISTS		= "rif:Exists";
 
-	public static final String RIF_OR = "rif:Or";
+	public static final String		RIF_OR			= "rif:Or";
 
-	public static final String RIF_FORMULA = "rif:formula";
+	public static final String		RIF_FORMULA		= "rif:formula";
 
-	public static final String RIF_AND = "rif:And";
+	public static final String		RIF_AND			= "rif:And";
+	
+	public static final String		RIF_ITEMS		= "rif:items";
 
-	private static XPathFactory factory;
+	private static XPathFactory		factory;
 
-	private static XPath xPath;
+	private static XPath			xPath;
 
-	private static NamespaceContext namespaceContext;
+	private static NamespaceContext	namespaceContext;
 
-	static {
+	static
+	{
 		factory = XPathFactory.newInstance();
 		xPath = factory.newXPath();
 		namespaceContext = new RifNamespaceContext();
 		xPath.setNamespaceContext(namespaceContext);
 	}
 
-	public XmlExtractor() {
+	public XmlExtractor()
+	{
 	}
 
-	private boolean isSimpleQuery(String query) {
-		return !(query.contains("/") || query.contains("[")
-				|| query.contains("]") || query.contains("(") || query
-				.contains(")"));
+	private boolean isSimpleQuery(String query)
+	{
+		return !(query.contains("/") || query.contains("[") || query.contains("]") || query.contains("(") || query.contains(")"));
 	}
 
-	private NodeList queryNodeList(Node context, String query) {
-		if (isSimpleQuery(query)) {
+	private NodeList queryNodeList(Node context, String query)
+	{
+		if (isSimpleQuery(query))
+		{
 			int index = query.indexOf(":");
 
 			String namespace = null;
 			String localName = query;
 
-			if (index >= 0) {
+			if (index >= 0)
+			{
 				localName = query.substring(index + 1);
 
 				String prefix = query.substring(0, index);
@@ -192,72 +198,87 @@ class XmlExtractor {
 			return new FilteredNodeList(filter);
 		}
 
-		try {
+		try
+		{
 			XPathExpression expression = xPath.compile(query);
-			Object result = expression
-					.evaluate(context, XPathConstants.NODESET);
+			Object result = expression.evaluate(context, XPathConstants.NODESET);
 			return (NodeList) result;
-		} catch (XPathExpressionException e) {
+		}
+		catch (XPathExpressionException e)
+		{
 			e.printStackTrace();
 		}
 
 		return null;
 	}
 
-	private Node queryNode(Node context, String query) {
+	private Node queryNode(Node context, String query)
+	{
 		NodeList nodeList = queryNodeList(context, query);
-
-		if (nodeList != null && nodeList.getLength() > 0) {
+		if (nodeList != null && nodeList.getLength() > 0)
+		{
 			return nodeList.item(0);
 		}
 
 		return null;
 	}
 
-	private Double queryNumber(Node context, String query) {
-		try {
+	private Double queryNumber(Node context, String query)
+	{
+		try
+		{
 			XPathExpression expression = xPath.compile(query);
 			Object result = expression.evaluate(context, XPathConstants.NUMBER);
 			return (Double) result;
-		} catch (XPathExpressionException e) {
+		}
+		catch (XPathExpressionException e)
+		{
 			e.printStackTrace();
 		}
 
 		return null;
 	}
 
-	private String queryString(Node context, String query) {
-		try {
+	private String queryString(Node context, String query)
+	{
+		try
+		{
 			XPathExpression expression = xPath.compile(query);
 			Object result = expression.evaluate(context, XPathConstants.STRING);
 			return (String) result;
-		} catch (XPathExpressionException e) {
+		}
+		catch (XPathExpressionException e)
+		{
 			e.printStackTrace();
 		}
 
 		return null;
 	}
 
-	private void setMetadata(Node context, Describable describable) {
+	private void setMetadata(Node context, Describable describable)
+	{
 		Metadata metadata = extractMetadata(context);
 
-		if (metadata != null && describable != null) {
+		if (metadata != null && describable != null)
+		{
 			describable.setId(metadata.getId());
 			describable.setMetadata(metadata.getData());
 		}
 	}
 
-	private void setPosition(Node context, Object object,
-			Map<Object, Integer> positions) {
+	private void setPosition(Node context, Object object, Map<Object, Integer> positions)
+	{
 		Double number = queryNumber(context, "count(preceding-sibling::*)");
 		int position = number.intValue();
 
-		if (positions != null) {
+		if (positions != null)
+		{
 			positions.put(object, position);
 		}
 	}
 
-	public Document extractDocument(Node context) {
+	public Document extractDocument(Node context)
+	{
 		Node documentNode = queryNode(context, RIF_DOCUMENT);
 
 		Node payloadNode = queryNode(documentNode, RIF_PAYLOAD);
@@ -275,14 +296,17 @@ class XmlExtractor {
 		return document;
 	}
 
-	public Group extractGroup(Node context) {
-		if (context == null) {
+	public Group extractGroup(Node context)
+	{
+		if (context == null)
+		{
 			return null;
 		}
 
 		Node groupNode = queryNode(context, RIF_GROUP);
 
-		if (groupNode == null) {
+		if (groupNode == null)
+		{
 			return null;
 		}
 
@@ -291,17 +315,20 @@ class XmlExtractor {
 
 		NodeList sentenceNodes = queryNodeList(groupNode, RIF_SENTENCE);
 
-		for (int i = 0; i < sentenceNodes.getLength(); i++) {
+		for (int i = 0; i < sentenceNodes.getLength(); i++)
+		{
 			Node sentenceNode = sentenceNodes.item(i);
 			Rule rule = extractRule(sentenceNode);
 
-			if (rule != null) {
+			if (rule != null)
+			{
 				rules.add(rule);
 			}
 
 			Group childGroup = extractGroup(sentenceNode);
 
-			if (childGroup != null) {
+			if (childGroup != null)
+			{
 				groups.add(childGroup);
 			}
 		}
@@ -313,38 +340,46 @@ class XmlExtractor {
 		return group;
 	}
 
-	public Rule extractRule(Node context) {
-		if (context == null) {
+	public Rule extractRule(Node context)
+	{
+		if (context == null)
+		{
 			return null;
 		}
 
 		java.util.List<ForallFormula> forallFormulas = extractForallFormulas(context);
-		if (forallFormulas.size() > 0) {
+		if (forallFormulas.size() > 0)
+		{
 			return forallFormulas.iterator().next();
 		}
 
 		Clause clause = extractClause(context);
-		if (clause != null) {
+		if (clause != null)
+		{
 			return clause;
 		}
 
 		return null;
 	}
 
-	public java.util.List<ForallFormula> extractForallFormulas(Node context) {
+	public java.util.List<ForallFormula> extractForallFormulas(Node context)
+	{
 		java.util.List<ForallFormula> forallFormulas = new ArrayList<ForallFormula>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return forallFormulas;
 		}
 
 		NodeList forallNodes = queryNodeList(context, RIF_FORALL);
 
-		if (forallNodes == null) {
+		if (forallNodes == null)
+		{
 			return forallFormulas;
 		}
 
-		for (int i = 0; i < forallNodes.getLength(); i++) {
+		for (int i = 0; i < forallNodes.getLength(); i++)
+		{
 			Node forallNode = forallNodes.item(i);
 
 			Node formulaNode = queryNode(forallNode, RIF_FORMULA);
@@ -353,7 +388,8 @@ class XmlExtractor {
 			java.util.List<Variable> variables = new ArrayList<Variable>();
 
 			NodeList declareNodes = queryNodeList(forallNode, RIF_DECLARE);
-			for (int j = 0; j < declareNodes.getLength(); j++) {
+			for (int j = 0; j < declareNodes.getLength(); j++)
+			{
 				Node declareNode = declareNodes.item(j);
 				variables.addAll(extractVariables(declareNode));
 			}
@@ -366,32 +402,39 @@ class XmlExtractor {
 		return forallFormulas;
 	}
 
-	public Clause extractClause(Node context) {
-		if (context == null) {
+	public Clause extractClause(Node context)
+	{
+		if (context == null)
+		{
 			return null;
 		}
 
 		ImpliesFormula implies = extractImplies(context);
-		if (implies != null) {
+		if (implies != null)
+		{
 			return implies;
 		}
 
 		java.util.List<AtomicFormula> atomicFormula = extractAtomicFormulas(context);
-		if (atomicFormula.size() > 0) {
+		if (atomicFormula.size() > 0)
+		{
 			return atomicFormula.iterator().next();
 		}
 
 		return null;
 	}
 
-	public ImpliesFormula extractImplies(Node context) {
-		if (context == null) {
+	public ImpliesFormula extractImplies(Node context)
+	{
+		if (context == null)
+		{
 			return null;
 		}
 
 		Node impliesNode = queryNode(context, RIF_IMPLIES);
 
-		if (impliesNode == null) {
+		if (impliesNode == null)
+		{
 			return null;
 		}
 
@@ -403,9 +446,9 @@ class XmlExtractor {
 
 		Node thenNode = queryNode(impliesNode, RIF_THEN);
 
-		NodeList formulaNodes = queryNodeList(impliesNode, RIF_THEN + "/"
-				+ RIF_AND + "/" + RIF_FORMULA);
-		for (int i = 0; i < formulaNodes.getLength(); i++) {
+		NodeList formulaNodes = queryNodeList(impliesNode, RIF_THEN + "/" + RIF_AND + "/" + RIF_FORMULA);
+		for (int i = 0; i < formulaNodes.getLength(); i++)
+		{
 			Node formulaNode = formulaNodes.item(i);
 			thenFormulas.addAll(extractAtomicFormulas(formulaNode));
 		}
@@ -419,7 +462,8 @@ class XmlExtractor {
 		return implies;
 	}
 
-	public java.util.List<AtomicFormula> extractAtomicFormulas(Node context) {
+	public java.util.List<AtomicFormula> extractAtomicFormulas(Node context)
+	{
 		java.util.List<AtomicFormula> formulas = new ArrayList<AtomicFormula>();
 
 		java.util.List<MemberAtom> memberAtoms = extractMemberAtoms(context);
@@ -440,20 +484,24 @@ class XmlExtractor {
 		return formulas;
 	}
 
-	public java.util.List<EqualAtom> extractEqualAtoms(Node context) {
+	public java.util.List<EqualAtom> extractEqualAtoms(Node context)
+	{
 		java.util.List<EqualAtom> equalAtoms = new ArrayList<EqualAtom>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return equalAtoms;
 		}
 
 		NodeList equalNodes = queryNodeList(context, RIF_EQUAL);
 
-		if (equalNodes == null) {
+		if (equalNodes == null)
+		{
 			return equalAtoms;
 		}
 
-		for (int i = 0; i < equalNodes.getLength(); i++) {
+		for (int i = 0; i < equalNodes.getLength(); i++)
+		{
 			Node equalNode = equalNodes.item(i);
 
 			Node leftNode = queryNode(equalNode, RIF_LEFT);
@@ -474,20 +522,24 @@ class XmlExtractor {
 		return equalAtoms;
 	}
 
-	public java.util.List<MemberAtom> extractMemberAtoms(Node context) {
+	public java.util.List<MemberAtom> extractMemberAtoms(Node context)
+	{
 		java.util.List<MemberAtom> memberAtoms = new ArrayList<MemberAtom>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return memberAtoms;
 		}
 
 		NodeList memberNodes = queryNodeList(context, RIF_MEMBER);
 
-		if (memberNodes == null) {
+		if (memberNodes == null)
+		{
 			return memberAtoms;
 		}
 
-		for (int i = 0; i < memberNodes.getLength(); i++) {
+		for (int i = 0; i < memberNodes.getLength(); i++)
+		{
 			Node memberNode = memberNodes.item(i);
 
 			Node instanceNode = queryNode(memberNode, RIF_INSTANCE);
@@ -506,20 +558,24 @@ class XmlExtractor {
 		return memberAtoms;
 	}
 
-	public java.util.List<SubclassAtom> extractSubclassAtoms(Node context) {
+	public java.util.List<SubclassAtom> extractSubclassAtoms(Node context)
+	{
 		java.util.List<SubclassAtom> subclassAtoms = new ArrayList<SubclassAtom>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return subclassAtoms;
 		}
 
 		NodeList subclassNodes = queryNodeList(context, RIF_SUBCLASS);
 
-		if (subclassNodes == null) {
+		if (subclassNodes == null)
+		{
 			return subclassAtoms;
 		}
 
-		for (int i = 0; i < subclassNodes.getLength(); i++) {
+		for (int i = 0; i < subclassNodes.getLength(); i++)
+		{
 			Node subclassNode = subclassNodes.item(i);
 
 			Node superNode = queryNode(subclassNode, RIF_SUPER);
@@ -538,23 +594,28 @@ class XmlExtractor {
 		return subclassAtoms;
 	}
 
-	public java.util.List<Atom> extractAtoms(Node context) {
+	public java.util.List<Atom> extractAtoms(Node context)
+	{
 		java.util.List<Atom> atoms = new ArrayList<Atom>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return atoms;
 		}
 
 		NodeList atomNodes = queryNodeList(context, RIF_ATOM);
 
-		if (atomNodes == null) {
+		if (atomNodes == null)
+		{
 			return atoms;
 		}
 
-		for (int i = 0; i < atomNodes.getLength(); i++) {
+		for (int i = 0; i < atomNodes.getLength(); i++)
+		{
 			Node atomNode = atomNodes.item(i);
 
-			if (atomNode == null) {
+			if (atomNode == null)
+			{
 				return null;
 			}
 
@@ -568,20 +629,23 @@ class XmlExtractor {
 		return atoms;
 	}
 
-	public java.util.List<Variable> extractVariables(Node context) {
+	public java.util.List<Variable> extractVariables(Node context)
+	{
 		return extractVariables(context, null);
 	}
 
-	public java.util.List<Variable> extractVariables(Node context,
-			Map<Object, Integer> positions) {
+	public java.util.List<Variable> extractVariables(Node context, Map<Object, Integer> positions)
+	{
 		java.util.List<Variable> variables = new ArrayList<Variable>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return variables;
 		}
 
 		NodeList variableNodes = queryNodeList(context, RIF_VAR);
-		for (int i = 0; i < variableNodes.getLength(); i++) {
+		for (int i = 0; i < variableNodes.getLength(); i++)
+		{
 			Node variableNode = variableNodes.item(i);
 
 			String name = variableNode.getTextContent().trim();
@@ -596,10 +660,12 @@ class XmlExtractor {
 		return variables;
 	}
 
-	public java.util.List<Formula> extractFormulas(Node context) {
+	public java.util.List<Formula> extractFormulas(Node context)
+	{
 		java.util.List<Formula> formulas = new ArrayList<Formula>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return formulas;
 		}
 
@@ -621,26 +687,31 @@ class XmlExtractor {
 		return formulas;
 	}
 
-	public java.util.List<AndFormula> extractAndFormulas(Node context) {
+	public java.util.List<AndFormula> extractAndFormulas(Node context)
+	{
 		java.util.List<AndFormula> andFormulas = new ArrayList<AndFormula>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return andFormulas;
 		}
 
 		NodeList andNodes = queryNodeList(context, RIF_AND);
 
-		if (andNodes == null) {
+		if (andNodes == null)
+		{
 			return andFormulas;
 		}
 
-		for (int i = 0; i < andNodes.getLength(); i++) {
+		for (int i = 0; i < andNodes.getLength(); i++)
+		{
 			Node andNode = andNodes.item(i);
 
 			java.util.List<Formula> formulas = new ArrayList<Formula>();
 
 			NodeList formulaNodes = queryNodeList(andNode, RIF_FORMULA);
-			for (int j = 0; j < formulaNodes.getLength(); j++) {
+			for (int j = 0; j < formulaNodes.getLength(); j++)
+			{
 				Node formulaNode = formulaNodes.item(j);
 				formulas.addAll(extractFormulas(formulaNode));
 			}
@@ -653,26 +724,31 @@ class XmlExtractor {
 		return andFormulas;
 	}
 
-	public java.util.List<OrFormula> extractOrFormulas(Node context) {
+	public java.util.List<OrFormula> extractOrFormulas(Node context)
+	{
 		java.util.List<OrFormula> orFormulas = new ArrayList<OrFormula>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return orFormulas;
 		}
 
 		NodeList orNodes = queryNodeList(context, RIF_OR);
 
-		if (orNodes == null) {
+		if (orNodes == null)
+		{
 			return orFormulas;
 		}
 
-		for (int i = 0; i < orNodes.getLength(); i++) {
+		for (int i = 0; i < orNodes.getLength(); i++)
+		{
 			Node orNode = orNodes.item(i);
 
 			java.util.List<Formula> formulas = new ArrayList<Formula>();
 
 			NodeList formulaNodes = queryNodeList(orNode, RIF_FORMULA);
-			for (int j = 0; j < formulaNodes.getLength(); j++) {
+			for (int j = 0; j < formulaNodes.getLength(); j++)
+			{
 				Node formulaNode = formulaNodes.item(j);
 				formulas.addAll(extractFormulas(formulaNode));
 			}
@@ -685,26 +761,31 @@ class XmlExtractor {
 		return orFormulas;
 	}
 
-	public java.util.List<ExistsFormula> extractExistsFormulas(Node context) {
+	public java.util.List<ExistsFormula> extractExistsFormulas(Node context)
+	{
 		java.util.List<ExistsFormula> existsFormulas = new ArrayList<ExistsFormula>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return existsFormulas;
 		}
 
 		NodeList existsNodes = queryNodeList(context, RIF_EXISTS);
 
-		if (existsNodes == null) {
+		if (existsNodes == null)
+		{
 			return existsFormulas;
 		}
 
-		for (int i = 0; i < existsNodes.getLength(); i++) {
+		for (int i = 0; i < existsNodes.getLength(); i++)
+		{
 			Node existsNode = existsNodes.item(i);
 
 			java.util.List<Formula> formulas = new ArrayList<Formula>();
 
 			NodeList formulaNodes = queryNodeList(existsNode, RIF_FORMULA);
-			for (int j = 0; j < formulaNodes.getLength(); j++) {
+			for (int j = 0; j < formulaNodes.getLength(); j++)
+			{
 				Node formulaNode = formulaNodes.item(j);
 				formulas.addAll(extractFormulas(formulaNode));
 			}
@@ -712,7 +793,8 @@ class XmlExtractor {
 			java.util.List<Variable> variables = new ArrayList<Variable>();
 
 			NodeList declareNodes = queryNodeList(existsNode, RIF_DECLARE);
-			for (int j = 0; j < declareNodes.getLength(); j++) {
+			for (int j = 0; j < declareNodes.getLength(); j++)
+			{
 				Node declareNode = declareNodes.item(j);
 				variables.addAll(extractVariables(declareNode));
 			}
@@ -725,20 +807,24 @@ class XmlExtractor {
 		return existsFormulas;
 	}
 
-	public java.util.List<ExternalFormula> extractExternalFormulas(Node context) {
+	public java.util.List<ExternalFormula> extractExternalFormulas(Node context)
+	{
 		java.util.List<ExternalFormula> formulas = new ArrayList<ExternalFormula>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return formulas;
 		}
 
 		NodeList externalNodes = queryNodeList(context, RIF_EXTERNAL);
 
-		if (externalNodes == null) {
+		if (externalNodes == null)
+		{
 			return formulas;
 		}
 
-		for (int i = 0; i < externalNodes.getLength(); i++) {
+		for (int i = 0; i < externalNodes.getLength(); i++)
+		{
 			Node externalNode = externalNodes.item(i);
 			Node contentNode = queryNode(externalNode, RIF_CONTENT);
 			java.util.List<Atom> atoms = extractAtoms(contentNode);
@@ -752,16 +838,18 @@ class XmlExtractor {
 		return formulas;
 	}
 
-	public java.util.List<ExternalExpression> extractExternalTerms(Node context) {
+	public java.util.List<ExternalExpression> extractExternalTerms(Node context)
+	{
 		return extractExternalTerms(context, null);
 	}
 
-	public java.util.List<ExternalExpression> extractExternalTerms(
-			Node context, Map<Object, Integer> positions) {
+	public java.util.List<ExternalExpression> extractExternalTerms(Node context, Map<Object, Integer> positions)
+	{
 		java.util.List<ExternalExpression> externalTerms = new ArrayList<ExternalExpression>();
 
 		NodeList externalNodes = queryNodeList(context, RIF_EXTERNAL);
-		for (int i = 0; i < externalNodes.getLength(); i++) {
+		for (int i = 0; i < externalNodes.getLength(); i++)
+		{
 			Node externalNode = externalNodes.item(i);
 			Node contentNode = queryNode(externalNode, RIF_CONTENT);
 
@@ -779,32 +867,35 @@ class XmlExtractor {
 		return externalTerms;
 	}
 
-	public java.util.List<List> extractLists(Node context) {
+	public java.util.List<List> extractLists(Node context)
+	{
 		return extractLists(context, null);
 	}
 
-	public java.util.List<List> extractLists(Node context,
-			Map<Object, Integer> positions) {
+	public java.util.List<List> extractLists(Node context, Map<Object, Integer> positions)
+	{
 		java.util.List<List> lists = new ArrayList<List>();
 
 		NodeList listNodes = queryNodeList(context, RIF_LIST);
 
-		if (listNodes == null) {
+		if (listNodes == null)
+		{
 			return lists;
 		}
 
-		for (int i = 0; i < listNodes.getLength(); i++) {
-			java.util.List<Term> terms = new ArrayList<Term>();
-
+		for (int i = 0; i < listNodes.getLength(); i++)
+		{
 			Node listNode = listNodes.item(i);
-			java.util.List<Term> listTerms = extractTerms(listNode);
-			terms.addAll(listTerms);
-
+			
+			Node itemsNode = queryNode(listNode, RIF_ITEMS);						
+			java.util.List<Term> listTerms = extractTerms(itemsNode);
+		
 			Node restNode = queryNode(listNode, RIF_REST);
 			java.util.List<Term> restTerms = extractTerms(restNode);
-			terms.addAll(restTerms);
-
-			List list = new List(terms);
+			
+			List list = new List();
+			list.setElements(listTerms);
+			list.setRestElements(restTerms);
 
 			setMetadata(listNode, list);
 			setPosition(listNode, list, positions);
@@ -815,23 +906,24 @@ class XmlExtractor {
 		return lists;
 	}
 
-	public java.util.List<Expression> extractExpressions(Node context) {
+	public java.util.List<Expression> extractExpressions(Node context)
+	{
 		return extractExpressions(context, null);
 	}
 
-	public java.util.List<Expression> extractExpressions(Node context,
-			Map<Object, Integer> positions) {
+	public java.util.List<Expression> extractExpressions(Node context, Map<Object, Integer> positions)
+	{
 		java.util.List<Expression> expressions = new ArrayList<Expression>();
 
 		NodeList exprNodes = queryNodeList(context, RIF_EXPR);
 
-		for (int i = 0; i < exprNodes.getLength(); i++) {
+		for (int i = 0; i < exprNodes.getLength(); i++)
+		{
 			Node exprNode = exprNodes.item(i);
 
 			Uniterm uniterm = extractUniterm(exprNode);
 
-			Expression expression = new Expression(uniterm.getOperator(),
-					uniterm.getArguments());
+			Expression expression = new Expression(uniterm.getOperator(), uniterm.getArguments());
 
 			setMetadata(exprNode, expression);
 			setPosition(exprNode, expression, positions);
@@ -842,24 +934,28 @@ class XmlExtractor {
 		return expressions;
 	}
 
-	public Uniterm extractUniterm(Node context) {
+	public Uniterm extractUniterm(Node context)
+	{
 		Node argsNode = queryNode(context, RIF_ARGS);
 		java.util.List<Term> argsTerms = extractTerms(argsNode);
 
 		java.util.List<Argument> arguments = new ArrayList<Argument>();
 
 		// Convert each term to an unnamed argument.
-		for (Term term : argsTerms) {
+		for (Term term : argsTerms)
+		{
 			Argument argument = new Argument(term);
 			arguments.add(argument);
 		}
 
 		NodeList slotNodes = queryNodeList(context, RIF_SLOT);
-		for (int j = 0; j < slotNodes.getLength(); j++) {
+		for (int j = 0; j < slotNodes.getLength(); j++)
+		{
 			Node slotNode = slotNodes.item(j);
 			Argument argument = extractArgument(slotNode);
 
-			if (argument != null) {
+			if (argument != null)
+			{
 				arguments.add(argument);
 			}
 		}
@@ -870,14 +966,17 @@ class XmlExtractor {
 		return new SimpleUniterm(operator, arguments);
 	}
 
-	public Argument extractArgument(Node context) {
-		if (context == null) {
+	public Argument extractArgument(Node context)
+	{
+		if (context == null)
+		{
 			return null;
 		}
 
 		Node nameNode = queryNode(context, RIF_NAME);
 
-		if (nameNode == null) {
+		if (nameNode == null)
+		{
 			return null;
 		}
 
@@ -886,10 +985,12 @@ class XmlExtractor {
 		return new Argument(name, terms.iterator().next());
 	}
 
-	public java.util.List<Term> extractTerms(Node context) {
+	public java.util.List<Term> extractTerms(Node context)
+	{
 		java.util.List<Term> terms = new ArrayList<Term>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return terms;
 		}
 
@@ -903,27 +1004,25 @@ class XmlExtractor {
 
 		Term[] orderedTerms = new Term[childNodes.getLength()];
 
-		java.util.List<Variable> variables = extractVariables(context,
-				positions);
+		java.util.List<Variable> variables = extractVariables(context, positions);
 		insertOrdered(orderedTerms, variables, positions);
 
 		java.util.List<List> lists = extractLists(context, positions);
 		insertOrdered(orderedTerms, lists, positions);
 
-		java.util.List<Expression> expressions = extractExpressions(context,
-				positions);
+		java.util.List<Expression> expressions = extractExpressions(context, positions);
 		insertOrdered(orderedTerms, expressions, positions);
 
-		java.util.List<ExternalExpression> externalTerms = extractExternalTerms(
-				context, positions);
+		java.util.List<ExternalExpression> externalTerms = extractExternalTerms(context, positions);
 		insertOrdered(orderedTerms, externalTerms, positions);
 
-		java.util.List<Constant> constantTerms = extractConstants(context,
-				positions);
+		java.util.List<Constant> constantTerms = extractConstants(context, positions);
 		insertOrdered(orderedTerms, constantTerms, positions);
 
-		for (Term orderedTerm : orderedTerms) {
-			if (orderedTerm != null) {
+		for (Term orderedTerm : orderedTerms)
+		{
+			if (orderedTerm != null)
+			{
 				terms.add(orderedTerm);
 			}
 		}
@@ -931,22 +1030,26 @@ class XmlExtractor {
 		return terms;
 	}
 
-	private void insertOrdered(Object[] array, java.util.List<?> objects,
-			Map<Object, Integer> positions) {
-		for (Object object : objects) {
+	private void insertOrdered(Object[] array, java.util.List<?> objects, Map<Object, Integer> positions)
+	{
+		for (Object object : objects)
+		{
 			Integer position = positions.get(object);
 
-			if (position != null && position >= 0) {
+			if (position != null && position >= 0)
+			{
 				array[position] = object;
 			}
 		}
 	}
 
-	public Metadata extractMetadata(Node context) {
+	public Metadata extractMetadata(Node context)
+	{
 		Node idNode = queryNode(context, RIF_ID);
 
 		Constant id = null;
-		if (idNode != null) {
+		if (idNode != null)
+		{
 			id = extractConstant(idNode);
 		}
 
@@ -954,10 +1057,11 @@ class XmlExtractor {
 
 		Node metaNode = queryNode(context, RIF_META);
 
-		if (metaNode != null) {
-			NodeList formulaNodes = queryNodeList(metaNode, RIF_AND + "/"
-					+ RIF_FORMULA);
-			for (int i = 0; i < formulaNodes.getLength(); i++) {
+		if (metaNode != null)
+		{
+			NodeList formulaNodes = queryNodeList(metaNode, RIF_AND + "/" + RIF_FORMULA);
+			for (int i = 0; i < formulaNodes.getLength(); i++)
+			{
 				Node formulaNode = formulaNodes.item(i);
 
 				java.util.List<Frame> frames = extractFrames(formulaNode);
@@ -971,20 +1075,24 @@ class XmlExtractor {
 		return new Metadata(id, allFrames);
 	}
 
-	public java.util.List<Frame> extractFrames(Node context) {
+	public java.util.List<Frame> extractFrames(Node context)
+	{
 		java.util.List<Frame> frames = new ArrayList<Frame>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return frames;
 		}
 
 		NodeList frameNodes = queryNodeList(context, RIF_FRAME);
 
-		if (frameNodes == null) {
+		if (frameNodes == null)
+		{
 			return frames;
 		}
 
-		for (int i = 0; i < frameNodes.getLength(); i++) {
+		for (int i = 0; i < frameNodes.getLength(); i++)
+		{
 			Node frameNode = frameNodes.item(i);
 
 			Node objectNode = queryNode(frameNode, RIF_OBJECT);
@@ -994,12 +1102,15 @@ class XmlExtractor {
 			java.util.List<Attribute> attributes = new ArrayList<Attribute>();
 
 			NodeList slotNodes = queryNodeList(frameNode, RIF_SLOT);
-			if (slotNodes != null) {
-				for (int j = 0; j < slotNodes.getLength(); j++) {
+			if (slotNodes != null)
+			{
+				for (int j = 0; j < slotNodes.getLength(); j++)
+				{
 					Node slotNode = slotNodes.item(j);
 					java.util.List<Term> slotTerms = extractTerms(slotNode);
 
-					if (slotTerms.size() == 2) {
+					if (slotTerms.size() == 2)
+					{
 						Term name = slotTerms.get(0);
 						Term value = slotTerms.get(1);
 
@@ -1016,18 +1127,22 @@ class XmlExtractor {
 		return frames;
 	}
 
-	public java.util.List<Import> extractImports(NodeList context) {
+	public java.util.List<Import> extractImports(NodeList context)
+	{
 		java.util.List<Import> imports = new ArrayList<Import>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return imports;
 		}
 
 		NodeList directiveList = (NodeList) context;
-		for (int i = 0; i < directiveList.getLength(); i++) {
+		for (int i = 0; i < directiveList.getLength(); i++)
+		{
 			Node directiveNode = directiveList.item(i);
 			Import importt = extractImport(directiveNode);
-			if (importt != null) {
+			if (importt != null)
+			{
 				imports.add(importt);
 			}
 		}
@@ -1035,14 +1150,17 @@ class XmlExtractor {
 		return imports;
 	}
 
-	public Import extractImport(Node context) {
+	public Import extractImport(Node context)
+	{
 		Node importNode = queryNode(context, RIF_IMPORT);
 
 		Node locationNode = queryNode(importNode, RIF_LOCATION);
-		Constant location = extractConstant(locationNode);
-
+		String location = locationNode.getTextContent().trim();
+//		Constant location = new Constant(RIF_LOCATION, "", locationText);
+		
 		Node profileNode = queryNode(importNode, RIF_PROFILE);
-		Constant profile = extractConstant(profileNode);
+		String profile = profileNode.getTextContent().trim();
+//		Constant profile = new Constant(RIF_PROFILE,"", profileText);
 
 		Import importt = new Import(location, profile);
 		setMetadata(importNode, importt);
@@ -1050,31 +1168,36 @@ class XmlExtractor {
 		return importt;
 	}
 
-	public java.util.List<Constant> extractConstants(Node context) {
+	public java.util.List<Constant> extractConstants(Node context)
+	{
 		return extractConstants(context, null);
 	}
-
-	public java.util.List<Constant> extractConstants(Node context,
-			Map<Object, Integer> positions) {
+ 
+	public java.util.List<Constant> extractConstants(Node context, Map<Object, Integer> positions)
+	{
 		java.util.List<Constant> constants = new ArrayList<Constant>();
 
-		if (context == null) {
+		if (context == null)
+		{
 			return constants;
 		}
 
 		NodeList constantNodes = queryNodeList(context, RIF_CONST);
-		for (int i = 0; i < constantNodes.getLength(); i++) {
+		for (int i = 0; i < constantNodes.getLength(); i++)
+		{
 			Node constNode = constantNodes.item(i);
 
 			String language = null;
 			Node languageNode = constNode.getAttributes().getNamedItem("lang");
-			if (languageNode != null) {
+			if (languageNode != null)
+			{
 				language = languageNode.getTextContent().trim();
 			}
 
 			String type = null;
 			Node typeNode = constNode.getAttributes().getNamedItem("type");
-			if (typeNode != null) {
+			if (typeNode != null)
+			{
 				type = typeNode.getTextContent().trim();
 			}
 
@@ -1091,13 +1214,16 @@ class XmlExtractor {
 		return constants;
 	}
 
-	public Constant extractConstant(Node context) {
-		if (context == null) {
+	public Constant extractConstant(Node context)
+	{
+		if (context == null)
+		{
 			return null;
 		}
 
 		java.util.List<Constant> constants = extractConstants(context);
-		if (constants.size() > 0) {
+		if (constants.size() > 0)
+		{
 			return constants.iterator().next();
 		}
 
