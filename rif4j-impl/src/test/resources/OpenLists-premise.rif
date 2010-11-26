@@ -17,10 +17,10 @@
             <args ordered="yes">
               <List>
                 <items ordered="yes">
-                  <Const type="&rif;iri">http://example.org/example#a</Const>
+                  	<Const type="&rif;iri">http://example.org/example#a</Const>
                 </items>
                 <rest>
-                  <Const type="&xs;string">b</Const>
+                	<Const type="&xs;string">b</Const>
                 </rest>
               </List>
             </args>
