@@ -1,0 +1,9 @@
+Document(
+  Group  (
+    Forall ?x ( <http://example.org/example#a>(?x) :-
+                   And ( <http://example.org/example#a>(External(<http://www.w3.org/2007/rif-builtin-function#numeric-add>(?x "1"^^<http://www.w3.org/2001/XMLSchema#integer>)))  
+                         External(<http://www.w3.org/2007/rif-builtin-predicate#numeric-greater-than>(?x "0"^^<http://www.w3.org/2001/XMLSchema#integer>)))
+              )
+    <http://example.org/example#a>("10"^^<http://www.w3.org/2001/XMLSchema#integer>)
+  ) 
+)

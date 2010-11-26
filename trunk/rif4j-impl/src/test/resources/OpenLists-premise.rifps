@@ -1,0 +1,5 @@
+Document(
+  Group(
+   <http://example.org/example#p>(List(<http://example.org/example#a> | "b"^^<http://www.w3.org/2001/XMLSchema#string>))
+  )
+ )
