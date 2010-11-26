@@ -290,7 +290,7 @@ class XmlExtractor
 		Document document = new Document();
 		document.setImports(imports);
 		document.setGroup(group);
-
+		
 		setMetadata(documentNode, document);
 
 		return document;

@@ -208,14 +208,13 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor, Cla
 		{
 			imprt.accept(this);
 		}
-
+		
 		if (document.getGroup() != null)
 		{
 			document.getGroup().accept(this);
 		}
 
 		decreaseLevel();
-
 		append(")");
 	}
 
@@ -245,14 +244,13 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor, Cla
 	@Override
 	public void visit(Import imprt)
 	{
-		//TODO Proper serialization of location and profile
 		describe(imprt);
 		append("Import(");
-//		imprt.getLocation().accept(this);
-
+		append("<" + imprt.getLocation() + ">");		
+		
 		if (imprt.getProfile() != null)
 		{
-//			imprt.getProfile().accept(this);
+			append(" <" + imprt.getProfile() + ">");
 		}
 
 		appendInline(")");
@@ -379,6 +377,23 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor, Cla
 			element.accept(this);
 		}
 
+		
+		if (list.getRestElements().size()>0)
+		{
+			appendInline(" | ");
+			
+			i=0;
+			for (Term element : list.getRestElements())
+			{
+				if (i++ > 0)
+				{
+					appendInline(" ");
+				}
+
+				element.accept(this);				
+			}
+		}
+		
 		appendInline(")");
 	}
 
@@ -613,7 +628,6 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor, Cla
 
 		clause.accept((ClauseVisitor) this);
 	}
-
 
 	public String getString()
 	{
