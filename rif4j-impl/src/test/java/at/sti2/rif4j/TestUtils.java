@@ -25,19 +25,21 @@ public class TestUtils
 		{
 		    public boolean accept(File dir, String name) 
 		    {
-		        return (name.endsWith("rif") || name.endsWith("xml"));
+		        return (name.endsWith("rif"));
 		    }
-		};		
+		};
 		
 		return dir.list(filter);
 	}
-	 
 	
 	public static URI getFileURI(String fileName)
 	{		
 		try
 		{
 			return TestUtils.class.getClassLoader().getResource(fileName).toURI();
+		}
+		catch (NullPointerException npe)
+		{
 		}
 		catch (URISyntaxException e)
 		{			
