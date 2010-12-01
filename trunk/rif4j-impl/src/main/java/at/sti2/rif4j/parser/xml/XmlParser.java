@@ -21,7 +21,6 @@ import java.io.Reader;
 import java.util.Collection;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.NamedNodeMap;
@@ -41,16 +40,16 @@ import at.sti2.rif4j.serializer.xml.XmlHandlerBase;
  * XML parser API has to be present on the classpath.
  * 
  * @author Adrian Marte
+ * @author Iker Larizgoitia Abad
  */
-public class XmlParser extends XmlHandlerBase
-{
+public class XmlParser extends XmlHandlerBase {
+	
 	/**
 	 * Creates a new parser for RIF XML documents and formulas. By default the
 	 * parser does not validate the XML documents against the XML schema of RIF
 	 * XML.
 	 */
-	public XmlParser()
-	{
+	public XmlParser() {
 		super();
 	}
 
@@ -63,8 +62,7 @@ public class XmlParser extends XmlHandlerBase
 	 *            If set to <code>true</code>, the parser first validates the
 	 *            specified XML document against the XML schemo of RIF XML.
 	 */
-	public XmlParser(boolean useValidation)
-	{
+	public XmlParser(boolean useValidation) {
 		super(useValidation);
 	}
 
@@ -81,10 +79,10 @@ public class XmlParser extends XmlHandlerBase
 	 * @throws ParserConfigurationException
 	 *             Indicates a configuration error.
 	 */
-	public Document parseDocument(Reader reader) throws SAXException, IOException, ParserConfigurationException
-	{
+	public Document parseDocument(Reader reader) throws SAXException,
+			IOException, ParserConfigurationException {
 		org.w3c.dom.Document xmlDocument = parseXml(reader);
-		
+
 		XmlExtractor extractor = new XmlExtractor();
 		Document document = extractor.extractDocument(xmlDocument);
 
@@ -104,35 +102,33 @@ public class XmlParser extends XmlHandlerBase
 	 * @throws ParserConfigurationException
 	 *             Indicates a configuration error.
 	 */
-	public Formula parseFormula(Reader reader) throws ParserConfigurationException, SAXException, IOException
-	{
+	public Formula parseFormula(Reader reader)
+			throws ParserConfigurationException, SAXException, IOException {
 		org.w3c.dom.Document xmlDocument = parseXml(reader);
-		
+
 		XmlExtractor extractor = new XmlExtractor();
 		Collection<Formula> formulas = extractor.extractFormulas(xmlDocument);
-		
-		if (formulas.size() > 0)
-		{
+
+		if (formulas.size() > 0) {
 			return formulas.iterator().next();
 		}
 
 		return null;
 	}
 
-	public org.w3c.dom.Document parseXml(Reader reader) throws ParserConfigurationException, SAXException, IOException
-	{
+	public org.w3c.dom.Document parseXml(Reader reader)
+			throws ParserConfigurationException, SAXException, IOException {
 		InputSource source = new InputSource(reader);
-		
-		DocumentBuilder builder = this.getDocumentBuilder();		
+
+		DocumentBuilder builder = this.getDocumentBuilder();
 		org.w3c.dom.Document xmlDocument = builder.parse(source);
 
-		if (useValidation)
-		{
-			this.validate(xmlDocument,BLD_RULE_XSD);
+		if (useValidation) {
+			this.validate(xmlDocument, BLD_RULE_XSD);
 		}
-		
+
 		this.removeOrderedArgsAttribute(xmlDocument);
-		
+
 		return xmlDocument;
 	}
 
@@ -141,17 +137,18 @@ public class XmlParser extends XmlHandlerBase
 	 * This attribute is optional and has a fixed value, so it is not necessary
 	 * and it is simpler not to have it (and better for testing purposes)
 	 * 
-	 * @param xmlDocument The xml document from which to remove the ordered attribute in the args element
+	 * @param xmlDocument
+	 *            The xml document from which to remove the ordered attribute in
+	 *            the args element
 	 */
-	private void removeOrderedArgsAttribute(org.w3c.dom.Document xmlDocument)
-	{
-		NodeList nodeList = xmlDocument.getElementsByTagName("args");		
-		for (int i = 0; i < nodeList.getLength(); i++)
-		{
+	private void removeOrderedArgsAttribute(org.w3c.dom.Document xmlDocument) {
+		NodeList nodeList = xmlDocument.getElementsByTagName("args");
+		for (int i = 0; i < nodeList.getLength(); i++) {
 			Node node = nodeList.item(i);
 			NamedNodeMap attributes = node.getAttributes();
 			if (attributes.getNamedItem("ordered") != null)
-				attributes.removeNamedItem("ordered");		  
-		}		
-	}	
+				attributes.removeNamedItem("ordered");
+		}
+	}
+	
 }

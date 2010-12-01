@@ -44,7 +44,8 @@ public interface Describable {
 	 * Sets the identifier of this RIF element. <code>null</code> values are
 	 * interpreted as non-present identifiers.
 	 * 
-	 * @param id The identifier of this RIF element.
+	 * @param id
+	 *            The identifier of this RIF element.
 	 */
 	public void setId(Constant id);
 
@@ -63,8 +64,9 @@ public interface Describable {
 	 * interpreted as a conjunction of Frames. <code>null</code> values are
 	 * interpreted as non-present meta data.
 	 * 
-	 * @param metadata The meta data of this RIF element represented as a list
-	 *            of Frames.
+	 * @param metadata
+	 *            The meta data of this RIF element represented as a list of
+	 *            Frames.
 	 */
 	public void setMetadata(List<Frame> metadata);
 

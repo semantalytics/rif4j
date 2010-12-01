@@ -48,9 +48,10 @@ public class Group extends AbstractDescribable implements Describable {
 	 * Creates a new group with the specified list of rules and with an empty
 	 * list of groups.
 	 * 
-	 * @param rules The list of rules of the group.
-	 * @throws NullPointerException If the <code>rules</code> parameter is
-	 *             <code>null</code>.
+	 * @param rules
+	 *            The list of rules of the group.
+	 * @throws NullPointerException
+	 *             If the <code>rules</code> parameter is <code>null</code>.
 	 */
 	public Group(List<Rule> rules) {
 		this(rules, new ArrayList<Group>());
@@ -59,10 +60,13 @@ public class Group extends AbstractDescribable implements Describable {
 	/**
 	 * Creates a new group with the specified list of rules and groups.
 	 * 
-	 * @param rules The list of rules of the group.
-	 * @param groups The list of groups of the group.
-	 * @throws NullPointerException If the <code>rules</code> or
-	 *             <code>groups</code> parameter is <code>null</code>.
+	 * @param rules
+	 *            The list of rules of the group.
+	 * @param groups
+	 *            The list of groups of the group.
+	 * @throws NullPointerException
+	 *             If the <code>rules</code> or <code>groups</code> parameter is
+	 *             <code>null</code>.
 	 */
 	public Group(List<Rule> rules, List<Group> groups) {
 		Assertions.notNull("rules", rules);
@@ -86,9 +90,10 @@ public class Group extends AbstractDescribable implements Describable {
 	/**
 	 * Sets list of rules of this group.
 	 * 
-	 * @param rules The list of rules of this group.
-	 * @throws NullPointerException If the <code>rules</code> parameter is
-	 *             <code>null</code>.
+	 * @param rules
+	 *            The list of rules of this group.
+	 * @throws NullPointerException
+	 *             If the <code>rules</code> parameter is <code>null</code>.
 	 */
 	public void setRules(List<Rule> rules) {
 		Assertions.notNull("rules", rules);
@@ -108,9 +113,10 @@ public class Group extends AbstractDescribable implements Describable {
 	/**
 	 * Sets the list of groups for this group.
 	 * 
-	 * @param groups The list of groups to set for this group.
-	 * @throws NullPointerException If the <code>groups</code> parameter is
-	 *             <code>null</code>.
+	 * @param groups
+	 *            The list of groups to set for this group.
+	 * @throws NullPointerException
+	 *             If the <code>groups</code> parameter is <code>null</code>.
 	 */
 	public void setGroups(List<Group> groups) {
 		Assertions.notNull("groups", groups);

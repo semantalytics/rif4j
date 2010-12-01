@@ -17,30 +17,31 @@ import org.xml.sax.SAXException;
 import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
 
-public class XmlSerializerTest
-{
+/**
+ * @author Daniel Winkler
+ * @author Iker Larizgoitia Abad
+ */
+public class XmlSerializerTest {
 
-	private XmlParser	parser;
+	private XmlParser parser;
 
 	@Before
-	public void setUp() throws Exception
-	{
+	public void setUp() throws Exception {
 		parser = new XmlParser(true);
 	}
 
-	private Reader openTestFile(String fileName)
-	{
-		return new InputStreamReader(getClass().getClassLoader().getResourceAsStream(fileName));
+	private Reader openTestFile(String fileName) {
+		return new InputStreamReader(getClass().getClassLoader()
+				.getResourceAsStream(fileName));
 	}
 
 	@Ignore
 	@Test
-	public void testRoundTrip() throws IOException, SAXException, ParserConfigurationException
-	{
+	public void testRoundTrip() throws IOException, SAXException,
+			ParserConfigurationException {
 		Reader reader = openTestFile("rif-bld-example.xml");
 
-		try
-		{
+		try {
 			Document original = parser.parseDocument(reader);
 
 			XmlSerializer serializer = new XmlSerializer(true);
@@ -51,9 +52,7 @@ public class XmlSerializerTest
 			Document replica = parser.parseDocument(new StringReader(output));
 
 			assertEquals(original, replica);
-		}
-		finally
-		{
+		} finally {
 			reader.close();
 		}
 	}

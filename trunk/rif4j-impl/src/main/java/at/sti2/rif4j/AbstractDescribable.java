@@ -36,7 +36,7 @@ public abstract class AbstractDescribable implements Describable {
 	public AbstractDescribable() {
 		data = new ArrayList<Frame>();
 	}
-	
+
 	public Constant getId() {
 		return id;
 	}

@@ -45,8 +45,10 @@ public class ImpliesFormula extends AbstractDescribable implements Clause,
 	/**
 	 * Creates a new implies formula with the specified body and head.
 	 * 
-	 * @param body The body of the implies formula, i.e. the "if" part.
-	 * @param head The head of the implies formula, i.e. the "then" part.
+	 * @param body
+	 *            The body of the implies formula, i.e. the "if" part.
+	 * @param head
+	 *            The head of the implies formula, i.e. the "then" part.
 	 */
 	public ImpliesFormula(Formula body, List<AtomicFormula> head) {
 		this.head = head;
@@ -69,9 +71,10 @@ public class ImpliesFormula extends AbstractDescribable implements Clause,
 	 * list of atomic formulas, which can be interpreted conjunctively or
 	 * disjunctively.
 	 * 
-	 * @param head The head of this implies formula.
-	 * @throws NullPointerException If the <code>head</code> parameter is
-	 *             <code>null</code>.
+	 * @param head
+	 *            The head of this implies formula.
+	 * @throws NullPointerException
+	 *             If the <code>head</code> parameter is <code>null</code>.
 	 */
 	public void setHead(List<AtomicFormula> head) {
 		Assertions.notNull("head", head);
@@ -91,9 +94,10 @@ public class ImpliesFormula extends AbstractDescribable implements Clause,
 	/**
 	 * Sets the body (the "if" part) of this implies formula.
 	 * 
-	 * @param body The body to set for this implies formula.
-	 * @throws NullPointerException If the <code>body</code> parameter is
-	 *             <code>null</code>.
+	 * @param body
+	 *            The body to set for this implies formula.
+	 * @throws NullPointerException
+	 *             If the <code>body</code> parameter is <code>null</code>.
 	 */
 	public void setBody(Formula body) {
 		Assertions.notNull("body", body);

@@ -30,7 +30,8 @@ public interface Clause extends Rule {
 	/**
 	 * Accept a ClauseVisitor.
 	 * 
-	 * @param visitor The visitor for clauses.
+	 * @param visitor
+	 *            The visitor for clauses.
 	 */
 	public void accept(ClauseVisitor visitor);
 

@@ -26,6 +26,7 @@ import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * @author Adrian Marte
+ * @author Daniel Winkler
  */
 public class EqualAtom extends AbstractDescribable implements AtomicFormula {
 
@@ -41,8 +42,7 @@ public class EqualAtom extends AbstractDescribable implements AtomicFormula {
 
 	private void checkSize(List<Term> terms) {
 		if (terms.size() != 2) {
-			throw new IllegalArgumentException(
-					"Number of terms must be 2");
+			throw new IllegalArgumentException("Number of terms must be 2");
 		}
 	}
 

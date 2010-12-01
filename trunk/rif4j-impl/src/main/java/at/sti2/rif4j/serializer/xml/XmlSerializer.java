@@ -58,57 +58,59 @@ import at.sti2.rif4j.rule.Prefix;
 import at.sti2.rif4j.rule.Rule;
 import at.sti2.rif4j.rule.RuleVisitor;
 
-public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, TermVisitor, ClauseVisitor, FormulaVisitor, AtomicFormulaVisitor,
-		CompositeFormulaVisitor, RuleVisitor, UnitermVisitor
-{
-	private org.w3c.dom.Document	xmlDocument;
-	private final Stack<Element>	elementStack;
+/**
+ * @author Daniel Winkler
+ * @author Iker Larizgoitia Abad
+ */
+public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor,
+		TermVisitor, ClauseVisitor, FormulaVisitor, AtomicFormulaVisitor,
+		CompositeFormulaVisitor, RuleVisitor, UnitermVisitor {
 
-	public XmlSerializer()
-	{
+	private org.w3c.dom.Document xmlDocument;
+
+	private final Stack<Element> elementStack;
+
+	public XmlSerializer() {
 		super();
-		elementStack = new Stack<Element>();		
+		elementStack = new Stack<Element>();
 	}
-	
-	public XmlSerializer(boolean useValidation) 
-	{
+
+	public XmlSerializer(boolean useValidation) {
 		super(useValidation);
 		elementStack = new Stack<Element>();
 	}
-		
-	public String serialize(Document rifDocument) throws ParserConfigurationException, SAXException, IOException
-	{		
-		xmlDocument = this.getXmlDocument(rifDocument);		
-		return serializeXmlDocument(xmlDocument);		
+
+	public String serialize(Document rifDocument)
+			throws ParserConfigurationException, SAXException, IOException {
+		xmlDocument = this.getXmlDocument(rifDocument);
+		return serializeXmlDocument(xmlDocument);
 	}
-	
-	private org.w3c.dom.Document getXmlDocument(Document rifDocument) throws ParserConfigurationException, SAXException, IOException
-	{
+
+	private org.w3c.dom.Document getXmlDocument(Document rifDocument)
+			throws ParserConfigurationException, SAXException, IOException {
 		xmlDocument = this.getNewDocument();
 		rifDocument.accept(this);
 
 		assert elementStack.size() == 1 : "There must be exactly one element on stack representing the root node";
 		Element root = elementStack.pop();
-		// TODO assert that xmlns is not used with other NS 
+		// TODO assert that xmlns is not used with other NS
 		root.setAttribute("xmlns", Namespaces.RIF_NAMESPACE);
-				
+
 		xmlDocument.appendChild(root);
-		
-		if (useValidation)
-		{
-			validate(xmlDocument, BLD_RULE_XSD);			
+
+		if (useValidation) {
+			validate(xmlDocument, BLD_RULE_XSD);
 		}
-		
+
 		return xmlDocument;
 	}
-	
-	private String serializeXmlDocument(org.w3c.dom.Document document)
-	{
-		Writer result = new StringWriter();
-		try
-		{
 
-			Transformer xformer = TransformerFactory.newInstance().newTransformer();
+	private String serializeXmlDocument(org.w3c.dom.Document document) {
+		Writer result = new StringWriter();
+		try {
+
+			Transformer xformer = TransformerFactory.newInstance()
+					.newTransformer();
 			xformer.setOutputProperty(OutputKeys.ENCODING, "UTF8");
 			xformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
@@ -122,33 +124,25 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 			 */
 			xformer.setOutputProperty(OutputKeys.STANDALONE, "no");
 
-			xformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			xformer.setOutputProperty(
+					"{http://xml.apache.org/xslt}indent-amount", "2");
 			xformer.transform(new DOMSource(document), new StreamResult(result));
 			result.flush();
-		}
-		catch (TransformerConfigurationException e)
-		{
+		} catch (TransformerConfigurationException e) {
+			throw new RuntimeException("Error when serializing the XML DOM", e);
+		} catch (TransformerFactoryConfigurationError e) {
+			throw new RuntimeException("Error when serializing the XML DOM", e);
+		} catch (TransformerException e) {
+			throw new RuntimeException("Error when serializing the XML DOM", e);
+		} catch (IOException e) {
 			throw new RuntimeException("Error when serializing the XML DOM", e);
 		}
-		catch (TransformerFactoryConfigurationError e)
-		{
-			throw new RuntimeException("Error when serializing the XML DOM", e);
-		}
-		catch (TransformerException e)
-		{
-			throw new RuntimeException("Error when serializing the XML DOM", e);
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException("Error when serializing the XML DOM", e);
-		}
-		
+
 		return result.toString();
 	}
-	
+
 	@Override
-	public void visit(Document rifDocument)
-	{
+	public void visit(Document rifDocument) {
 		/*
 		 * <xs:element name="Document"> <!-- Document ::= IRIMETA? 'Document'
 		 * '(' Base? Prefix* Import* Group? ')' --> <xs:complexType>
@@ -167,15 +161,15 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 		 */
 
 		// create root node
-		Element root = xmlDocument.createElementNS(Namespaces.RIF_NAMESPACE, "Document");
+		Element root = xmlDocument.createElementNS(Namespaces.RIF_NAMESPACE,
+				"Document");
 		elementStack.push(root);
 
 		// handle iri and meta data
 		visitDescribable(rifDocument);
 
 		// handle directive, i.e. imports
-		for (Import rifImport : rifDocument.getImports())
-		{
+		for (Import rifImport : rifDocument.getImports()) {
 			appendAndPush("directive");
 			rifImport.accept(this);
 			elementStack.pop();
@@ -184,21 +178,19 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 		// TODO prefixes are not allowed in xml
 		for (Prefix prefix : rifDocument.getPrefixes())
 			prefix.accept(this);
-		
-		if (rifDocument.getGroup() != null)
-		{
+
+		if (rifDocument.getGroup() != null) {
 			appendAndPush("payload");
 			rifDocument.getGroup().accept(this);
 			elementStack.pop();
 		}
-		
+
 		// final assertions
 		assert elementStack.size() == 1;
 		assert elementStack.peek().equals(root);
 	}
 
-	private void visitDescribable(Describable describable)
-	{
+	private void visitDescribable(Describable describable) {
 		/*
 		 * <xs:group name="IRIMETA"> <!-- IRIMETA ::= '(*' IRICONST? (Frame |
 		 * 'And' '(' Frame* ')')? '*)' --> <xs:sequence> <xs:element ref="id"
@@ -229,26 +221,20 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 		 */
 
 		Constant id;
-		if ((id = describable.getId()) != null)
-		{
+		if ((id = describable.getId()) != null) {
 			appendAndPush("id");
 			id.accept(this);
 			elementStack.pop();
 		}
 
 		java.util.List<Frame> metadataList = describable.getMetadata();
-		if (!metadataList.isEmpty())
-		{
+		if (!metadataList.isEmpty()) {
 			appendAndPush("meta");
-			if (metadataList.size() == 1)
-			{
+			if (metadataList.size() == 1) {
 				metadataList.get(0).accept((AtomicFormulaVisitor) this);
-			}
-			else
-			{ // (metadataList.size() > 1)
+			} else { // (metadataList.size() > 1)
 				appendAndPush("And");
-				for (Frame metaData : metadataList)
-				{
+				for (Frame metaData : metadataList) {
 					metaData.accept((AtomicFormulaVisitor) this);
 				}
 				elementStack.pop();
@@ -258,8 +244,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(Group group)
-	{
+	public void visit(Group group) {
 		/*
 		 * <xs:element name="Group"> <!-- Group ::= IRIMETA? 'Group' '(' (RULE |
 		 * Group)* ')' --> <xs:complexType> <xs:sequence> <xs:group
@@ -276,15 +261,13 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 
 		visitDescribable(group);
 
-		for (Rule rule : group.getRules())
-		{
+		for (Rule rule : group.getRules()) {
 			appendAndPush("sentence");
 			rule.accept(this);
 			elementStack.pop();
 		}
 
-		for (Group subGroup : group.getGroups())
-		{
+		for (Group subGroup : group.getGroups()) {
 			appendAndPush("sentence");
 			subGroup.accept(this);
 			elementStack.pop();
@@ -294,8 +277,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(Import imprt)
-	{
+	public void visit(Import imprt) {
 		/*
 		 * <xs:element name="Import"> <!-- Import ::= IRIMETA? 'Import' '('
 		 * LOCATOR PROFILE? ')' LOCATOR ::= ANGLEBRACKIRI PROFILE ::=
@@ -315,11 +297,11 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 
 		appendAndPush("location");
 		elementStack.peek().setTextContent(imprt.getLocation());
-//		imprt.getLocation().accept(this);
+		// imprt.getLocation().accept(this);
 		elementStack.pop();
 
 		appendAndPush("profile");
-//		imprt.getProfile().accept(this);
+		// imprt.getProfile().accept(this);
 		elementStack.peek().setTextContent(imprt.getProfile());
 		elementStack.pop();
 
@@ -327,14 +309,12 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(Prefix prefix)
-	{
+	public void visit(Prefix prefix) {
 		throw new RuntimeException("Prefixes not allowed in XML serialization");
 	}
 
 	@Override
-	public void visit(Constant constant)
-	{
+	public void visit(Constant constant) {
 		/*
 		 * <xs:element name="Const"> <!-- Const ::= '"' UNICODESTRING '"^^'
 		 * SYMSPACE | CONSTSHORT --> <xs:complexType mixed="true"> <xs:sequence>
@@ -357,8 +337,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(Expression expression)
-	{
+	public void visit(Expression expression) {
 		/*
 		 * <xs:element name="Expr"> <!-- Expr ::= UNITERM --> <xs:complexType>
 		 * <xs:sequence> <xs:group ref="UNITERM"/> </xs:sequence>
@@ -373,8 +352,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(ExternalExpression externalExpression)
-	{
+	public void visit(ExternalExpression externalExpression) {
 		/*
 		 * <xs:complexType name="External-FORMULA.type"> <!-- sensitive to
 		 * FORMULA (Atom) context--> <xs:sequence> <xs:group ref="IRIMETA"
@@ -398,8 +376,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(List list)
-	{
+	public void visit(List list) {
 		/*
 		 * <xs:element name="List"> <!-- List ::= 'List' '(' TERM* ')' | 'List'
 		 * '(' TERM+ '|' TERM ')' rewritten as List ::= 'List' '(' LISTELEMENTS?
@@ -420,36 +397,34 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 		 * <xs:element name="rest"> <xs:complexType> <xs:sequence> <xs:group
 		 * ref="TERM"/> </xs:sequence> </xs:complexType> </xs:element>
 		 */
-		
+
 		appendAndPush("List");
-		
+
 		visitDescribable(list);
-		
-		//This attribute is optional and fixed so no need to add it and better for testing purposes
-		//elementStack.peek().setAttribute("ordered", "yes");	
-		
-		if (list.getElements().size() > 0)
-		{
-			appendAndPush("items");		
+
+		// This attribute is optional and fixed so no need to add it and better
+		// for testing purposes
+		// elementStack.peek().setAttribute("ordered", "yes");
+
+		if (list.getElements().size() > 0) {
+			appendAndPush("items");
 			for (Term item : list.getElements())
 				item.accept(this);
 			elementStack.pop();
 		}
-		
-		if (list.getRestElements().size() > 0)
-		{
+
+		if (list.getRestElements().size() > 0) {
 			appendAndPush("rest");
 			for (Term item : list.getRestElements())
 				item.accept(this);
 			elementStack.pop();
 		}
-		
+
 		elementStack.pop();
 	}
 
 	@Override
-	public void visit(Variable variable)
-	{
+	public void visit(Variable variable) {
 		/*
 		 * <xs:element name="Var"> <!-- Var ::= '?' Name --> <xs:complexType
 		 * mixed="true"> <xs:sequence> <xs:group ref="IRIMETA" minOccurs="0"
@@ -466,8 +441,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(ImpliesFormula implies)
-	{
+	public void visit(ImpliesFormula implies) {
 		/*
 		 * <xs:element name="Implies"> <!-- Implies ::= IRIMETA? (ATOMIC | 'And'
 		 * '(' ATOMIC* ')') ':-' FORMULA --> <xs:complexType> <xs:sequence>
@@ -503,15 +477,11 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 		java.util.List<AtomicFormula> headFormulas = implies.getHead();
 
 		appendAndPush("then");
-		if (headFormulas.size() == 1)
-		{
+		if (headFormulas.size() == 1) {
 			headFormulas.get(0).accept((AtomicFormulaVisitor) this);
-		}
-		else if (headFormulas.size() > 1)
-		{
+		} else if (headFormulas.size() > 1) {
 			appendAndPush("And");
-			for (AtomicFormula headFormula : headFormulas)
-			{
+			for (AtomicFormula headFormula : headFormulas) {
 				appendAndPush("formula");
 				headFormula.accept((AtomicFormulaVisitor) this);
 				elementStack.pop();
@@ -524,8 +494,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(AtomicFormula atomicFormula)
-	{
+	public void visit(AtomicFormula atomicFormula) {
 		/*
 		 * <xs:group name="ATOMIC"> <!-- ATOMIC ::= IRIMETA? (Atom | Equal |
 		 * Member | Subclass | Frame) --> <xs:choice> <xs:element ref="Atom"/>
@@ -536,8 +505,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(ExistsFormula existsFormula)
-	{
+	public void visit(ExistsFormula existsFormula) {
 		/*
 		 * <xs:element name="Exists"> <xs:complexType> <xs:sequence> <xs:group
 		 * ref="IRIMETA" minOccurs="0" maxOccurs="1"/> <xs:element ref="declare"
@@ -567,8 +535,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(ExternalFormula externalFormula)
-	{
+	public void visit(ExternalFormula externalFormula) {
 		/*
 		 * <xs:complexType name="External-FORMULA.type"> <!-- sensitive to
 		 * FORMULA (Atom) context--> <xs:sequence> <xs:group ref="IRIMETA"
@@ -588,8 +555,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(ForallFormula forallFormula)
-	{
+	public void visit(ForallFormula forallFormula) {
 		/*
 		 * <xs:group name="RULE"> <!-- RULE ::= (IRIMETA? 'Forall' Var+ '('
 		 * CLAUSE ')') | CLAUSE --> <xs:choice> <xs:element ref="Forall"/>
@@ -612,40 +578,34 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 		 */
 
 		java.util.List<Variable> variables = forallFormula.getVariables();
-		if (variables.size() > 0)
-		{ // Forall
-			
+		if (variables.size() > 0) { // Forall
+
 			appendAndPush("Forall");
 			visitDescribable(forallFormula);
 
-			for (Variable variable : variables)
-			{
+			for (Variable variable : variables) {
 				appendAndPush("declare");
 				variable.accept(this);
 				elementStack.pop();
 			}
-			
+
 			appendAndPush("formula");
 			forallFormula.getClause().accept((ClauseVisitor) this);
 			elementStack.pop();
 
 			elementStack.pop();
-		}
-		else
-		{ // Clause
+		} else { // Clause
 			forallFormula.getClause().accept((ClauseVisitor) this);
 		}
 	}
 
 	@Override
-	public void visit(CompositeFormula compositeFormula)
-	{
+	public void visit(CompositeFormula compositeFormula) {
 		compositeFormula.accept((CompositeFormulaVisitor) this);
 	}
 
 	@Override
-	public void visit(Atom atom)
-	{
+	public void visit(Atom atom) {
 		/*
 		 * <xs:element name="Atom"> <!-- Atom ::= UNITERM --> <xs:complexType>
 		 * <xs:sequence> <xs:group ref="UNITERM"/> </xs:sequence>
@@ -659,8 +619,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 		elementStack.pop();
 	}
 
-	private void visitUniterm(Uniterm atom)
-	{
+	private void visitUniterm(Uniterm atom) {
 		/*
 		 * <xs:group name="UNITERM"> <!-- UNITERM ::= Const '(' (TERM* | (Name
 		 * '->' TERM)*) ')' --> <xs:sequence> <xs:group ref="IRIMETA"
@@ -690,32 +649,26 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 		elementStack.pop();
 
 		java.util.List<Argument> arguments = atom.getArguments();
-		if (!arguments.isEmpty())
-		{
+		if (!arguments.isEmpty()) {
 
-			if (arguments.get(0).getName() == null)
-			{ // arguments
+			if (arguments.get(0).getName() == null) { // arguments
 				appendAndPush("args");
-//				elementStack.peek().setAttribute("ordered", "yes");
+				// elementStack.peek().setAttribute("ordered", "yes");
 
-				for (Argument argument : arguments)
-				{
+				for (Argument argument : arguments) {
 					argument.getValue().accept(this);
 				}
 
 				elementStack.pop();
-			}
-			else
-			{ // slots
-				for (Argument argument : arguments)
-				{
+			} else { // slots
+				for (Argument argument : arguments) {
 					appendAndPush("slot");
 
 					appendAndPush("Name");
 					elementStack.peek().setTextContent(argument.getName());
 					elementStack.pop();
-					
-					argument.getValue().accept(this);					
+
+					argument.getValue().accept(this);
 					elementStack.pop();
 				}
 			}
@@ -723,8 +676,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(EqualAtom equalAtom)
-	{
+	public void visit(EqualAtom equalAtom) {
 		/*
 		 * <xs:element name="Equal"> <!-- Equal ::= TERM '=' TERM -->
 		 * <xs:complexType> <xs:sequence> <xs:group ref="IRIMETA" minOccurs="0"
@@ -754,8 +706,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(Frame frame)
-	{
+	public void visit(Frame frame) {
 		/*
 		 * <xs:element name="Frame"> <!-- Frame ::= TERM '[' (TERM '->' TERM)*
 		 * ']' --> <xs:complexType> <xs:sequence> <xs:group ref="IRIMETA"
@@ -781,10 +732,9 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 		frame.getObject().accept(this);
 		elementStack.pop();
 
-		for (Attribute attribute : frame.getAttributes())
-		{
+		for (Attribute attribute : frame.getAttributes()) {
 			appendAndPush("slot");
-//			elementStack.peek().setAttribute("ordered", "yes");
+			// elementStack.peek().setAttribute("ordered", "yes");
 
 			attribute.getName().accept(this);
 			attribute.getValue().accept(this);
@@ -796,8 +746,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(MemberAtom memberAtom)
-	{
+	public void visit(MemberAtom memberAtom) {
 		/*
 		 * <xs:element name="Member"> <!-- Member ::= TERM '#' TERM -->
 		 * <xs:complexType> <xs:sequence> <xs:group ref="IRIMETA" minOccurs="0"
@@ -821,8 +770,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(SubclassAtom subclassAtom)
-	{
+	public void visit(SubclassAtom subclassAtom) {
 		/*
 		 * <xs:element name="Subclass"> <!-- Subclass ::= TERM '##' TERM -->
 		 * <xs:complexType> <xs:sequence> <xs:group ref="IRIMETA" minOccurs="0"
@@ -852,8 +800,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(AndFormula andFormula)
-	{
+	public void visit(AndFormula andFormula) {
 		/*
 		 * <xs:element name="And"> <xs:complexType> <xs:sequence> <xs:group
 		 * ref="IRIMETA" minOccurs="0" maxOccurs="1"/> <xs:element ref="formula"
@@ -870,10 +817,8 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 		elementStack.pop();
 	}
 
-	private void visitFormulas(java.util.List<Formula> formulas)
-	{
-		for (Formula formula : formulas)
-		{
+	private void visitFormulas(java.util.List<Formula> formulas) {
+		for (Formula formula : formulas) {
 			appendAndPush("formula");
 			formula.accept(this);
 			elementStack.pop();
@@ -881,8 +826,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(OrFormula orFormula)
-	{
+	public void visit(OrFormula orFormula) {
 		/*
 		 * <xs:element name="Or"> <xs:complexType> <xs:sequence> <xs:group
 		 * ref="IRIMETA" minOccurs="0" maxOccurs="1"/> <xs:element ref="formula"
@@ -900,8 +844,7 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 	}
 
 	@Override
-	public void visit(Clause clause)
-	{
+	public void visit(Clause clause) {
 		/*
 		 * <xs:group name="CLAUSE"> <!-- CLAUSE ::= Implies | ATOMIC -->
 		 * <xs:choice> <xs:element ref="Implies"/> <xs:group ref="ATOMIC"/>
@@ -911,15 +854,14 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor, Te
 		clause.accept((ClauseVisitor) this);
 	}
 
-	private void appendAndPush(Element element)
-	{
+	private void appendAndPush(Element element) {
 		elementStack.peek().appendChild(element);
 		elementStack.push(element);
 	}
 
-	private void appendAndPush(String elementName)
-	{
-		appendAndPush(xmlDocument.createElementNS(Namespaces.RIF_NAMESPACE, elementName));
+	private void appendAndPush(String elementName) {
+		appendAndPush(xmlDocument.createElementNS(Namespaces.RIF_NAMESPACE,
+				elementName));
 	}
-	
+
 }

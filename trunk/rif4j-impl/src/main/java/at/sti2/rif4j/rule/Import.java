@@ -19,54 +19,45 @@ package at.sti2.rif4j.rule;
 import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
 import at.sti2.rif4j.Describable;
-import at.sti2.rif4j.condition.Constant;
 import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * @author Adrian Marte
  */
-public class Import extends AbstractDescribable implements Describable
-{
+public class Import extends AbstractDescribable implements Describable {
 	private String location;
 	private String profile;
 
-	public Import(String location, String profile)
-	{
+	public Import(String location, String profile) {
 		this.location = location;
 		this.profile = profile;
 	}
 
-	public String getLocation()
-	{
+	public String getLocation() {
 		return location;
 	}
 
-	public void setLocation(String location)
-	{
+	public void setLocation(String location) {
 		Assertions.notNull("location", location);
 
 		this.location = location;
 	}
 
-	public String getProfile()
-	{
+	public String getProfile() {
 		return profile;
 	}
 
-	public void setProfile(String profile)
-	{
+	public void setProfile(String profile) {
 		Assertions.notNull("profile", profile);
 		this.profile = profile;
 	}
 
-	public void accept(DocumentVisitor visitor)
-	{
+	public void accept(DocumentVisitor visitor) {
 		visitor.visit(this);
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		PresentationSerializer serializer = new PresentationSerializer();
 		accept(serializer);
 		return serializer.getString();

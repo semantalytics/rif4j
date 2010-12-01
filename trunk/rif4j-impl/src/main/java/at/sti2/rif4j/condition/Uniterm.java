@@ -22,6 +22,7 @@ import at.sti2.rif4j.Describable;
 
 /**
  * @author Adrian Marte
+ * @author Daniel Winkler
  */
 public interface Uniterm extends Describable {
 

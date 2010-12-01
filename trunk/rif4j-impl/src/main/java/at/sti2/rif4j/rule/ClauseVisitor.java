@@ -28,14 +28,16 @@ public interface ClauseVisitor {
 	/**
 	 * Visit an implies formula.
 	 * 
-	 * @param implies The implies formula to visit.
+	 * @param implies
+	 *            The implies formula to visit.
 	 */
 	public void visit(ImpliesFormula implies);
 
 	/**
 	 * Visit an atomic formula.
 	 * 
-	 * @param atomicFormula The atomic formula to visit.
+	 * @param atomicFormula
+	 *            The atomic formula to visit.
 	 */
 	public void visit(AtomicFormula atomicFormula);
 

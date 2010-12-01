@@ -3,7 +3,6 @@ package at.sti2.rif4j.parser.xml;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -14,73 +13,69 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.Rule;
 
-public class XmlParserTest
-{
-	private XmlParser	parser;
+/**
+ * @author Adrian Marte
+ * @author Iker Larizgoitia Abad
+ */
+public class XmlParserTest {
+
+	private XmlParser parser;
 
 	@Before
-	public void setUp() throws Exception
-	{
+	public void setUp() throws Exception {
 		parser = new XmlParser(true);
 	}
 
-	private Reader openTestFile(String fileName)
-	{
-		return new InputStreamReader(getClass().getClassLoader().getResourceAsStream(fileName));
+	private Reader openTestFile(String fileName) {
+		return new InputStreamReader(getClass().getClassLoader()
+				.getResourceAsStream(fileName));
 	}
 
 	// Just tests if parser generates correct number of rules.
 	@Ignore
 	@Test
-	public void parseClassMembership() throws IOException, SAXException, ParserConfigurationException
-	{
+	public void parseClassMembership() throws IOException, SAXException,
+			ParserConfigurationException {
 		Reader reader = openTestFile("Class_Membership.xml");
 
-		try
-		{
+		try {
 			Document document = parser.parseDocument(reader);
 
 			Assert.assertNotNull("Document must not be null", document);
 			Assert.assertNotNull("Group must not be null", document.getGroup());
 
 			List<Rule> rules = document.getGroup().getAllRules();
-			
+
 			Assert.assertEquals("Incorrect number of rules", 4, rules.size());
-		}
-		finally
-		{
+		} finally {
 			reader.close();
 		}
 	}
-	
+
 	@Ignore
 	@Test
-	public void extractRules_ClassMembership() throws SAXException, IOException, ParserConfigurationException 
-	{
+	public void extractRules_ClassMembership() throws SAXException,
+			IOException, ParserConfigurationException {
 		Reader reader = openTestFile("Class_Membership.xml");
 
-		try
-		{
+		try {
 			Document document = parser.parseDocument(reader);
-			
+
 			Assert.assertNotNull("Document must not be null", document);
 			Assert.assertNotNull("Group must not be null", document.getGroup());
 
 			List<Rule> rules = document.getGroup().getAllRules();
 			Assert.assertEquals("Incorrect number of rules", 4, rules.size());
-			
-			for (Rule rule : rules)
-			{
-//				System.out.println("r: " + rule.toString());
-			}				
-		}
-		finally
-		{
+
+			for (Rule rule : rules) {
+				// System.out.println("r: " + rule.toString());
+			}
+		} finally {
 			reader.close();
 		}
-	}	
+	}
+
 }

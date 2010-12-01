@@ -39,8 +39,10 @@ class SimpleUniterm extends AbstractDescribable implements Uniterm {
 	/**
 	 * Creates a new uniterm with the specified operator and arguments.
 	 * 
-	 * @param operator The operator of the uniterm.
-	 * @param arguments The arguments of the uniterm.
+	 * @param operator
+	 *            The operator of the uniterm.
+	 * @param arguments
+	 *            The arguments of the uniterm.
 	 */
 	public SimpleUniterm(Constant operator, List<Argument> arguments) {
 		this.operator = operator;

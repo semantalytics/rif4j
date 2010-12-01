@@ -83,7 +83,8 @@ public class Document extends AbstractDescribable {
 	/**
 	 * Sets the group of this document.
 	 * 
-	 * @param group The group to set for this document.
+	 * @param group
+	 *            The group to set for this document.
 	 */
 	public void setGroup(Group group) {
 		this.group = group;

@@ -17,57 +17,51 @@ import org.xml.sax.SAXException;
 import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
 
-public class RifToIrisTranslator
-{
+/**
+ * @author Iker Larizgoitia Abad
+ */
+public class RifToIrisTranslator {
+
 	Map<IPredicate, IRelation> facts;
+
 	List<IRule> rules;
-	 
-	public void translate(Reader rifXmlFileReader) 
-	{		
+
+	public void translate(Reader rifXmlFileReader) {
 		XmlParser parser = new XmlParser(true);
-		Document rifDocument =null;
-		
-		try
-		{
+		Document rifDocument = null;
+
+		try {
 			rifDocument = parser.parseDocument(rifXmlFileReader);
-		}
-		catch (SAXException e)
-		{
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (ParserConfigurationException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+
 		if (rifDocument == null)
-			return;  //TODO Treat error
-		
-		
+			return; // TODO Treat error
+
 		facts = new HashMap<IPredicate, IRelation>();
 		rules = new ArrayList<IRule>();
-		
-		RifToIrisVisitor visitor = new RifToIrisVisitor(facts, rules);				
-		rifDocument.accept(visitor);				
-		
+
+		RifToIrisVisitor visitor = new RifToIrisVisitor(facts, rules);
+		rifDocument.accept(visitor);
+
 		this.facts = visitor.getFacts();
-		this.rules = visitor.getRules();				
+		this.rules = visitor.getRules();
 	}
 
-	public Map<IPredicate, IRelation> getFacts()
-	{
+	public Map<IPredicate, IRelation> getFacts() {
 		return facts;
 	}
 
-	public List<IRule> getRules()
-	{
+	public List<IRule> getRules() {
 		return rules;
 	}
+
 }
