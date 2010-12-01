@@ -22,6 +22,10 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import at.sti2.rif4j.parser.xml.XmlParser;
+import at.sti2.rif4j.rule.Document;
+import at.sti2.rif4j.rule.Rule;
+
 /**
  * @author Iker Larizgoitia Abad
  */
@@ -54,6 +58,36 @@ public class TestUtils {
 		}
 
 		return null;
+	}
+
+	public static Document parseDocument(String fileName) {
+		XmlParser parser = new XmlParser();
+
+		Reader reader = getFileReader(fileName);
+		Document document = null;
+
+		try {
+			document = parser.parseDocument(reader);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return document;
+	}
+
+	public static Rule parseRule(String fileName) {
+		XmlParser parser = new XmlParser();
+
+		Reader reader = getFileReader(fileName);
+		Rule rule = null;
+
+		try {
+			rule = parser.parseRule(reader);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return rule;
 	}
 
 }
