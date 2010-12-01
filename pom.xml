@@ -12,6 +12,7 @@
 	<modules>
 		<module>rif4j-impl</module>
 		<module>rif4j-wsml</module>
+		<module>rif4j-iris</module>
 		<module>rif4j-parser</module>
 	</modules>
 
