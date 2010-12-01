@@ -18,9 +18,18 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sourceforge.wsmo4j</groupId>
-			<artifactId>wsmo4j-impl</artifactId>
-			<version>2.1.2-SNAPSHOT</version>
+			<groupId>at.sti2.rif4j</groupId>
+			<artifactId>rif4j-impl</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.wsml2reasoner</groupId>
+			<artifactId>wsml2reasoner-impl</artifactId>
+			<version>0.8.3-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>
