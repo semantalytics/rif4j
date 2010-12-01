@@ -1,0 +1,8 @@
+Document(
+  Group (
+    Forall ?C ?I ?P ?V ( ?I[?P -> ?V] :- And (?C[?P -> ?V] ?I#?C ) ) 
+
+    <http://example.org/people#john>#<http://example.org/concepts#Person>
+    <http://example.org/concepts#Person>[<http://example.org/scientific-classification#phylum> -> <http://example.org/scientific-classification#Chordata>]       
+  )
+)

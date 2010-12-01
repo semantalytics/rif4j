@@ -1,0 +1,8 @@
+Document(
+   Group
+   (
+     Forall ?buyer ?item ?seller (
+        <http://example.org/example#Buy>(?buyer ?item ?seller) :- <http://example.org/example#Sell>(?seller ?item ?buyer ?price)
+     )
+   )
+ )

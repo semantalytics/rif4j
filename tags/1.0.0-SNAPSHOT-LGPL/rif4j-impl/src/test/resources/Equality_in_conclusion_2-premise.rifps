@@ -1,0 +1,6 @@
+Document(
+  Group  (
+     Forall ?x ( <http://example.org/example#workZIPCode>(?x) = <http://example.org/example#homeZIPCode>(?x) :- <http://example.org/example#homeWorker>(?x) ) 
+     <http://example.org/example#homeWorker>(<http://example.org/example#a>)
+  ) 
+)
