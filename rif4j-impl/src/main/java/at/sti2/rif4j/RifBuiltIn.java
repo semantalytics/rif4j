@@ -582,7 +582,8 @@ public enum RifBuiltIn {
 	/**
 	 * Finds the built-in for the specified URI.
 	 * 
-	 * @param uri The URI of the built-in to look for.
+	 * @param uri
+	 *            The URI of the built-in to look for.
 	 * @return The corresponding built-in for the specified URI, or
 	 *         <code>null</code> if no such built-in can be found.
 	 */
@@ -593,7 +594,8 @@ public enum RifBuiltIn {
 	/**
 	 * Checks if the specified URI represents a built-in.
 	 * 
-	 * @param uri The URI to check if it represents a built-in.
+	 * @param uri
+	 *            The URI to check if it represents a built-in.
 	 * @return true if the specified URI represents a built-in, false otherwise.
 	 */
 	public static boolean isBuiltIn(String uri) {

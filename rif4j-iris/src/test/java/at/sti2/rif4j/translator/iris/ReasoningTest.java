@@ -9,10 +9,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -38,59 +36,59 @@ import at.sti2.rif4j.TestUtils;
 import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
 
+public class ReasoningTest {
 
-public class ReasoningTest
-{
 	Configuration configuration = null;
-	
+
 	@Before
-	public void setUp() throws Exception
-	{
-		configuration = org.deri.iris.KnowledgeBaseFactory.getDefaultConfiguration();
+	public void setUp() throws Exception {
+		configuration = org.deri.iris.KnowledgeBaseFactory
+				.getDefaultConfiguration();
 	}
 
 	@After
-	public void tearDown() throws Exception
-	{
+	public void tearDown() throws Exception {
 		configuration = null;
 	}
 
 	@Test
-	public void testReasoning()
-	{
+	public void testReasoning() {
 		String rifXmlFileName = "Class_Membership.xml";
-		
+
 		Reader rifXmlFileReader = TestUtils.getFileReader(rifXmlFileName);
-		assertNotNull("Test file " + rifXmlFileName + " could not be found", rifXmlFileReader);
-		
+		assertNotNull("Test file " + rifXmlFileName + " could not be found",
+				rifXmlFileReader);
+
 		RifToIrisTranslator translator = new RifToIrisTranslator();
 		translator.translate(rifXmlFileReader);
-		
-		assertTrue("Rules were not found", translator.getRules().size()>0);
-		assertTrue("Factos were not found", translator.getFacts().size()>0);
-		
-		try
-		{
-			Configuration configuration = org.deri.iris.KnowledgeBaseFactory.getDefaultConfiguration();			
-			
-			Map<IPredicate, IRelation> facts = translator.getFacts();			
-			List<IRule> rules = translator.getRules();			
-			
-			IKnowledgeBase irisKnowledgeBase = KnowledgeBaseFactory.createKnowledgeBase(facts, rules, configuration);
-			
-			IQuery query = Factory.BASIC.createQuery(createLiteral("http://example.com/concepts#reject", "http://example.com/instances#John", "http://example.com/instances#Milk"));						
+
+		assertTrue("Rules were not found", translator.getRules().size() > 0);
+		assertTrue("Factos were not found", translator.getFacts().size() > 0);
+
+		try {
+			Configuration configuration = org.deri.iris.KnowledgeBaseFactory
+					.getDefaultConfiguration();
+
+			Map<IPredicate, IRelation> facts = translator.getFacts();
+			List<IRule> rules = translator.getRules();
+
+			IKnowledgeBase irisKnowledgeBase = KnowledgeBaseFactory
+					.createKnowledgeBase(facts, rules, configuration);
+
+			IQuery query = Factory.BASIC.createQuery(createLiteral(
+					"http://example.com/concepts#reject",
+					"http://example.com/instances#John",
+					"http://example.com/instances#Milk"));
 			IRelation relation = irisKnowledgeBase.execute(query);
 			assertNotNull(relation);
-			
+
 			relation.toString();
-		}
-		catch (EvaluationException e)
-		{
+		} catch (EvaluationException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
-		}		
+		}
 	}
-	
+
 	/**
 	 * Creates a positive literal out of a predicate name and a set of variable
 	 * strings.
@@ -108,24 +106,25 @@ public class ReasoningTest
 	 * @throws IllegalArgumentException
 	 *             if the name of the predicate is 0 characters long
 	 */
-	private static ILiteral createLiteral(final String pred, final String... vars)
-	{
-		if ((pred == null) || (vars == null))
-		{
-			throw new NullPointerException("The predicate and the vars must not be null");
+	private static ILiteral createLiteral(final String pred,
+			final String... vars) {
+		if ((pred == null) || (vars == null)) {
+			throw new NullPointerException(
+					"The predicate and the vars must not be null");
 		}
-		if (pred.length() <= 0)
-		{
-			throw new IllegalArgumentException("The predicate name must be longer than 0 chars");
+		if (pred.length() <= 0) {
+			throw new IllegalArgumentException(
+					"The predicate name must be longer than 0 chars");
 		}
-		if (Arrays.asList(vars).contains(null))
-		{
+		if (Arrays.asList(vars).contains(null)) {
 			throw new NullPointerException("The vars must not contain null");
 		}
 
-		return BASIC.createLiteral(true, BASIC.createPredicate(pred, vars.length), BASIC.createTuple(new ArrayList<ITerm>(createVarList(vars))));
+		return BASIC.createLiteral(true,
+				BASIC.createPredicate(pred, vars.length),
+				BASIC.createTuple(new ArrayList<ITerm>(createVarList(vars))));
 	}
-	
+
 	/**
 	 * Creates a list of IVariables out of a list of strings.
 	 * 
@@ -135,49 +134,40 @@ public class ReasoningTest
 	 * @throws NullPointerException
 	 *             if the vars is null, or contains null
 	 */
-	private static List<IVariable> createVarList(final String... vars)
-	{
-		if ((vars == null) || Arrays.asList(vars).contains(null))
-		{
-			throw new NullPointerException("The vars must not be null and must not contain null");
+	private static List<IVariable> createVarList(final String... vars) {
+		if ((vars == null) || Arrays.asList(vars).contains(null)) {
+			throw new NullPointerException(
+					"The vars must not be null and must not contain null");
 		}
 		final List<IVariable> v = new ArrayList<IVariable>(vars.length);
-		for (final String var : vars)
-		{
+		for (final String var : vars) {
 			v.add(TERM.createVariable(var));
 		}
 		return v;
 	}
-	
+
 	@Ignore
 	@Test
-	public void testPresentationForm()
-	{
+	public void testPresentationForm() {
 		XmlParser parser = new XmlParser(true);
-		Document rifDocument =null;
-		
+		Document rifDocument = null;
+
 		String rifXmlFileName = "Class_Membership.xml";
 		Reader rifXmlFileReader = TestUtils.getFileReader(rifXmlFileName);
-		
-		try
-		{
+
+		try {
 			rifDocument = parser.parseDocument(rifXmlFileReader);
-//			System.out.println(rifDocument.toString());
-		}
-		catch (SAXException e)
-		{
+			// System.out.println(rifDocument.toString());
+		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (ParserConfigurationException e)
-		{
+		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
 }

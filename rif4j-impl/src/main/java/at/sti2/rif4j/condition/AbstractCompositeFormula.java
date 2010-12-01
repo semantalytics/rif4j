@@ -41,8 +41,10 @@ abstract class AbstractCompositeFormula extends AbstractDescribable implements
 	/**
 	 * Creates a new composite formula with the specified list of formulas.
 	 * 
-	 * @param formulas The list of formulas this composite formulas contains.
-	 * @throws NullPointerException If formulas is <code>null</code>.
+	 * @param formulas
+	 *            The list of formulas this composite formulas contains.
+	 * @throws NullPointerException
+	 *             If formulas is <code>null</code>.
 	 */
 	public AbstractCompositeFormula(List<Formula> formulas) {
 		Assertions.notNull("formulas", formulas);
@@ -65,9 +67,10 @@ abstract class AbstractCompositeFormula extends AbstractDescribable implements
 	/**
 	 * Sets the list of formulas of this composite formula.
 	 * 
-	 * @param formulas The list of formulas this composite formula should
-	 *            contain.
-	 * @throws NullPointerException If formulas is <code>null</code>.
+	 * @param formulas
+	 *            The list of formulas this composite formula should contain.
+	 * @throws NullPointerException
+	 *             If formulas is <code>null</code>.
 	 */
 	public void setFormulas(List<Formula> formulas) {
 		Assertions.notNull("formulas", formulas);

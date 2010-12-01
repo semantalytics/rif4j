@@ -35,8 +35,10 @@ public class Argument {
 	/**
 	 * Creates a new unnamed argument with the specified term value.
 	 * 
-	 * @param value The term value of the argument.
-	 * @throws NullPointerException If the term value is <code>null</code>.
+	 * @param value
+	 *            The term value of the argument.
+	 * @throws NullPointerException
+	 *             If the term value is <code>null</code>.
 	 */
 	public Argument(Term value) {
 		this(null, value);
@@ -47,9 +49,12 @@ public class Argument {
 	 * name is
 	 * <code>null</null> the argument is interpreted as an unnamed argument.
 	 * 
-	 * @param name The name of the argument.
-	 * @param value The term value of the argument.
-	 * @throws NullPointerException If the term value is <code>null</code>.
+	 * @param name
+	 *            The name of the argument.
+	 * @param value
+	 *            The term value of the argument.
+	 * @throws NullPointerException
+	 *             If the term value is <code>null</code>.
 	 */
 	public Argument(String name, Term value) {
 		Assertions.notNull("value", value);
@@ -73,7 +78,8 @@ public class Argument {
 	 * Sets the name of this argument. If a <code>null</code> value is provided,
 	 * this argument becomes an unnamed argument.
 	 * 
-	 * @param name The name of this argument.
+	 * @param name
+	 *            The name of this argument.
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -91,8 +97,10 @@ public class Argument {
 	/**
 	 * Sets the term value of this argument.
 	 * 
-	 * @param value The term value of this argument.
-	 * @throws NullPointerException If the term value is <code>null</code>.
+	 * @param value
+	 *            The term value of this argument.
+	 * @throws NullPointerException
+	 *             If the term value is <code>null</code>.
 	 */
 	public void setValue(Term value) {
 		Assertions.notNull("value", value);

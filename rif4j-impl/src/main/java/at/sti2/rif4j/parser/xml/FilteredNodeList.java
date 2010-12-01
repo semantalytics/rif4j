@@ -24,9 +24,10 @@ import org.w3c.dom.NodeList;
 /**
  * An implementation of NodeList that servers nodes given by a NodeFilter.
  * 
- * @author Adrian Marte
  * @see NodeFilter
  * @see NodeList
+ * 
+ * @author Adrian Marte
  */
 class FilteredNodeList implements NodeList {
 
@@ -35,7 +36,8 @@ class FilteredNodeList implements NodeList {
 	/**
 	 * Creates a new FilteredNodeList.
 	 * 
-	 * @param filter The filter whose elements are served by this node list.
+	 * @param filter
+	 *            The filter whose elements are served by this node list.
 	 */
 	public FilteredNodeList(NodeFilter filter) {
 		if (filter == null) {
