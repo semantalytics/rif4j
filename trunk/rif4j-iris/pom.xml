@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>at.sti2.rif4j</groupId>
 			<artifactId>rif4j-impl</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>xmlunit</groupId>
