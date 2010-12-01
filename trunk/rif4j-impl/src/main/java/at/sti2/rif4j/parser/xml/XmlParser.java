@@ -30,6 +30,7 @@ import org.xml.sax.SAXException;
 
 import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.rule.Document;
+import at.sti2.rif4j.rule.Rule;
 import at.sti2.rif4j.serializer.xml.XmlHandlerBase;
 
 /**
@@ -42,7 +43,7 @@ import at.sti2.rif4j.serializer.xml.XmlHandlerBase;
  * @author Iker Larizgoitia Abad
  */
 public class XmlParser extends XmlHandlerBase {
-	
+
 	/**
 	 * Creates a new parser for RIF XML documents and formulas. By default the
 	 * parser does not validate the XML documents against the XML schema of RIF
@@ -115,6 +116,29 @@ public class XmlParser extends XmlHandlerBase {
 		return null;
 	}
 
+	/**
+	 * Parses a RIF rule using the specified reader.
+	 * 
+	 * @param reader
+	 *            The reader which serves the rule.
+	 * @return A Rule object representing the specified RIF rule.
+	 * @throws SAXException
+	 *             If a SAX error or warning occurs.
+	 * @throws IOException
+	 *             If an I/O error or waring occurs.
+	 * @throws ParserConfigurationException
+	 *             Indicates a configuration error.
+	 */
+	public Rule parseRule(Reader reader) throws ParserConfigurationException,
+			SAXException, IOException {
+		org.w3c.dom.Document xmlDocument = parseXml(reader);
+
+		XmlExtractor extractor = new XmlExtractor();
+		Rule rule = extractor.extractRule(xmlDocument);
+
+		return rule;
+	}
+
 	public org.w3c.dom.Document parseXml(Reader reader)
 			throws ParserConfigurationException, SAXException, IOException {
 		InputSource source = new InputSource(reader);
@@ -149,5 +173,5 @@ public class XmlParser extends XmlHandlerBase {
 				attributes.removeNamedItem("ordered");
 		}
 	}
-	
+
 }
