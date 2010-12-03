@@ -15,60 +15,47 @@
  */
 package at.sti2.rif4j.translator.iris;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.ParserConfigurationException;
-
+import org.deri.iris.Configuration;
+import org.deri.iris.EvaluationException;
+import org.deri.iris.KnowledgeBaseFactory;
+import org.deri.iris.api.IKnowledgeBase;
 import org.deri.iris.api.basics.IPredicate;
+import org.deri.iris.api.basics.IQuery;
 import org.deri.iris.api.basics.IRule;
 import org.deri.iris.storage.IRelation;
-import org.xml.sax.SAXException;
 
-import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
+import at.sti2.rif4j.rule.Rule;
 
 /**
  * @author Iker Larizgoitia Abad
+ * @author Adrian Marte
  */
 public class RifToIrisTranslator {
 
-	Map<IPredicate, IRelation> facts;
+	private Map<IPredicate, IRelation> facts;
 
-	List<IRule> rules;
+	private List<IRule> rules;
 
-	public void translate(Reader rifXmlFileReader) {
-		XmlParser parser = new XmlParser(true);
-		Document rifDocument = null;
+	private List<IQuery> queries;
 
-		try {
-			rifDocument = parser.parseDocument(rifXmlFileReader);
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void translate(Document document) {
+		if (document == null) {
+			throw new IllegalArgumentException("document must not be null");
 		}
 
-		if (rifDocument == null)
-			return; // TODO Treat error
+		RifToIrisVisitor visitor = new RifToIrisVisitor();
+		document.accept(visitor);
 
-		facts = new HashMap<IPredicate, IRelation>();
-		rules = new ArrayList<IRule>();
+		facts = visitor.getFacts();
+		rules = visitor.getRules();
+	}
 
-		RifToIrisVisitor visitor = new RifToIrisVisitor(facts, rules);
-		rifDocument.accept(visitor);
-
-		this.facts = visitor.getFacts();
-		this.rules = visitor.getRules();
+	public void translate(Rule rule) {
+		// TODO Implement.
 	}
 
 	public Map<IPredicate, IRelation> getFacts() {
@@ -79,4 +66,21 @@ public class RifToIrisTranslator {
 		return rules;
 	}
 
+	public List<IQuery> getQueries() {
+		return queries;
+	}
+
+	public IKnowledgeBase getKnowledgeBase() throws EvaluationException {
+		if (facts != null && rules != null) {
+			Configuration configuration = KnowledgeBaseFactory
+					.getDefaultConfiguration();
+
+			IKnowledgeBase irisKnowledgeBase = KnowledgeBaseFactory
+					.createKnowledgeBase(facts, rules, configuration);
+
+			return irisKnowledgeBase;
+		}
+
+		return null;
+	}
 }

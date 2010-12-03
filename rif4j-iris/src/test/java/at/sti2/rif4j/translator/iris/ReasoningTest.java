@@ -67,15 +67,19 @@ public class ReasoningTest {
 	}
 
 	@Test
-	public void testReasoning() {
+	public void testReasoning() throws SAXException, IOException,
+			ParserConfigurationException {
 		String rifXmlFileName = "Class_Membership.xml";
 
 		Reader rifXmlFileReader = TestUtils.getFileReader(rifXmlFileName);
 		assertNotNull("Test file " + rifXmlFileName + " could not be found",
 				rifXmlFileReader);
 
+		XmlParser parser = new XmlParser(true);
+		Document rifDocument = parser.parseDocument(rifXmlFileReader);
+
 		RifToIrisTranslator translator = new RifToIrisTranslator();
-		translator.translate(rifXmlFileReader);
+		translator.translate(rifDocument);
 
 		assertTrue("Rules were not found", translator.getRules().size() > 0);
 		assertTrue("Factos were not found", translator.getFacts().size() > 0);
