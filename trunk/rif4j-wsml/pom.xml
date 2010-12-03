@@ -11,6 +11,10 @@
 	<artifactId>rif4j-wsml</artifactId>
 	<name>RIF4J Binding for WSMO4J</name>
 
+	<properties>
+		<wsml2reasoner.version>0.8.3-SNAPSHOT</wsml2reasoner.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>at.sti2.rif4j</groupId>
@@ -27,9 +31,7 @@
 		<dependency>
 			<groupId>net.sourceforge.wsml2reasoner</groupId>
 			<artifactId>wsml2reasoner-impl</artifactId>
-			<version>0.8.3-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
+			<version>${wsml2reasoner.version}</version>
 		</dependency>
 	</dependencies>
 </project>
