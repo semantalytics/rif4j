@@ -7,7 +7,8 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>RIF4J</name>
-	<description>RIF Implementation for Java</description>
+	<description>RIF framework for Java</description>
+	<url>http://sourceforge.net/projects/rif4j/</url>
 
 	<modules>
 		<module>rif4j-impl</module>
@@ -28,6 +29,30 @@
 		<url>http://rif4j.svn.sourceforge.net/viewvc/rif4j/trunk/</url>
 		<connection>scm:svn:https://rif4j.svn.sourceforge.net/svnroot/rif4j/trunk/</connection>
 	</scm>
+
+	<developers>
+		<developer>
+			<id>adrian.marte@sti2.at</id>
+			<name>Adrian Marte</name>
+			<email>adrian.marte@sti2.at</email>
+			<organization>STI Innsbruck</organization>
+			<organizationUrl>http://www.sti-innsbruck.at</organizationUrl>
+		</developer>
+		<developer>
+			<id>daniel.winkler@sti2.at</id>
+			<name>Daniel Winkler</name>
+			<email>daniel.winkler@sti2.at</email>
+			<organization>STI Innsbruck</organization>
+			<organizationUrl>http://www.sti-innsbruck.at</organizationUrl>
+		</developer>
+		<developer>
+			<id>iker.larizgoitia@sti2.at</id>
+			<name>Iker Larizgoitia</name>
+			<email>iker.larizgoitia@sti2.at</email>
+			<organization>STI Innsbruck</organization>
+			<organizationUrl>http://www.sti-innsbruck.at</organizationUrl>
+		</developer>
+	</developers>
 
 	<licenses>
 		<license>
