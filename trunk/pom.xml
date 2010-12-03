@@ -24,6 +24,11 @@
 		<junit.version>4.8.1</junit.version>
 	</properties>
 
+	<scm>
+		<url>http://rif4j.svn.sourceforge.net/viewvc/rif4j/trunk/</url>
+		<connection>scm:svn:https://rif4j.svn.sourceforge.net/svnroot/rif4j/trunk/</connection>
+	</scm>
+
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
