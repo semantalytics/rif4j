@@ -21,6 +21,8 @@ import java.util.Map;
 import org.deri.iris.api.basics.IPredicate;
 import org.deri.iris.api.basics.IRule;
 import org.deri.iris.storage.IRelation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import at.sti2.rif4j.condition.Argument;
 import at.sti2.rif4j.condition.Atom;
@@ -53,6 +55,9 @@ import at.sti2.rif4j.rule.RuleVisitor;
  */
 public class RifToIrisVisitor implements DocumentVisitor, AtomicFormulaVisitor,
 		RuleVisitor, FormulaVisitor, ClauseVisitor {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(RifToIrisVisitor.class);
 
 	private Map<IPredicate, IRelation> facts;
 
@@ -112,51 +117,51 @@ public class RifToIrisVisitor implements DocumentVisitor, AtomicFormulaVisitor,
 	@Override
 	public void visit(Prefix prefix) {
 		// TODO Auto-generated method stub
-		System.out.println("Visiting prefix");
+		logger.debug("Visiting prefix");
 	}
 
 	@Override
 	public void visit(Atom atom) {
-		System.out.println("Visiting atom");
+		logger.debug("Visiting atom");
 
-		System.out.print("text: ");
-		System.out.println(atom.getOperator().getText());
+		logger.debug("text: ");
+		logger.debug(atom.getOperator().getText());
 
 		List<Argument> args = atom.getArguments();
 		for (Argument argument : args) {
 			// System.out.println(argument.getName());
-			System.out.println(argument.getValue().toString());
+			logger.debug(argument.getValue().toString());
 		}
 	}
 
 	@Override
 	public void visit(EqualAtom equalAtom) {
-		System.out.println("Visiting equalAtom");
+		logger.debug("Visiting equalAtom");
 		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void visit(Frame frame) {
-		System.out.println("Visiting frame");
+		logger.debug("Visiting frame");
 		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void visit(MemberAtom memberAtom) {
-		System.out.println("Visiting member atom");
+		logger.debug("Visiting member atom");
 		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void visit(SubclassAtom subclassAtom) {
-		System.out.println("Visiting subclassAtom");
+		logger.debug("Visiting subclassAtom");
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void visit(ForallFormula forallFormula) {
-		System.out.println("Visiting forAll");
+		logger.debug("Visiting forAll");
 
 		List<Variable> vars = forallFormula.getVariables();
 		for (Variable variable : vars) {
@@ -167,42 +172,42 @@ public class RifToIrisVisitor implements DocumentVisitor, AtomicFormulaVisitor,
 
 	@Override
 	public void visit(Clause clause) {
-		System.out.println("Visiting clause");
+		logger.debug("Visiting clause");
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void visit(ExistsFormula existsFormula) {
-		System.out.println("Visiting exists");
+		logger.debug("Visiting exists");
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void visit(ExternalFormula externalFormula) {
-		System.out.println("Visiting external");
+		logger.debug("Visiting external");
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void visit(AtomicFormula atomicFormula) {
-		System.out.println("Visiting atomic");
+		logger.debug("Visiting atomic");
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void visit(CompositeFormula compositeFormula) {
-		System.out.println("Visiting composite");
+		logger.debug("Visiting composite");
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void visit(ImpliesFormula implies) {
-		System.out.println("Visiting implies");
+		logger.debug("Visiting implies");
 
 		implies.getBody().accept(this);
 

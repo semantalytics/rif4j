@@ -27,6 +27,8 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import at.sti2.rif4j.parser.xml.XmlParser;
@@ -35,6 +37,9 @@ import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 import at.sti2.rif4j.serializer.xml.XmlSerializer;
 
 public class RIFParseAndSerializeTest extends XMLTestCase {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(RIFParseAndSerializeTest.class);
 
 	private XmlParser parser = null;
 
@@ -93,7 +98,7 @@ public class RIFParseAndSerializeTest extends XMLTestCase {
 
 	private void testParseAndSerializeXML_RIF_BLD(String fileName)
 			throws SAXException, IOException, ParserConfigurationException {
-		System.out.println("Testing " + fileName);
+		logger.debug("Testing " + fileName);
 
 		// Parse RIFDocument
 		Reader rifXmlFileReader = TestUtils.getFileReader(fileName);
@@ -121,7 +126,7 @@ public class RIFParseAndSerializeTest extends XMLTestCase {
 		if (TestUtils.getFileURI(fileName + "ps") == null)
 			return;
 
-		System.out.println("Testing " + fileName);
+		logger.debug("Testing " + fileName);
 
 		// Parse RIFDocument
 		Reader rifXmlFileReader = TestUtils.getFileReader(fileName);
@@ -145,5 +150,5 @@ public class RIFParseAndSerializeTest extends XMLTestCase {
 		assertEquals("Serialized and original documents do not match for file "
 				+ fileName, originalRIF, serializedRIF);
 	}
-	
+
 }
