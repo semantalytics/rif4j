@@ -28,6 +28,7 @@
 	<scm>
 		<url>http://rif4j.svn.sourceforge.net/viewvc/rif4j/trunk/</url>
 		<connection>scm:svn:https://rif4j.svn.sourceforge.net/svnroot/rif4j/trunk/</connection>
+		<developerConnection>scm:svn:https://rif4j.svn.sourceforge.net/svnroot/rif4j/trunk/</developerConnection>
 	</scm>
 
 	<developers>
