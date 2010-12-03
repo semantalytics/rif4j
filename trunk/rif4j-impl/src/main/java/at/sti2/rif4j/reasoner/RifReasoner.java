@@ -49,12 +49,12 @@ import at.sti2.rif4j.rule.Rule;
  */
 public interface RifReasoner {
 
-	public boolean entails(Document phi, Document psi);
+	public boolean entails(Document phi, Rule psi);
 
-	public boolean entails(Group phi, Group psi);
+	public boolean entails(Group phi, Rule psi);
 
 	public boolean entails(Rule phi, Rule psi);
-
+	
 	// FIXME Return value should be a binding set.
 	public boolean query(Document document, Rule query);
 
