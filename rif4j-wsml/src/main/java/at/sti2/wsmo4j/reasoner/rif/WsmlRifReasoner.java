@@ -42,20 +42,21 @@ import at.sti2.wsmo4j.translator.rif.RifToWsmlTranslator;
 public class WsmlRifReasoner extends AbstractRifReasoner {
 
 	@Override
-	public boolean entails(Document phi, Document psi) {
+	public boolean entails(Document phi, Rule psi) {
 		Ontology wsmlOntology = toOntology(phi);
-		List<LogicalExpression> wsmlQueries = toLogicalExpressions(psi);
+		List<LogicalExpression> wsmlRules = toQueries(psi);
 
 		LPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
 				.createFlightReasoner(null);
+		
 		try {
 			reasoner.registerOntology(wsmlOntology);
 		} catch (InconsistencyException e) {
 			e.printStackTrace();
 		}
 
-		for (LogicalExpression wsmlQuery : wsmlQueries) {
-			boolean entailed = reasoner.ask(wsmlQuery);
+		for (LogicalExpression wsmlRule : wsmlRules) {
+			boolean entailed = reasoner.ask(wsmlRule);
 
 			if (!entailed) {
 				return entailed;
@@ -67,23 +68,12 @@ public class WsmlRifReasoner extends AbstractRifReasoner {
 
 	@Override
 	public boolean query(Document document, Rule query) {
-		Ontology wsmlOntology = toOntology(document);
-		LogicalExpression wsmlQuery = toQuery(query);
-
-		LPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
-				.createFlightReasoner(null);
-		try {
-			reasoner.registerOntology(wsmlOntology);
-		} catch (InconsistencyException e) {
-			e.printStackTrace();
-		}
-
-		return reasoner.ask(wsmlQuery);
+		return entails(document, query);
 	}
 
-	private List<LogicalExpression> toLogicalExpressions(Document document) {
+	private List<LogicalExpression> toQueries(Rule rule) {
 		RifToWsmlTranslator translator = new RifToWsmlTranslator();
-		List<LogicalExpression> expressions = translator.translate(document);
+		List<LogicalExpression> expressions = translator.translate(rule);
 
 		return expressions;
 	}
@@ -116,13 +106,6 @@ public class WsmlRifReasoner extends AbstractRifReasoner {
 		}
 
 		return null;
-	}
-
-	private LogicalExpression toQuery(Rule rule) {
-		RifToWsmlTranslator translator = new RifToWsmlTranslator();
-		List<LogicalExpression> expressions = translator.translate(rule);
-
-		return expressions.get(0);
 	}
 
 }

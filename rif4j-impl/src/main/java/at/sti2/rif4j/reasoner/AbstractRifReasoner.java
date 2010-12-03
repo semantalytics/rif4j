@@ -31,19 +31,17 @@ import at.sti2.rif4j.rule.Rule;
 public abstract class AbstractRifReasoner implements RifReasoner {
 
 	@Override
-	public boolean entails(Group phi, Group psi) {
+	public boolean entails(Group phi, Rule psi) {
 		Document phiDocument = toDocument(phi);
-		Document psiDocument = toDocument(psi);
 
-		return entails(phiDocument, psiDocument);
+		return entails(phiDocument, psi);
 	}
 
 	@Override
 	public boolean entails(Rule phi, Rule psi) {
 		Document phiDocument = toDocument(phi);
-		Document psiDocument = toDocument(psi);
 
-		return entails(phiDocument, psiDocument);
+		return entails(phiDocument, psi);
 	}
 
 	protected Document toDocument(Group group) {
