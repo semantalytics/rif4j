@@ -15,6 +15,8 @@
  */
 package at.sti2.rif4j.translator.iris;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,12 +65,9 @@ public class RifToIrisVisitor implements DocumentVisitor, AtomicFormulaVisitor,
 
 	private List<IRule> rules;
 
-	public RifToIrisVisitor(Map<IPredicate, IRelation> facts, List<IRule> rules) {
-		assert facts != null;
-		assert rules != null;
-
-		this.facts = facts;
-		this.rules = rules;
+	public RifToIrisVisitor() {
+		this.facts = new HashMap<IPredicate, IRelation>();
+		this.rules = new ArrayList<IRule>();
 	}
 
 	public Map<IPredicate, IRelation> getFacts() {
