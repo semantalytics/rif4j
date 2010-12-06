@@ -72,12 +72,13 @@ import at.sti2.rif4j.rule.Import;
 import at.sti2.rif4j.rule.Prefix;
 import at.sti2.rif4j.rule.Rule;
 import at.sti2.rif4j.rule.RuleVisitor;
+import at.sti2.rif4j.serializer.RifSerializer;
 
 /**
  * @author Daniel Winkler
  * @author Iker Larizgoitia Abad
  */
-public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor,
+public class XmlSerializer extends XmlHandlerBase implements RifSerializer, DocumentVisitor,
 		TermVisitor, ClauseVisitor, FormulaVisitor, AtomicFormulaVisitor,
 		CompositeFormulaVisitor, RuleVisitor, UnitermVisitor {
 
@@ -95,10 +96,24 @@ public class XmlSerializer extends XmlHandlerBase implements DocumentVisitor,
 		elementStack = new Stack<Element>();
 	}
 
-	public String serialize(Document rifDocument)
-			throws ParserConfigurationException, SAXException, IOException {
-		xmlDocument = this.getXmlDocument(rifDocument);
-		return serializeXmlDocument(xmlDocument);
+	@Override
+	public String serialize(Document rifDocument) {
+		String serializedDocument = null;
+		try {
+			xmlDocument = this.getXmlDocument(rifDocument);
+			serializedDocument = serializeXmlDocument(xmlDocument);
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return serializedDocument;
 	}
 
 	private org.w3c.dom.Document getXmlDocument(Document rifDocument)
