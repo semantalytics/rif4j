@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <!DOCTYPE Document [
   <!ENTITY cpt  "http://example.com/concepts#">
   <!ENTITY inst  "http://example.com/instances#">
@@ -448,4 +446,3 @@
 		</Group>
 	</payload>
 </Document>
-
