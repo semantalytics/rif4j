@@ -63,6 +63,8 @@ import at.sti2.rif4j.rule.Import;
 import at.sti2.rif4j.rule.Prefix;
 import at.sti2.rif4j.rule.Rule;
 import at.sti2.rif4j.rule.RuleVisitor;
+import at.sti2.rif4j.translator.iris.mapper.RifToIrisBuiltinMapper;
+import at.sti2.rif4j.translator.iris.mapper.RifToIrisConstantMapper;
 
 /**
  * @author Iker Larizgoitia Abad
