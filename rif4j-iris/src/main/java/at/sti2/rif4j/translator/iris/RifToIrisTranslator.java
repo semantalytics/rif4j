@@ -27,6 +27,7 @@ import org.deri.iris.api.basics.IQuery;
 import org.deri.iris.api.basics.IRule;
 import org.deri.iris.storage.IRelation;
 
+import at.sti2.rif4j.reasoner.translator.iris.visitors.DocumentTranslator;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.Rule;
 
@@ -37,26 +38,8 @@ import at.sti2.rif4j.rule.Rule;
 public class RifToIrisTranslator {
 
 	private Map<IPredicate, IRelation> facts;
-
 	private List<IRule> rules;
-
 	private List<IQuery> queries;
-
-	public void translate(Document document) {
-		if (document == null) {
-			throw new IllegalArgumentException("document must not be null");
-		}
-
-		RifToIrisVisitor visitor = new RifToIrisVisitor();
-		document.accept(visitor);
-
-		facts = visitor.getFacts();
-		rules = visitor.getRules();
-	}
-
-	public void translate(Rule rule) {
-		// TODO Implement.
-	}
 
 	public Map<IPredicate, IRelation> getFacts() {
 		return facts;
@@ -68,6 +51,22 @@ public class RifToIrisTranslator {
 
 	public List<IQuery> getQueries() {
 		return queries;
+	}
+
+	public void translate(Document document) {
+		if (document == null) {
+			throw new IllegalArgumentException("document must not be null");
+		}
+
+		DocumentTranslator documentTranslator = new DocumentTranslator();
+		document.accept(documentTranslator);
+
+		facts = documentTranslator.getFacts();
+		rules = documentTranslator.getRules();
+	}
+
+	public void translate(Rule rule) {
+		// TODO Implement.
 	}
 
 	public IKnowledgeBase getKnowledgeBase() throws EvaluationException {
