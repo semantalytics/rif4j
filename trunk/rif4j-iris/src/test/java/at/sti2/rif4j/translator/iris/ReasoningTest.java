@@ -50,6 +50,7 @@ import org.xml.sax.SAXException;
 import at.sti2.rif4j.TestUtils;
 import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
+import at.sti2.rif4j.translator.iris.RifToIrisTranslator;
 
 public class ReasoningTest {
 
@@ -82,7 +83,7 @@ public class ReasoningTest {
 		translator.translate(rifDocument);
 
 		assertTrue("Rules were not found", translator.getRules().size() > 0);
-		assertTrue("Factos were not found", translator.getFacts().size() > 0);
+		assertTrue("Facts were not found", translator.getFacts().size() > 0);
 
 		try {
 			Configuration configuration = org.deri.iris.KnowledgeBaseFactory
