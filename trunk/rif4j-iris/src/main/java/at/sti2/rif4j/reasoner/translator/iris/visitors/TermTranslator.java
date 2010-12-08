@@ -67,9 +67,7 @@ public class TermTranslator implements TermVisitor {
 
 		RifToIrisConstantMapper mapper = new RifToIrisConstantMapper();
 
-		// FIXME What about the language?
-		ITerm irisTerm = mapper.toIrisTerm(constant.getType(),
-				constant.getText());
+		ITerm irisTerm = mapper.toIrisTerm(constant);
 
 		if (irisTerm != null) {
 			terms.add(irisTerm);

@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import at.sti2.rif4j.RdfDatatype;
 import at.sti2.rif4j.RifDatatype;
 import at.sti2.rif4j.XmlSchemaDatatype;
+import at.sti2.rif4j.condition.Constant;
 
 /**
  * Maps RIF constants to IRIS data values and vice versa.
@@ -62,18 +63,17 @@ public class RifToIrisConstantMapper {
 	 * Maps a RIF constant, given its datatype URI and the value, to an IRIS
 	 * term.
 	 * 
-	 * @param type
-	 *            The datatype URI of the RIF constant, e.g.
-	 *            http://www.w3.org/2001/XMLSchema#double.
-	 * @param value
-	 *            The value of the RIF constant in canonical string
-	 *            representation, e.g. 0.1337 for a XSD double value.
+	 * @param constant
+	 *            The RIF constant.
 	 * @return The corresponding IRIS term for the specific RIF constant, or
 	 *         <code>null</code> if there is no corresponding IRIS term.
 	 * @throws IllegalArgumentException
 	 *             If the value is not compatible with the type.
 	 */
-	public ITerm toIrisTerm(String type, String value) {
+	public ITerm toIrisTerm(Constant constant) {
+		String type = constant.getType();
+		String value = constant.getText();
+		
 		// Check if this is a XSD datatype.
 		XmlSchemaDatatype xsdDatatype = XmlSchemaDatatype.forUri(type);
 
