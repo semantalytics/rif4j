@@ -27,6 +27,8 @@ import org.deri.iris.api.factory.IConcreteFactory;
 import org.deri.iris.api.factory.ITermFactory;
 import org.deri.iris.api.terms.ITerm;
 import org.deri.iris.factory.Factory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import at.sti2.rif4j.RdfDatatype;
 import at.sti2.rif4j.RifDatatype;
@@ -38,6 +40,9 @@ import at.sti2.rif4j.XmlSchemaDatatype;
  * @author Adrian Marte
  */
 public class RifToIrisConstantMapper {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(RifToIrisConstantMapper.class);
 
 	private ITermFactory termFactory;
 
@@ -118,13 +123,12 @@ public class RifToIrisConstantMapper {
 				Duration dayTimeDuration = createDuration(value);
 
 				if (dayTimeDuration != null) {
-					return factory
-							.createDayTimeDuration(
-									dayTimeDuration.getSign() == 1,
-									dayTimeDuration.getDays(), dayTimeDuration
-											.getHours(), dayTimeDuration
-											.getMinutes(), dayTimeDuration
-											.getSeconds());
+					return factory.createDayTimeDuration(
+							dayTimeDuration.getSign() == 1,
+							dayTimeDuration.getDays(),
+							dayTimeDuration.getHours(),
+							dayTimeDuration.getMinutes(),
+							dayTimeDuration.getSeconds());
 				}
 
 				break;
@@ -137,9 +141,9 @@ public class RifToIrisConstantMapper {
 
 				if (duration != null) {
 					return factory.createDuration(duration.getSign() == 1,
-							duration.getYears(), duration.getMonths(), duration
-									.getDays(), duration.getHours(), duration
-									.getMinutes(), duration.getSeconds());
+							duration.getYears(), duration.getMonths(),
+							duration.getDays(), duration.getHours(),
+							duration.getMinutes(), duration.getSeconds());
 				}
 
 				break;
@@ -243,8 +247,9 @@ public class RifToIrisConstantMapper {
 				Duration yearMonthDuration = createDuration(value);
 
 				if (yearMonthDuration != null) {
-					return factory.createYearMonthDuration(yearMonthDuration
-							.getSign() == 1, yearMonthDuration.getYears(),
+					return factory.createYearMonthDuration(
+							yearMonthDuration.getSign() == 1,
+							yearMonthDuration.getYears(),
 							yearMonthDuration.getMonths());
 				}
 
@@ -284,13 +289,14 @@ public class RifToIrisConstantMapper {
 		if (rifDatatype != null) {
 			switch (rifDatatype) {
 			case IRI:
-				// TODO Implement.
-				break;
+				return Factory.CONCRETE.createIri(value);
 			case LOCAL:
 				// TODO Implement.
 				break;
 			}
 		}
+
+		logger.error("Could not find appropriate IRIS data type for " + type);
 
 		return null;
 	}

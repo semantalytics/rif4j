@@ -104,7 +104,7 @@ public class RifToIrisVisitor implements DocumentVisitor, AtomicFormulaVisitor,
 	public List<ITerm> getTerms() {
 		return terms;
 	}
-	
+
 	public IAtom getAtom() {
 		return atom;
 	}
@@ -229,9 +229,8 @@ public class RifToIrisVisitor implements DocumentVisitor, AtomicFormulaVisitor,
 		List<ITerm> irisTermList = visitor.getTerms();
 		ITerm[] irisTerms = toArray(irisTermList);
 
-		RifToIrisBuiltinMapper builtInMapper = new RifToIrisBuiltinMapper();
-		IAtom irisAtom = builtInMapper.toIrisBuiltin(atom.getOperator()
-				.getText(), irisTerms);
+		IAtom irisAtom = RifToIrisBuiltinMapper.toIrisBuiltin(atom
+				.getOperator().getText(), irisTerms);
 
 		// If it is not a built-in, then it is an ordinary predicate.
 		if (irisAtom == null) {
@@ -241,7 +240,7 @@ public class RifToIrisVisitor implements DocumentVisitor, AtomicFormulaVisitor,
 					irisTerms.length);
 			ITuple tuple = toTuple(irisTermList);
 			irisAtom = Factory.BASIC.createAtom(predicate, tuple);
-			
+
 			// FIXME What about regular facts?
 		}
 
@@ -346,8 +345,8 @@ public class RifToIrisVisitor implements DocumentVisitor, AtomicFormulaVisitor,
 		RifToIrisConstantMapper mapper = new RifToIrisConstantMapper();
 
 		// FIXME What about the language?
-		ITerm irisTerm = mapper.toIrisTerm(constant.getType(), constant
-				.getText());
+		ITerm irisTerm = mapper.toIrisTerm(constant.getType(),
+				constant.getText());
 
 		if (irisTerm != null) {
 			terms.add(irisTerm);
