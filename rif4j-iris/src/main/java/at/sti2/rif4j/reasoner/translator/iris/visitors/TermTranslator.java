@@ -2,99 +2,116 @@ package at.sti2.rif4j.reasoner.translator.iris.visitors;
 
 import java.util.ArrayList;
 
-import org.deri.iris.api.basics.IAtom;
+import org.deri.iris.api.basics.ILiteral;
+import org.deri.iris.api.basics.ITuple;
 import org.deri.iris.api.terms.ITerm;
+import org.deri.iris.api.terms.concrete.IList;
 import org.deri.iris.factory.Factory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.sti2.rif4j.condition.Argument;
 import at.sti2.rif4j.condition.Constant;
 import at.sti2.rif4j.condition.Expression;
 import at.sti2.rif4j.condition.ExternalExpression;
 import at.sti2.rif4j.condition.List;
+import at.sti2.rif4j.condition.Term;
 import at.sti2.rif4j.condition.TermVisitor;
 import at.sti2.rif4j.condition.Variable;
-import at.sti2.rif4j.translator.iris.mapper.RifToIrisBuiltinMapper;
+import at.sti2.rif4j.translator.iris.mapper.RifToIrisConstantMapper;
 
 public class TermTranslator implements TermVisitor {
 
 	private static final Logger logger = LoggerFactory
-	.getLogger(TermTranslator.class);
-	
-	private ITerm term;
-	private IAtom irisAtom;
-	private IAtom extraAtom;
+			.getLogger(TermTranslator.class);
 
-	public ITerm getTerm() {
-		return term;
+	private java.util.List<ITerm> terms;
+
+	private java.util.List<ILiteral> literals;
+
+	public TermTranslator() {
+		reset();
 	}
-	
-	public IAtom getExtraAtom()
-	{
-		return extraAtom;
+
+	public static ITuple toTuple(java.util.List<ITerm> terms) {
+		ITerm[] termArray = toArray(terms);
+		ITuple tuple = Factory.BASIC.createTuple(termArray);
+
+		return tuple;
 	}
-	
+
+	public static ITerm[] toArray(java.util.List<ITerm> terms) {
+		ITerm[] termArray = new ITerm[terms.size()];
+		termArray = terms.toArray(termArray);
+		return termArray;
+	}
+
+	public java.util.List<ITerm> getTerms() {
+		return terms;
+	}
+
+	public java.util.List<ILiteral> getLiterals() {
+		return literals;
+	}
+
+	public void reset() {
+		terms = new ArrayList<ITerm>();
+		literals = new ArrayList<ILiteral>();
+	}
+
 	@Override
 	public void visit(Constant constant) {
-		// TODO Auto-generated method stub
+		if (constant == null) {
+			logger.error("Constant is null");
+			return;
+		}
+
+		RifToIrisConstantMapper mapper = new RifToIrisConstantMapper();
+
+		// FIXME What about the language?
+		ITerm irisTerm = mapper.toIrisTerm(constant.getType(),
+				constant.getText());
+
+		if (irisTerm != null) {
+			terms.add(irisTerm);
+		}
 	}
 
 	@Override
 	public void visit(Expression expression) {
-		// TODO Auto-generated method stub
+		ExpressionFlattener flattener = new ExpressionFlattener();
+		flattener.flatten(expression);
+
+		terms.add(flattener.getVariable());
+		literals.addAll(flattener.getLiterals());
 	}
 
 	@Override
 	public void visit(ExternalExpression externalExpression) {
-		
-		//TODO generate proper aux var names, is always necessary, considering this is an ExternalExpression?
-		ITerm auxVariable = Factory.TERM.createVariable("auxVar");
-		
-		//Arguments
-		java.util.List<ITerm> irisTermList = new ArrayList<ITerm>();		
-		for (Argument argument : externalExpression.getExpression().getArguments()) {
-			// In IRIS, an argument can not be named, therefore, we can ignore
-			// the name and only use the value.			
-			TermTranslator termTranslator = new TermTranslator();
-			argument.getValue().accept(termTranslator);			
-			irisTermList.add(termTranslator.getTerm());
-		}
-		
-		ITerm[] irisTerms = AtomicFormulaTranslator.toArray(irisTermList);
-		
-		//Operator
-		String operator = externalExpression.getExpression().getOperator().getText();
-		if (RifToIrisBuiltinMapper.isBuiltin(operator)) {			
-			
-			if (RifToIrisBuiltinMapper.needsAuxiliaryVariable(operator))
-			{								
-				irisTermList.add(auxVariable);
-				irisTerms = AtomicFormulaTranslator.toArray(irisTermList);
-			}
-			
-			term = auxVariable;			
-			extraAtom = RifToIrisBuiltinMapper.toIrisBuiltin(externalExpression.getExpression().getOperator().getText(), irisTerms);			
-		}
-		else {
-			//TODO Is this code reachable?
-//			String predicateName = externalExpression.getExpression().getOperator().getText();
-//			IPredicate predicate = Factory.BASIC.createPredicate(predicateName,irisTerms.length);
-//			ITuple tuple = Factory.BASIC.createTuple(irisTerms);
-//			
-//			extraAtom = Factory.BASIC.createAtom(predicate, tuple);
-//			
-//			// FIXME What about regular facts?
-		}
+		externalExpression.getExpression().accept(this);
 	}
 
 	@Override
 	public void visit(List list) {
-		// TODO Auto-generated method stub
+		java.util.List<ITerm> irisTerms = new ArrayList<ITerm>();
+		java.util.List<ILiteral> irisLiterals = new ArrayList<ILiteral>();
+
+		for (Term element : list.getElements()) {
+			TermTranslator translator = new TermTranslator();
+			element.accept(translator);
+
+			irisTerms.addAll(translator.getTerms());
+			irisLiterals.addAll(translator.getLiterals());
+		}
+
+		// FIXME Create a list with all terms from irisTerms.
+		IList irisList = new org.deri.iris.terms.concrete.List();
+
+		terms.addAll(irisList);
+		literals.addAll(irisLiterals);
 	}
 
 	@Override
 	public void visit(Variable variable) {
-		term = Factory.TERM.createVariable(variable.getName());
+		terms.add(Factory.TERM.createVariable(variable.getName()));
 	}
 }

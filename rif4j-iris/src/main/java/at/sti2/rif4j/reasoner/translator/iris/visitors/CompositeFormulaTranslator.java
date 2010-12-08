@@ -3,9 +3,7 @@ package at.sti2.rif4j.reasoner.translator.iris.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.deri.iris.api.basics.IAtom;
 import org.deri.iris.api.basics.ILiteral;
-import org.deri.iris.basics.BasicFactory;
 
 import at.sti2.rif4j.condition.AndFormula;
 import at.sti2.rif4j.condition.CompositeFormulaVisitor;
@@ -16,20 +14,28 @@ import at.sti2.rif4j.rule.ForallFormula;
 
 public class CompositeFormulaTranslator implements CompositeFormulaVisitor {
 
-	private List<ILiteral> literalList = new ArrayList<ILiteral>();
-	
-	public List<ILiteral> getLiterals() {
-		return literalList;
+	private List<ILiteral> literals;
+
+	public CompositeFormulaTranslator() {
+		reset();
 	}
-	
+
+	public void reset() {
+		literals = new ArrayList<ILiteral>();
+	}
+
+	public List<ILiteral> getLiterals() {
+		return literals;
+	}
+
 	@Override
 	public void visit(AndFormula andFormula) {
 		for (Formula formula : andFormula.getFormulas()) {
 			FormulaTranslator formulaTranslator = new FormulaTranslator();
 			formula.accept(formulaTranslator);
-			
-			literalList = formulaTranslator.getLiterals();			
-		}		
+
+			literals.addAll(formulaTranslator.getLiterals());
+		}
 	}
 
 	@Override
@@ -49,7 +55,5 @@ public class CompositeFormulaTranslator implements CompositeFormulaVisitor {
 		// TODO Auto-generated method stub
 
 	}
-
-
 
 }

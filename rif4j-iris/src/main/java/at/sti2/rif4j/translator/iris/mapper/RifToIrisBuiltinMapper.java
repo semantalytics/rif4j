@@ -19,6 +19,8 @@ import org.deri.iris.api.builtins.IBuiltinAtom;
 import org.deri.iris.api.factory.IBuiltinsFactory;
 import org.deri.iris.api.terms.ITerm;
 import org.deri.iris.factory.Factory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import at.sti2.rif4j.RifBuiltIn;
 
@@ -27,7 +29,11 @@ import at.sti2.rif4j.RifBuiltIn;
  */
 public class RifToIrisBuiltinMapper {
 
-	public static IBuiltinAtom toIrisBuiltin(String rifBuiltinIri, ITerm... terms) {
+	private static final Logger logger = LoggerFactory
+			.getLogger(RifToIrisBuiltinMapper.class);
+
+	public static IBuiltinAtom toIrisBuiltin(String rifBuiltinIri,
+			ITerm... terms) {
 		RifBuiltIn rifBuiltin = RifBuiltIn.from(rifBuiltinIri);
 
 		if (rifBuiltin == null) {
@@ -466,9 +472,29 @@ public class RifToIrisBuiltinMapper {
 		return null;
 	}
 
-	public static boolean isBuiltin(String rifBuiltinIri) {	
+	public static boolean isBuiltin(String rifBuiltinIri) {
 		boolean isBuiltIn = (RifBuiltIn.from(rifBuiltinIri) != null);
-		return isBuiltIn;			
+		return isBuiltIn;
+	}
+
+	public static boolean isPredicate(String rifBuiltinIri) {
+		RifBuiltIn rifBuiltin = RifBuiltIn.from(rifBuiltinIri);
+
+		if (rifBuiltin != null) {
+			return rifBuiltin.isPredicate();
+		}
+
+		return false;
+	}
+
+	public static boolean isFunction(String rifBuiltinIri) {
+		RifBuiltIn rifBuiltin = RifBuiltIn.from(rifBuiltinIri);
+
+		if (rifBuiltin != null) {
+			return rifBuiltin.isFunction();
+		}
+
+		return false;
 	}
 
 	public static boolean needsAuxiliaryVariable(String rifBuiltinIri) {
@@ -483,7 +509,7 @@ public class RifToIrisBuiltinMapper {
 		case DAYS_FROM_DURATION:
 			return true;
 		}
-		
-		return false;		
+
+		return false;
 	}
 }
