@@ -46,6 +46,12 @@ public class Constant extends AbstractDescribable implements Term {
 		this.text = text;
 	}
 
+	/**
+	 * Returns the datatype URI of the RIF constant, e.g.
+	 * http://www.w3.org/2001/XMLSchema#double.
+	 * 
+	 * @return The datatype URI of the RIF constant.
+	 */
 	public String getType() {
 		return type;
 	}
@@ -62,6 +68,12 @@ public class Constant extends AbstractDescribable implements Term {
 		this.language = language;
 	}
 
+	/**
+	 * Returns the value of the RIF constant in canonical string representation,
+	 * e.g. 0.1337 for a xsd:double.
+	 * 
+	 * @return The value of the RIF constant in canonical string representation
+	 */
 	public String getText() {
 		return text;
 	}
