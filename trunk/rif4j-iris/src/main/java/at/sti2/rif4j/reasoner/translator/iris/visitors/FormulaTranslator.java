@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.deri.iris.api.basics.ILiteral;
+import org.deri.iris.api.basics.IRule;
 
 import at.sti2.rif4j.condition.AtomicFormula;
 import at.sti2.rif4j.condition.CompositeFormula;
@@ -16,16 +17,23 @@ public class FormulaTranslator implements FormulaVisitor {
 
 	private List<ILiteral> literals;
 
+	private List<IRule> rules;
+
 	public FormulaTranslator() {
 		reset();
 	}
 
 	private void reset() {
 		literals = new ArrayList<ILiteral>();
+		rules = new ArrayList<IRule>();
 	}
 
 	public List<ILiteral> getLiterals() {
 		return literals;
+	}
+
+	public List<IRule> getRules() {
+		return rules;
 	}
 
 	@Override
@@ -43,7 +51,12 @@ public class FormulaTranslator implements FormulaVisitor {
 
 	@Override
 	public void visit(ForallFormula forallFormula) {
-		// TODO Auto-generated method stub
+		// We can ignore the variable definition.
+
+		ClauseTranslator clauseTranslator = new ClauseTranslator();
+		forallFormula.getClause().accept(clauseTranslator);
+
+		rules.addAll(clauseTranslator.getRules());
 	}
 
 	@Override

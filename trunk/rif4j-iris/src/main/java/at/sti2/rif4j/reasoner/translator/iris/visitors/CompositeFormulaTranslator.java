@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.deri.iris.api.basics.ILiteral;
+import org.deri.iris.api.basics.IRule;
 
 import at.sti2.rif4j.condition.AndFormula;
 import at.sti2.rif4j.condition.CompositeFormulaVisitor;
@@ -16,16 +17,23 @@ public class CompositeFormulaTranslator implements CompositeFormulaVisitor {
 
 	private List<ILiteral> literals;
 
+	private List<IRule> rules;
+
 	public CompositeFormulaTranslator() {
 		reset();
 	}
 
 	public void reset() {
 		literals = new ArrayList<ILiteral>();
+		rules = new ArrayList<IRule>();
 	}
 
 	public List<ILiteral> getLiterals() {
 		return literals;
+	}
+
+	public List<IRule> getRules() {
+		return rules;
 	}
 
 	@Override
@@ -52,8 +60,10 @@ public class CompositeFormulaTranslator implements CompositeFormulaVisitor {
 
 	@Override
 	public void visit(ForallFormula forallFormula) {
-		// TODO Auto-generated method stub
+		FormulaTranslator formulaTranslator = new FormulaTranslator();
+		forallFormula.accept(formulaTranslator);
 
+		rules.addAll(formulaTranslator.getRules());
 	}
 
 }

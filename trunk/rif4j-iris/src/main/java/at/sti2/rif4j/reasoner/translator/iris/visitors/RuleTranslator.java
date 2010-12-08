@@ -64,11 +64,9 @@ public class RuleTranslator implements RuleVisitor {
 
 	@Override
 	public void visit(ForallFormula forallFormula) {
-		// We can ignore the variable definition.
+		FormulaTranslator formulaTranslator = new FormulaTranslator();
+		forallFormula.accept(formulaTranslator);
 
-		ClauseTranslator clauseTranslator = new ClauseTranslator();
-		forallFormula.getClause().accept(clauseTranslator);
-
-		rules.addAll(clauseTranslator.getRules());
+		rules.addAll(formulaTranslator.getRules());
 	}
 }
