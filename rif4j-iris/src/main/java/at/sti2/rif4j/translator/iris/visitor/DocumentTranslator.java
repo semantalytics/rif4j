@@ -1,4 +1,4 @@
-package at.sti2.rif4j.reasoner.translator.iris.visitors;
+package at.sti2.rif4j.translator.iris.visitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
