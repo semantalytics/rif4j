@@ -27,9 +27,9 @@ import org.deri.iris.api.basics.IQuery;
 import org.deri.iris.api.basics.IRule;
 import org.deri.iris.storage.IRelation;
 
-import at.sti2.rif4j.reasoner.translator.iris.visitors.DocumentTranslator;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.Rule;
+import at.sti2.rif4j.translator.iris.visitor.DocumentTranslator;
 
 /**
  * @author Iker Larizgoitia Abad
