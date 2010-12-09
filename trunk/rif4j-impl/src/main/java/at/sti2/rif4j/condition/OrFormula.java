@@ -20,18 +20,13 @@ import java.util.List;
 /**
  * @author Adrian Marte
  */
-public class OrFormula extends AbstractCompositeFormula implements
-		CompositeFormula {
+public class OrFormula extends AbstractCompositeFormula implements Formula {
 
 	public OrFormula() {
 	}
 
 	public OrFormula(List<Formula> formulas) {
 		super(formulas);
-	}
-
-	public void accept(CompositeFormulaVisitor visitor) {
-		visitor.visit(this);
 	}
 
 	public void accept(FormulaVisitor visitor) {

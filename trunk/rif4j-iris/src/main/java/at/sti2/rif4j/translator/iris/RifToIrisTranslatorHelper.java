@@ -17,8 +17,6 @@ import at.sti2.rif4j.condition.Argument;
 import at.sti2.rif4j.condition.Atom;
 import at.sti2.rif4j.condition.AtomicFormula;
 import at.sti2.rif4j.condition.AtomicFormulaVisitor;
-import at.sti2.rif4j.condition.CompositeFormula;
-import at.sti2.rif4j.condition.CompositeFormulaVisitor;
 import at.sti2.rif4j.condition.EqualAtom;
 import at.sti2.rif4j.condition.ExistsFormula;
 import at.sti2.rif4j.condition.ExternalFormula;
@@ -28,10 +26,9 @@ import at.sti2.rif4j.condition.Frame;
 import at.sti2.rif4j.condition.MemberAtom;
 import at.sti2.rif4j.condition.OrFormula;
 import at.sti2.rif4j.condition.SubclassAtom;
-import at.sti2.rif4j.rule.ForallFormula;
 
 public class RifToIrisTranslatorHelper implements AtomicFormulaVisitor,
-		FormulaVisitor, CompositeFormulaVisitor {
+		FormulaVisitor {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(RifToIrisTranslatorHelper.class);
@@ -107,18 +104,8 @@ public class RifToIrisTranslatorHelper implements AtomicFormulaVisitor,
 	}
 
 	@Override
-	public void visit(ForallFormula forallFormula) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public void visit(AtomicFormula atomicFormula) {
 		atomicFormula.accept((AtomicFormulaVisitor) this);
-	}
-
-	@Override
-	public void visit(CompositeFormula compositeFormula) {
-		compositeFormula.accept((CompositeFormulaVisitor) this);
 	}
 
 	@Override

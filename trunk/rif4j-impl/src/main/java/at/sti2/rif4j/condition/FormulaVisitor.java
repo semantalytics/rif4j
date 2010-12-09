@@ -15,21 +15,20 @@
  */
 package at.sti2.rif4j.condition;
 
-import at.sti2.rif4j.rule.ForallFormula;
 
 /**
  * @author Adrian Marte
  */
 public interface FormulaVisitor {
 
+	public void visit(AndFormula andFormula);
+	
+	public void visit(OrFormula orFormula);
+	
 	public void visit(ExistsFormula existsFormula);
 
 	public void visit(ExternalFormula externalFormula);
 
-	public void visit(ForallFormula forallFormula);
-
 	public void visit(AtomicFormula atomicFormula);
-
-	public void visit(CompositeFormula compositeFormula);
 
 }

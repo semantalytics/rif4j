@@ -6,12 +6,13 @@ import java.util.List;
 import org.deri.iris.api.basics.ILiteral;
 import org.deri.iris.api.basics.IRule;
 
+import at.sti2.rif4j.condition.AndFormula;
 import at.sti2.rif4j.condition.AtomicFormula;
-import at.sti2.rif4j.condition.CompositeFormula;
 import at.sti2.rif4j.condition.ExistsFormula;
 import at.sti2.rif4j.condition.ExternalFormula;
+import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.condition.FormulaVisitor;
-import at.sti2.rif4j.rule.ForallFormula;
+import at.sti2.rif4j.condition.OrFormula;
 
 public class FormulaTranslator implements FormulaVisitor {
 
@@ -50,16 +51,6 @@ public class FormulaTranslator implements FormulaVisitor {
 	}
 
 	@Override
-	public void visit(ForallFormula forallFormula) {
-		// We can ignore the variable definition.
-
-		ClauseTranslator clauseTranslator = new ClauseTranslator();
-		forallFormula.getClause().accept(clauseTranslator);
-
-		rules.addAll(clauseTranslator.getRules());
-	}
-
-	@Override
 	public void visit(AtomicFormula atomicFormula) {
 		AtomicFormulaTranslator atomicFormulaTranslator = new AtomicFormulaTranslator();
 		atomicFormula.accept(atomicFormulaTranslator);
@@ -68,11 +59,19 @@ public class FormulaTranslator implements FormulaVisitor {
 	}
 
 	@Override
-	public void visit(CompositeFormula compositeFormula) {
-		CompositeFormulaTranslator compositeFormulaExtractor = new CompositeFormulaTranslator();
-		compositeFormula.accept(compositeFormulaExtractor);
+	public void visit(AndFormula andFormula) {
+		for (Formula formula : andFormula.getFormulas()) {
+			FormulaTranslator formulaTranslator = new FormulaTranslator();
+			formula.accept(formulaTranslator);
 
-		literals = compositeFormulaExtractor.getLiterals();
+			literals.addAll(formulaTranslator.getLiterals());
+		}
+	}
+
+	@Override
+	public void visit(OrFormula orFormula) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
