@@ -32,8 +32,6 @@ import at.sti2.rif4j.condition.Argument;
 import at.sti2.rif4j.condition.AtomicFormula;
 import at.sti2.rif4j.condition.AtomicFormulaVisitor;
 import at.sti2.rif4j.condition.Attribute;
-import at.sti2.rif4j.condition.CompositeFormula;
-import at.sti2.rif4j.condition.CompositeFormulaVisitor;
 import at.sti2.rif4j.condition.Constant;
 import at.sti2.rif4j.condition.EqualAtom;
 import at.sti2.rif4j.condition.ExistsFormula;
@@ -59,8 +57,7 @@ import at.sti2.rif4j.rule.RuleVisitor;
  * @author Adrian Marte
  */
 class RifEntityTransformer implements TermVisitor, ClauseVisitor,
-		FormulaVisitor, AtomicFormulaVisitor, CompositeFormulaVisitor,
-		RuleVisitor {
+		FormulaVisitor, AtomicFormulaVisitor, RuleVisitor {
 
 	private Term term;
 
@@ -370,11 +367,6 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 			// expression = factories.getLogicalExpressionFactory()
 			// .createUniversalQuantification(wsmlVariables, wsmlClause);
 		}
-	}
-
-	@Override
-	public void visit(CompositeFormula compositeFormula) {
-		compositeFormula.accept((CompositeFormulaVisitor) this);
 	}
 
 	@Override

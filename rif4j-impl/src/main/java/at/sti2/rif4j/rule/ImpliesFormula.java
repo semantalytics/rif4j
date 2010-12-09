@@ -15,6 +15,7 @@
  */
 package at.sti2.rif4j.rule;
 
+import java.util.Collections;
 import java.util.List;
 
 import at.sti2.rif4j.AbstractDescribable;
@@ -48,6 +49,21 @@ public class ImpliesFormula extends AbstractDescribable implements Clause,
 	 *            The body of the implies formula, i.e. the "if" part.
 	 * @param head
 	 *            The head of the implies formula, i.e. the "then" part.
+	 */
+	public ImpliesFormula(Formula body, AtomicFormula head) {
+		this.head = Collections.singletonList(head);
+		this.body = body;
+	}
+
+	/**
+	 * Creates a new implies formula with the specified body and head.
+	 * 
+	 * @param body
+	 *            The body of the implies formula, i.e. the "if" part.
+	 * @param head
+	 *            The head of the implies formula, i.e. the "then" part. The
+	 *            list of {@link AtomicFormula}s should be interpreted as a
+	 *            conjunction of {@link AtomicFormula}s.
 	 */
 	public ImpliesFormula(Formula body, List<AtomicFormula> head) {
 		this.head = head;

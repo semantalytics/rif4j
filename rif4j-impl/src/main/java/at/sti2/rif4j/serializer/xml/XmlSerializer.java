@@ -41,8 +41,6 @@ import at.sti2.rif4j.condition.Atom;
 import at.sti2.rif4j.condition.AtomicFormula;
 import at.sti2.rif4j.condition.AtomicFormulaVisitor;
 import at.sti2.rif4j.condition.Attribute;
-import at.sti2.rif4j.condition.CompositeFormula;
-import at.sti2.rif4j.condition.CompositeFormulaVisitor;
 import at.sti2.rif4j.condition.Constant;
 import at.sti2.rif4j.condition.EqualAtom;
 import at.sti2.rif4j.condition.ExistsFormula;
@@ -78,9 +76,9 @@ import at.sti2.rif4j.serializer.RifSerializer;
  * @author Daniel Winkler
  * @author Iker Larizgoitia Abad
  */
-public class XmlSerializer extends XmlHandlerBase implements RifSerializer, DocumentVisitor,
-		TermVisitor, ClauseVisitor, FormulaVisitor, AtomicFormulaVisitor,
-		CompositeFormulaVisitor, RuleVisitor, UnitermVisitor {
+public class XmlSerializer extends XmlHandlerBase implements RifSerializer,
+		DocumentVisitor, TermVisitor, ClauseVisitor, FormulaVisitor,
+		AtomicFormulaVisitor, RuleVisitor, UnitermVisitor {
 
 	private org.w3c.dom.Document xmlDocument;
 
@@ -112,7 +110,7 @@ public class XmlSerializer extends XmlHandlerBase implements RifSerializer, Docu
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return serializedDocument;
 	}
 
@@ -627,11 +625,6 @@ public class XmlSerializer extends XmlHandlerBase implements RifSerializer, Docu
 		} else { // Clause
 			forallFormula.getClause().accept((ClauseVisitor) this);
 		}
-	}
-
-	@Override
-	public void visit(CompositeFormula compositeFormula) {
-		compositeFormula.accept((CompositeFormulaVisitor) this);
 	}
 
 	@Override

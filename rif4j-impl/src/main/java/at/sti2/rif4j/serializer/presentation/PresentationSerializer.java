@@ -26,8 +26,6 @@ import at.sti2.rif4j.condition.Atom;
 import at.sti2.rif4j.condition.AtomicFormula;
 import at.sti2.rif4j.condition.AtomicFormulaVisitor;
 import at.sti2.rif4j.condition.Attribute;
-import at.sti2.rif4j.condition.CompositeFormula;
-import at.sti2.rif4j.condition.CompositeFormulaVisitor;
 import at.sti2.rif4j.condition.Constant;
 import at.sti2.rif4j.condition.EqualAtom;
 import at.sti2.rif4j.condition.ExistsFormula;
@@ -60,8 +58,8 @@ import at.sti2.rif4j.rule.RuleVisitor;
 import at.sti2.rif4j.serializer.RifSerializer;
 
 public class PresentationSerializer implements DocumentVisitor, TermVisitor,
-		ClauseVisitor, FormulaVisitor, AtomicFormulaVisitor,
-		CompositeFormulaVisitor, RuleVisitor, UnitermVisitor, RifSerializer {
+		ClauseVisitor, FormulaVisitor, AtomicFormulaVisitor, RuleVisitor,
+		UnitermVisitor, RifSerializer {
 
 	public static final String LINE_SEPARATOR = System
 			.getProperty("line.separator");
@@ -439,11 +437,6 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 		append(")");
 	}
 
-	@Override
-	public void visit(CompositeFormula compositeFormula) {
-		compositeFormula.accept((CompositeFormulaVisitor) this);
-	}
-
 	private void visit(Uniterm uniterm) {
 		uniterm.getOperator().accept(this);
 
@@ -558,11 +551,11 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 	public String getString() {
 		return builder.toString();
 	}
-	
+
 	@Override
 	public String serialize(Document rifDocument) {
 		this.visit(rifDocument);
 		return builder.toString();
 	}
-	
+
 }

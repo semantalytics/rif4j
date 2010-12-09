@@ -17,11 +17,12 @@ package at.sti2.rif4j.condition;
 
 import java.util.List;
 
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
+
 /**
  * @author Adrian Marte
  */
-public class AndFormula extends AbstractCompositeFormula implements
-		CompositeFormula {
+public class AndFormula extends AbstractCompositeFormula implements Formula {
 
 	public AndFormula() {
 	}
@@ -30,12 +31,15 @@ public class AndFormula extends AbstractCompositeFormula implements
 		super(formulas);
 	}
 
-	public void accept(CompositeFormulaVisitor visitor) {
+	public void accept(FormulaVisitor visitor) {
 		visitor.visit(this);
 	}
 
-	public void accept(FormulaVisitor visitor) {
-		visitor.visit(this);
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept(serializer);
+		return serializer.getString();
 	}
 
 }

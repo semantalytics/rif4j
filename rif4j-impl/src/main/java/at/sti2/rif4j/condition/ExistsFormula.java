@@ -23,8 +23,7 @@ import at.sti2.rif4j.Assertions;
  * @author Adrian Marte
  * @author Daniel Winkler
  */
-public class ExistsFormula extends AbstractCompositeFormula implements
-		CompositeFormula, Formula {
+public class ExistsFormula extends AbstractCompositeFormula implements Formula {
 
 	private List<Variable> variables;
 
@@ -46,10 +45,6 @@ public class ExistsFormula extends AbstractCompositeFormula implements
 		Assertions.notNull("variables", variables);
 
 		this.variables = variables;
-	}
-
-	public void accept(CompositeFormulaVisitor visitor) {
-		visitor.visit(this);
 	}
 
 	public void accept(FormulaVisitor visitor) {
