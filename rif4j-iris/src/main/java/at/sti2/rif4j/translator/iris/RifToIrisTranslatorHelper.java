@@ -4,16 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.deri.iris.api.basics.ILiteral;
-import org.deri.iris.api.basics.IPredicate;
-import org.deri.iris.api.basics.ITuple;
-import org.deri.iris.api.terms.ITerm;
-import org.deri.iris.basics.BasicFactory;
-import org.deri.iris.terms.TermFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.sti2.rif4j.condition.AndFormula;
-import at.sti2.rif4j.condition.Argument;
 import at.sti2.rif4j.condition.Atom;
 import at.sti2.rif4j.condition.AtomicFormula;
 import at.sti2.rif4j.condition.AtomicFormulaVisitor;
@@ -26,6 +20,8 @@ import at.sti2.rif4j.condition.Frame;
 import at.sti2.rif4j.condition.MemberAtom;
 import at.sti2.rif4j.condition.OrFormula;
 import at.sti2.rif4j.condition.SubclassAtom;
+import at.sti2.rif4j.translator.iris.visitor.AtomicFormulaTranslator;
+import at.sti2.rif4j.translator.iris.visitor.FormulaTranslator;
 
 public class RifToIrisTranslatorHelper implements AtomicFormulaVisitor,
 		FormulaVisitor {
@@ -33,74 +29,72 @@ public class RifToIrisTranslatorHelper implements AtomicFormulaVisitor,
 	private static final Logger logger = LoggerFactory
 			.getLogger(RifToIrisTranslatorHelper.class);
 
-	private List<ILiteral> literalList = new ArrayList<ILiteral>();
-	private ILiteral literal = null;
+	private List<ILiteral> literals = new ArrayList<ILiteral>();
 
 	public ILiteral translateAtomicFormula(AtomicFormula atomicFormula) {
 		atomicFormula.accept((AtomicFormulaVisitor) this);
-		return this.literal;
+		return this.literals.get(0);
 	}
 
 	public List<ILiteral> translateFormula(Formula formula) {
 		formula.accept(this);
-		return literalList;
+		return literals;
 	}
 
 	@Override
 	public void visit(Atom atom) {
+		AtomicFormulaTranslator translator = new AtomicFormulaTranslator();
+		atom.accept(translator);
 
-		String symbol = atom.getOperator().getText();
-		int arity = atom.getArguments().size();
-
-		IPredicate predicate = BasicFactory.getInstance().createPredicate(
-				symbol, arity);
-
-		List<ITerm> terms = new ArrayList<ITerm>();
-
-		List<Argument> args = atom.getArguments();
-
-		for (Argument argument : args) {
-			terms.add(TermFactory.getInstance().createVariable(
-					argument.getValue().toString().replace("?", "")));
-		}
-
-		ITuple tuple = BasicFactory.getInstance().createTuple(terms);
-
-		// TODO isPositive implications?
-		this.literal = BasicFactory.getInstance().createLiteral(true,
-				predicate, tuple);
-
-		logger.debug("IRIS atom translated --> " + this.literal.toString());
+		literals.addAll(translator.getLiterals());
 	}
 
 	@Override
 	public void visit(EqualAtom equalAtom) {
-		// TODO Auto-generated method stub
+		AtomicFormulaTranslator translator = new AtomicFormulaTranslator();
+		equalAtom.accept(translator);
+
+		literals.addAll(translator.getLiterals());
 	}
 
 	@Override
 	public void visit(Frame frame) {
-		// TODO Auto-generated method stub
+		AtomicFormulaTranslator translator = new AtomicFormulaTranslator();
+		frame.accept(translator);
+
+		literals.addAll(translator.getLiterals());
 	}
 
 	@Override
 	public void visit(MemberAtom memberAtom) {
-		// TODO Auto-generated method stub
+		AtomicFormulaTranslator translator = new AtomicFormulaTranslator();
+		memberAtom.accept(translator);
+
+		literals.addAll(translator.getLiterals());
 	}
 
 	@Override
 	public void visit(SubclassAtom subclassAtom) {
-		// TODO Auto-generated method stub
+		AtomicFormulaTranslator translator = new AtomicFormulaTranslator();
+		subclassAtom.accept(translator);
+
+		literals.addAll(translator.getLiterals());
 	}
 
 	@Override
 	public void visit(ExistsFormula existsFormula) {
-		// TODO Auto-generated method stub
+		FormulaTranslator translator = new FormulaTranslator();
+		existsFormula.accept(translator);
+
+		literals.addAll(translator.getLiterals());
 	}
 
 	@Override
 	public void visit(ExternalFormula externalFormula) {
-		// TODO Auto-generated method stub
+		FormulaTranslator translator = new FormulaTranslator();
+		externalFormula.accept(translator);
+
+		literals.addAll(translator.getLiterals());
 	}
 
 	@Override
@@ -110,19 +104,17 @@ public class RifToIrisTranslatorHelper implements AtomicFormulaVisitor,
 
 	@Override
 	public void visit(AndFormula andFormula) {
+		FormulaTranslator translator = new FormulaTranslator();
+		andFormula.accept(translator);
 
-		for (Formula formula : andFormula.getFormulas()) {
-			this.literal = null;
-
-			formula.accept(this);
-
-			if (literal != null)
-				this.literalList.add(this.literal);
-		}
+		literals.addAll(translator.getLiterals());
 	}
 
 	@Override
 	public void visit(OrFormula orFormula) {
-		// TODO Auto-generated method stub
+		FormulaTranslator translator = new FormulaTranslator();
+		orFormula.accept(translator);
+
+		literals.addAll(translator.getLiterals());
 	}
 }
