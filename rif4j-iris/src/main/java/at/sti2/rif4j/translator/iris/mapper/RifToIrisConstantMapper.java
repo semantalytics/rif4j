@@ -36,7 +36,7 @@ import at.sti2.rif4j.XmlSchemaDatatype;
 import at.sti2.rif4j.condition.Constant;
 
 /**
- * Maps RIF constants to IRIS data values and vice versa.
+ * Maps RIF constants to IRIS terms.
  * 
  * @author Adrian Marte
  */
@@ -73,7 +73,7 @@ public class RifToIrisConstantMapper {
 	public ITerm toIrisTerm(Constant constant) {
 		String type = constant.getType();
 		String value = constant.getText();
-		
+
 		// Check if this is a XSD datatype.
 		XmlSchemaDatatype xsdDatatype = XmlSchemaDatatype.forUri(type);
 
@@ -278,8 +278,7 @@ public class RifToIrisConstantMapper {
 
 				break;
 			case XML_LITERAL:
-				// FIXME Set language.
-				return factory.createXMLLiteral(value, "");
+				return factory.createXMLLiteral(value, constant.getLanguage());
 			}
 		}
 
