@@ -19,8 +19,6 @@ import org.deri.iris.api.builtins.IBuiltinAtom;
 import org.deri.iris.api.factory.IBuiltinsFactory;
 import org.deri.iris.api.terms.ITerm;
 import org.deri.iris.factory.Factory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import at.sti2.rif4j.RifBuiltIn;
 
@@ -28,9 +26,6 @@ import at.sti2.rif4j.RifBuiltIn;
  * @author Adrian Marte
  */
 public class RifToIrisBuiltinMapper {
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(RifToIrisBuiltinMapper.class);
 
 	public static IBuiltinAtom toIrisBuiltin(String rifBuiltinIri,
 			ITerm... terms) {
@@ -497,19 +492,4 @@ public class RifToIrisBuiltinMapper {
 		return false;
 	}
 
-	public static boolean needsAuxiliaryVariable(String rifBuiltinIri) {
-		RifBuiltIn rifBuiltin = RifBuiltIn.from(rifBuiltinIri);
-		if (rifBuiltin == null) {
-			return false;
-		}
-
-		switch (rifBuiltin) {
-		case SUBTRACT_DATETIMES:
-			return true;
-		case DAYS_FROM_DURATION:
-			return true;
-		}
-
-		return false;
-	}
 }
