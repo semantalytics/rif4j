@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import at.sti2.rif4j.condition.AtomicFormula;
 import at.sti2.rif4j.rule.ClauseVisitor;
 import at.sti2.rif4j.rule.ImpliesFormula;
+import at.sti2.rif4j.transformer.LloydToporTransformer;
 
 public class ClauseTranslator implements ClauseVisitor {
 
