@@ -1,4 +1,4 @@
-package at.sti2.rif4j.translator.iris.visitor;
+package at.sti2.rif4j.transformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +37,12 @@ import at.sti2.rif4j.rule.ImpliesFormula;
 public class LloydToporTransformer {
 
 	public List<ImpliesFormula> transform(final ImpliesFormula implies) {
-		List<ImpliesFormula> eraseOrformulas;
-
-		// Create a new implies formula of the form H :- Bi for each atom in a
-		// OrFormula.
+		// Create a new implies formula of the form H :- Bi for each atom Bi in
+		// a OrFormula.
 		BodyVisitor bodyVisitor = new BodyVisitor(implies);
 		implies.getBody().accept(bodyVisitor);
 
-		eraseOrformulas = bodyVisitor.newImpliesFormulas;
+		List<ImpliesFormula> eraseOrformulas = bodyVisitor.newImpliesFormulas;
 
 		List<ImpliesFormula> eraseAndformulas = new ArrayList<ImpliesFormula>();
 

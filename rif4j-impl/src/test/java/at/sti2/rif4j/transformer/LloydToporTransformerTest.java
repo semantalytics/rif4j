@@ -1,4 +1,4 @@
-package at.sti2.rif4j.translator.iris.visitor;
+package at.sti2.rif4j.transformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ import at.sti2.rif4j.condition.Constant;
 import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.condition.OrFormula;
 import at.sti2.rif4j.rule.ImpliesFormula;
+import at.sti2.rif4j.transformer.LloydToporTransformer;
 
 public class LloydToporTransformerTest {
 
