@@ -52,24 +52,30 @@ public class ClauseTranslator implements ClauseVisitor {
 
 	@Override
 	public void visit(ImpliesFormula implies) {
-		for (AtomicFormula atomicFormula : implies.getHead()) {
-			List<ILiteral> headLiterals = new ArrayList<ILiteral>();
+		LloydToporTransformer transformer = new LloydToporTransformer();
+		List<ImpliesFormula> transformedFormulas = transformer
+				.transform(implies);
 
-			AtomicFormulaTranslator atomicFormulaTranslator = new AtomicFormulaTranslator();
-			atomicFormula.accept(atomicFormulaTranslator);
+		for (ImpliesFormula transformedFormula : transformedFormulas) {
+			for (AtomicFormula atomicFormula : transformedFormula.getHead()) {
+				List<ILiteral> headLiterals = new ArrayList<ILiteral>();
 
-			// The translator should only create one literal.
-			if (atomicFormulaTranslator.getLiterals().size() > 1) {
-				logger.error("Found more than one literal in the head");
+				AtomicFormulaTranslator atomicFormulaTranslator = new AtomicFormulaTranslator();
+				atomicFormula.accept(atomicFormulaTranslator);
+
+				// The translator should only create one literal.
+				if (atomicFormulaTranslator.getLiterals().size() > 1) {
+					logger.error("Found more than one literal in the head");
+				}
+
+				headLiterals.addAll(atomicFormulaTranslator.getLiterals());
+
+				FormulaTranslator formulaTranslator = new FormulaTranslator();
+				transformedFormula.getBody().accept(formulaTranslator);
+				List<ILiteral> bodyLiterals = formulaTranslator.getLiterals();
+
+				rules.add(Factory.BASIC.createRule(headLiterals, bodyLiterals));
 			}
-
-			headLiterals.addAll(atomicFormulaTranslator.getLiterals());
-
-			FormulaTranslator formulaTranslator = new FormulaTranslator();
-			implies.getBody().accept(formulaTranslator);
-			List<ILiteral> bodyLiterals = formulaTranslator.getLiterals();
-
-			rules.add(Factory.BASIC.createRule(headLiterals, bodyLiterals));
 		}
 	}
 
@@ -93,7 +99,7 @@ public class ClauseTranslator implements ClauseVisitor {
 			if (tuple.isGround()) {
 				relation.add(tuple);
 			}
-			
+
 			facts.put(predicate, relation);
 		}
 	}
