@@ -22,13 +22,20 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.junit.Ignore;
+
 import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.Rule;
 
 /**
+ * This class needs to be marked with {@link Ignore}, otherwise the Maven
+ * Surefire plug-in handles this class like a JUnit test, due to its "Test"
+ * prefix.
+ * 
  * @author Iker Larizgoitia Abad
  */
+@Ignore
 public class TestUtils {
 
 	public static Reader getFileReader(String fileName) {
