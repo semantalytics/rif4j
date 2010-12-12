@@ -1,7 +1,7 @@
 package at.sti2.rif4j.translator.iris;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.deri.iris.api.basics.IAtom;
 import org.deri.iris.api.basics.ILiteral;
 import org.junit.After;
 import org.junit.Before;
@@ -78,16 +77,24 @@ public class RifToIrisTranslatorHelperTest {
 		ForallFormula formula = (ForallFormula) rifDocument.getGroup().getAllRules().get(0);
 		assertNotNull(formula);
 		
-		ImpliesFormula implies = (ImpliesFormula) formula.getClause();		
+		ImpliesFormula implies = (ImpliesFormula) formula.getClause();	
 		
 		// Body
 		List<ILiteral> irisBody = helper.translateFormula(implies.getBody());
-				
+		
 		ArrayList<String> expectedBody = new ArrayList<String>();
 		expectedBody.add("http://example.org/concepts#perishable(?item)");
 		expectedBody.add("http://example.org/concepts#delivered(?item, ?deliverydate, ?store)");
 		expectedBody.add("http://example.org/concepts#scheduled(?item, ?scheduledate)");
 		expectedBody.add("IS_DATETIME(?deliverydate)");
+		expectedBody.add("IS_DATETIME(?scheduledate)");
+		expectedBody.add("EQUAL(?diffduration, ?var1)");
+		expectedBody.add("DATETIME_SUBTRACT(?deliverydate, ?scheduledate, ?var1)");
+		expectedBody.add("EQUAL(?diffdays, ?var2)");
+		expectedBody.add("DAYS_FROM_DURATION(?diffduration, ?var2)");
+		expectedBody.add("NUMERIC_GREATER(?diffdays, 10)");
+		
+		assertEquals(3 + 2 + 2 + 2 + 1, irisBody.size());
 		assertEquals(expectedBody.toString(),irisBody.toString());		
 	}
 	
