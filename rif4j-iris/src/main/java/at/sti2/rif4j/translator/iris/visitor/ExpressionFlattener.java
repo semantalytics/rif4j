@@ -18,7 +18,7 @@ import at.sti2.rif4j.translator.iris.mapper.RifToIrisBuiltinMapper;
 
 public class ExpressionFlattener {
 
-	private int uniqueVariableCounter = 0;
+	private static int uniqueVariableCounter = 0;
 
 	private IVariable variable;
 
@@ -53,8 +53,7 @@ public class ExpressionFlattener {
 	private IVariable createUniqueVariable() {
 		uniqueVariableCounter++;
 
-		return Factory.TERM.createVariable("var" + this.hashCode()
-				+ uniqueVariableCounter);
+		return Factory.TERM.createVariable("var" + uniqueVariableCounter);
 	}
 
 	public void flatten(Expression expression) {
@@ -115,7 +114,7 @@ public class ExpressionFlattener {
 
 		ITerm[] terms = TermTranslator.toArray(irisTerms);
 		atom = RifToIrisBuiltinMapper.toIrisBuiltin(operatorIri, terms);
-		
+
 		// Create an ordinary atom if this is not a mappable built-in or if it
 		// is not an expression.
 		if (atom == null) {
