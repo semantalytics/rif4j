@@ -65,7 +65,7 @@ public enum XmlSchemaDatatype {
 
 	BASE64BINARY("base64Binary"),
 
-	ANYURI("anyUri"),
+	ANYURI("anyURI"),
 
 	QNAME("QName"),
 
