@@ -17,6 +17,8 @@ package at.sti2.rif4j.condition;
 
 import java.util.List;
 
+import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
+
 /**
  * @author Adrian Marte
  */
@@ -31,6 +33,13 @@ public class OrFormula extends AbstractCompositeFormula implements Formula {
 
 	public void accept(FormulaVisitor visitor) {
 		visitor.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		PresentationSerializer serializer = new PresentationSerializer();
+		accept(serializer);
+		return serializer.getString();
 	}
 
 }
