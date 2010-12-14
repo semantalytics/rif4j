@@ -17,20 +17,20 @@ package at.sti2.rif4j.condition;
 
 import java.util.List;
 
+import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
 
 /**
  * @author Adrian Marte
  * @author Daniel Winkler
  */
-public class ExistsFormula extends AbstractCompositeFormula implements Formula {
+public class ExistsFormula extends AbstractDescribable implements Formula {
 
 	private List<Variable> variables;
 
-	public ExistsFormula(List<Variable> variables, List<Formula> formulas) {
-		// TODO am: one single formula?
-		super(formulas);
+	private Formula formula;
 
+	public ExistsFormula(List<Variable> variables, Formula formula) {
 		Assertions.notNull("variables", variables);
 
 		this.variables = variables;
@@ -49,6 +49,14 @@ public class ExistsFormula extends AbstractCompositeFormula implements Formula {
 
 	public void accept(FormulaVisitor visitor) {
 		visitor.visit(this);
+	}
+
+	public Formula getFormula() {
+		return formula;
+	}
+
+	public void setFormula(Formula formula) {
+		this.formula = formula;
 	}
 
 }

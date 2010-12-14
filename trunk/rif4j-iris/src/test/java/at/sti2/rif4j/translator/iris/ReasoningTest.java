@@ -70,7 +70,7 @@ public class ReasoningTest {
 	@Test
 	public void testReasoning() throws SAXException, IOException,
 			ParserConfigurationException {
-		String rifXmlFileName = "Class_Membership.xml";
+		String rifXmlFileName = "class_membership/Class_Membership.xml";
 
 		Reader rifXmlFileReader = TestUtils.getFileReader(rifXmlFileName);
 		assertNotNull("Test file " + rifXmlFileName + " could not be found",
@@ -164,30 +164,6 @@ public class ReasoningTest {
 			v.add(TERM.createVariable(var));
 		}
 		return v;
-	}
-
-	@Ignore
-	@Test
-	public void testPresentationForm() {
-		XmlParser parser = new XmlParser(true);
-		Document rifDocument = null;
-
-		String rifXmlFileName = "Class_Membership.xml";
-		Reader rifXmlFileReader = TestUtils.getFileReader(rifXmlFileName);
-
-		try {
-			rifDocument = parser.parseDocument(rifXmlFileReader);
-			// System.out.println(rifDocument.toString());
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 }

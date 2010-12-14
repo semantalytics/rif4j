@@ -78,7 +78,7 @@ public class PresentationSerializerTest extends XMLTestCase {
 		if (TestUtils.getFileURI(fileName + "ps") == null)
 			return;
 
-		logger.debug("Testing " + fileName);
+		logger.debug("Serializing " + fileName);
 
 		// Parse RIFDocument
 		Reader rifXmlFileReader = TestUtils.getFileReader(fileName);

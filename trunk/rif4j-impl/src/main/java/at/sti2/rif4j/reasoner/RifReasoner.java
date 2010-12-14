@@ -15,6 +15,7 @@
  */
 package at.sti2.rif4j.reasoner;
 
+import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.Group;
 import at.sti2.rif4j.rule.Rule;
@@ -49,13 +50,13 @@ import at.sti2.rif4j.rule.Rule;
  */
 public interface RifReasoner {
 
-	public boolean entails(Document phi, Rule psi);
+	public boolean entails(Document phi, Formula psi);
 
-	public boolean entails(Group phi, Rule psi);
+	public boolean entails(Group phi, Formula psi);
 
-	public boolean entails(Rule phi, Rule psi);
+	public boolean entails(Rule phi, Formula psi);
 	
 	// FIXME Return value should be a binding set.
-	public boolean query(Document document, Rule query);
+	public boolean query(Document document, Formula query);
 
 }

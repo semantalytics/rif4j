@@ -556,7 +556,7 @@ public class XmlSerializer extends XmlHandlerBase implements RifSerializer,
 		elementStack.pop();
 
 		appendAndPush("formula");
-		existsFormula.getFormulas().get(0).accept(this);
+		existsFormula.getFormula().accept(this);
 		elementStack.pop();
 
 		elementStack.pop();

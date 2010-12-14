@@ -57,6 +57,11 @@ import at.sti2.rif4j.rule.Rule;
 import at.sti2.rif4j.rule.RuleVisitor;
 import at.sti2.rif4j.serializer.RifSerializer;
 
+/**
+ * @author Adrian Marte
+ * @author Daniel Winkler
+ * 
+ */
 public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 		ClauseVisitor, FormulaVisitor, AtomicFormulaVisitor, RuleVisitor,
 		UnitermVisitor, RifSerializer {
@@ -399,8 +404,7 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 		appendInline(" (");
 
 		increaseLevel();
-		// An exists formula only contains a single formula.
-		existsFormula.getFormulas().get(0).accept(this);
+		existsFormula.getFormula().accept(this);
 		decreaseLevel();
 
 		append(")");

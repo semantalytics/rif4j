@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.deri.iris.api.basics.ILiteral;
-import org.deri.iris.api.basics.IRule;
+import org.deri.iris.api.basics.IQuery;
+import org.deri.iris.factory.Factory;
 
 import at.sti2.rif4j.condition.AndFormula;
 import at.sti2.rif4j.condition.AtomicFormula;
@@ -18,7 +19,7 @@ public class FormulaTranslator implements FormulaVisitor {
 
 	private List<ILiteral> literals;
 
-	private List<IRule> rules;
+	private List<IQuery> queries;
 
 	public FormulaTranslator() {
 		reset();
@@ -26,20 +27,20 @@ public class FormulaTranslator implements FormulaVisitor {
 
 	private void reset() {
 		literals = new ArrayList<ILiteral>();
-		rules = new ArrayList<IRule>();
+		queries = new ArrayList<IQuery>();
 	}
 
 	public List<ILiteral> getLiterals() {
 		return literals;
 	}
 
-	public List<IRule> getRules() {
-		return rules;
+	public List<IQuery> getQueries() {
+		return queries;
 	}
 
 	@Override
 	public void visit(ExistsFormula existsFormula) {
-		// TODO Auto-generated method stub
+		existsFormula.getFormula().accept(this);
 	}
 
 	@Override
@@ -48,6 +49,9 @@ public class FormulaTranslator implements FormulaVisitor {
 		externalFormula.getAtom().accept(atomicFormulaTranslator);
 
 		literals.addAll(atomicFormulaTranslator.getLiterals());
+
+		IQuery query = Factory.BASIC.createQuery(literals);
+		queries.add(query);
 	}
 
 	@Override
@@ -56,6 +60,9 @@ public class FormulaTranslator implements FormulaVisitor {
 		atomicFormula.accept(atomicFormulaTranslator);
 
 		literals.addAll(atomicFormulaTranslator.getLiterals());
+
+		IQuery query = Factory.BASIC.createQuery(literals);
+		queries.add(query);
 	}
 
 	@Override
@@ -66,12 +73,24 @@ public class FormulaTranslator implements FormulaVisitor {
 
 			literals.addAll(formulaTranslator.getLiterals());
 		}
+
+		IQuery query = Factory.BASIC.createQuery(literals);
+		queries.add(query);
 	}
 
 	@Override
 	public void visit(OrFormula orFormula) {
-		// TODO Auto-generated method stub
+		for (Formula formula : orFormula.getFormulas()) {
+			FormulaTranslator formulaTranslator = new FormulaTranslator();
+			formula.accept(formulaTranslator);
 
+			List<ILiteral> disjunctLiterals = formulaTranslator.getLiterals();
+
+			IQuery query = Factory.BASIC.createQuery(disjunctLiterals);
+			queries.add(query);
+
+			literals.addAll(formulaTranslator.getLiterals());
+		}
 	}
 
 }

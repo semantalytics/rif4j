@@ -29,9 +29,9 @@ import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 
+import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.reasoner.AbstractRifReasoner;
 import at.sti2.rif4j.rule.Document;
-import at.sti2.rif4j.rule.Rule;
 import at.sti2.wsmo4j.translator.rif.RifToWsmlTranslator;
 
 /**
@@ -42,13 +42,13 @@ import at.sti2.wsmo4j.translator.rif.RifToWsmlTranslator;
 public class WsmlRifReasoner extends AbstractRifReasoner {
 
 	@Override
-	public boolean entails(Document phi, Rule psi) {
+	public boolean entails(Document phi, Formula psi) {
 		Ontology wsmlOntology = toOntology(phi);
 		List<LogicalExpression> wsmlRules = toQueries(psi);
 
 		LPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
 				.createFlightReasoner(null);
-		
+
 		try {
 			reasoner.registerOntology(wsmlOntology);
 		} catch (InconsistencyException e) {
@@ -67,11 +67,11 @@ public class WsmlRifReasoner extends AbstractRifReasoner {
 	}
 
 	@Override
-	public boolean query(Document document, Rule query) {
+	public boolean query(Document document, Formula query) {
 		return entails(document, query);
 	}
 
-	private List<LogicalExpression> toQueries(Rule rule) {
+	private List<LogicalExpression> toQueries(Formula rule) {
 		RifToWsmlTranslator translator = new RifToWsmlTranslator();
 		List<LogicalExpression> expressions = translator.translate(rule);
 
