@@ -130,4 +130,9 @@ public class ExpressionFlattener {
 		this.literals.add(literal);
 		this.literals.addAll(irisLiterals);
 	}
+	
+	public static int getCurrentVariableNumber()
+	{
+		return uniqueVariableCounter;
+	}
 }
