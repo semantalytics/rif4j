@@ -34,7 +34,7 @@ public class ExistsFormula extends AbstractDescribable implements Formula {
 		Assertions.notNull("variables", variables);
 
 		this.variables = variables;
-
+		this.formula = formula;
 	}
 
 	public List<Variable> getVariables() {
