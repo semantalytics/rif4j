@@ -30,28 +30,41 @@ import at.sti2.rif4j.condition.OrFormula;
  */
 public class FormulaNormalizer {
 
+	/**
+	 * Transforms the specified formula to an equivalent formula in disjunctive
+	 * normal form (DNF). In this process, {@link AndFormula}s and
+	 * {@link OrFormula}s are simplified using
+	 * {@link FormulaSimplifier#simplify(Formula)}.
+	 * 
+	 * @param formula
+	 *            The formula to transform to an equivalent formula in DNF.
+	 * @return An equivalent formula in disjunctive normal form (DNF).
+	 */
 	public Formula normalize(Formula formula) {
+		FormulaSimplifier simplifier = new FormulaSimplifier();
+		Formula simplifiedFormula = simplifier.simplify(formula);
+
 		Formula newFormula;
 
-		newFormula = normalizeAndFormula(formula);
+		newFormula = normalizeAndFormula(simplifiedFormula);
 
 		if (newFormula != null) {
 			return newFormula;
 		}
 
-		newFormula = normalizeOrFormula(formula);
+		newFormula = normalizeOrFormula(simplifiedFormula);
 
 		if (newFormula != null) {
 			return newFormula;
 		}
 
-		newFormula = normalizeFrame(formula);
+		newFormula = normalizeFrame(simplifiedFormula);
 
 		if (newFormula != null) {
 			return newFormula;
 		}
 
-		return formula;
+		return simplifiedFormula;
 	}
 
 	private Formula normalizeOrFormula(Formula formula) {
@@ -105,12 +118,14 @@ public class FormulaNormalizer {
 
 		Formula resultingFormula = null;
 
+		// Apply the distribute law on formulas of the form (a and (b or c)).
 		resultingFormula = applyLeftDistributiveLaw(andFormula);
 
 		if (resultingFormula != null) {
 			return resultingFormula;
 		}
 
+		// Apply the distribute law on formulas of the form ((a or b) and c).
 		resultingFormula = applyRightDistributiveLaw(andFormula);
 
 		if (resultingFormula != null) {
@@ -226,5 +241,5 @@ public class FormulaNormalizer {
 
 		return null;
 	}
-
+	
 }

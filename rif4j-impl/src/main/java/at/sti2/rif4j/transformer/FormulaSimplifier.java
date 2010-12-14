@@ -22,19 +22,22 @@ import at.sti2.rif4j.condition.AndFormula;
 import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.condition.OrFormula;
 
+/**
+ * @author Adrian Marte
+ */
 public class FormulaSimplifier {
 
 	public Formula simplify(Formula formula) {
 		if (formula instanceof OrFormula) {
-			simplifyOrFormula((OrFormula) formula);
+			simplify((OrFormula) formula);
 		} else if (formula instanceof AndFormula) {
-			simplifyAndFormula((AndFormula) formula);
+			simplify((AndFormula) formula);
 		}
 
 		return formula;
 	}
 
-	private Formula simplifyOrFormula(OrFormula orFormula) {
+	private Formula simplify(OrFormula orFormula) {
 		List<Formula> newDisjuncts = new ArrayList<Formula>();
 		for (Formula disjunct : orFormula.getFormulas()) {
 			Formula newDisjunct = simplify(disjunct);
@@ -57,7 +60,7 @@ public class FormulaSimplifier {
 		return orFormula;
 	}
 
-	private Formula simplifyAndFormula(AndFormula andFormula) {
+	private Formula simplify(AndFormula andFormula) {
 		List<Formula> newConjuncts = new ArrayList<Formula>();
 		for (Formula conjunct : andFormula.getFormulas()) {
 			Formula newConjunct = simplify(conjunct);

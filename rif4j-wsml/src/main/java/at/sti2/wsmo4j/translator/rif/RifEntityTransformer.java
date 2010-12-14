@@ -18,6 +18,7 @@ package at.sti2.wsmo4j.translator.rif;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -327,8 +328,8 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 
 	@Override
 	public void visit(ExistsFormula existsFormula) {
-		java.util.List<LogicalExpression> wsmlFormulas = convertFormulas(existsFormula
-				.getFormulas());
+		java.util.List<LogicalExpression> wsmlFormulas = convertFormulas(Collections
+				.singletonList(existsFormula.getFormula()));
 		LogicalExpression wsmlClause = makeConjunction(wsmlFormulas);
 
 		if (wsmlClause != null) {

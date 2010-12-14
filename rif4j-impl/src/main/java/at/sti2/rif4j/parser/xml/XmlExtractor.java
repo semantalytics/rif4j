@@ -727,7 +727,9 @@ class XmlExtractor {
 				variables.addAll(extractVariables(declareNode));
 			}
 
-			ExistsFormula existsFormula = new ExistsFormula(variables, formulas);
+			// An ExistsFormula only has a single formula.
+			ExistsFormula existsFormula = new ExistsFormula(variables,
+					formulas.get(0));
 			setMetadata(existsNode, existsFormula);
 			existsFormulas.add(existsFormula);
 		}

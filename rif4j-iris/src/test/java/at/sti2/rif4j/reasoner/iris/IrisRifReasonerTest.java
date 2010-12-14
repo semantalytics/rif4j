@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package at.sti2.wsmo4j.reasoner.rif;
+package at.sti2.rif4j.reasoner.iris;
 
 import junit.framework.Assert;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,31 +25,28 @@ import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.rule.Document;
 
 /**
- * Integration tests for {@link WsmlRifReasoner}.
- * 
  * @author Adrian Marte
  */
-public class ITReasonRuleML2010 {
+public class IrisRifReasonerTest {
 
-	private WsmlRifReasoner reasoner;
+	private static String CLASS_MEMBERSHIPT_PREFIX = "BLD_v1.22/Approved/PositiveEntailmentTest/"
+			+ "Class_Membership/Class_Membership";
+
+	private IrisRifReasoner reasoner;
 
 	@Before
 	public void setUp() {
-		reasoner = new WsmlRifReasoner();
-	}
-
-	@After
-	public void shutDown() {
-		reasoner = null;
+		reasoner = new IrisRifReasoner();
 	}
 
 	@Test
-	public void testRuleML2010() {
-		Document document = TestUtils.parseDocument("RuleML2010_Document.xml");
-		Formula formula = TestUtils.parseFormula("RuleML2010_Query.xml");
-		boolean entailed = reasoner.query(document, formula);
+	public void testClassMembership() {
+		Document document = TestUtils.parseDocument(CLASS_MEMBERSHIPT_PREFIX
+				+ "-premise.rif");
+		Formula formula = TestUtils.parseFormula(CLASS_MEMBERSHIPT_PREFIX
+				+ "-conclusion.rif");
 
-		Assert.assertTrue(entailed);
+		Assert.assertTrue(reasoner.entails(document, formula));
 	}
 
 }

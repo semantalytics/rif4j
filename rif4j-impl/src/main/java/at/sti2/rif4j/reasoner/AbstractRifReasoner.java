@@ -17,6 +17,7 @@ package at.sti2.rif4j.reasoner;
 
 import java.util.Collections;
 
+import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.Group;
 import at.sti2.rif4j.rule.Rule;
@@ -31,14 +32,14 @@ import at.sti2.rif4j.rule.Rule;
 public abstract class AbstractRifReasoner implements RifReasoner {
 
 	@Override
-	public boolean entails(Group phi, Rule psi) {
+	public boolean entails(Group phi, Formula psi) {
 		Document phiDocument = toDocument(phi);
 
 		return entails(phiDocument, psi);
 	}
 
 	@Override
-	public boolean entails(Rule phi, Rule psi) {
+	public boolean entails(Rule phi, Formula psi) {
 		Document phiDocument = toDocument(phi);
 
 		return entails(phiDocument, psi);

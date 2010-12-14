@@ -79,7 +79,7 @@ public class XmlSerializerTest extends XMLTestCase {
 
 	private void testParseAndSerializeXML_RIF_BLD(String fileName)
 			throws SAXException, IOException, ParserConfigurationException {
-		logger.debug("Testing " + fileName);
+		logger.debug("Serializing " + fileName);
 
 		// Parse RIFDocument
 		Reader rifXmlFileReader = TestUtils.getFileReader(fileName);

@@ -49,7 +49,7 @@ import at.sti2.rif4j.rule.ImpliesFormula;
  */
 public class LloydToporTransformer {
 
-	public List<ImpliesFormula> transform(final ImpliesFormula implies) {
+	public List<ImpliesFormula> transform(ImpliesFormula implies) {
 		List<ImpliesFormula> eraseOrformulas = eraseOrFormulaInBody(implies);
 
 		if (eraseOrformulas.size() > 0) {

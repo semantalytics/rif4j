@@ -16,12 +16,23 @@
 package at.sti2.rif4j.transformer;
 
 import at.sti2.rif4j.condition.Formula;
+import at.sti2.rif4j.rule.Clause;
 import at.sti2.rif4j.rule.ImpliesFormula;
 
 /**
  * @author Adrian Marte
  */
-public class ImpliesFormulaNormalizer {
+public class ClauseNormalizer {
+
+	public Clause normalize(Clause clause) {
+		if (clause instanceof ImpliesFormula) {
+			ImpliesFormula impliesFormula = (ImpliesFormula) clause;
+			return normalize(impliesFormula);
+		}
+
+		// An AtomicFormula does not need to be normalized.
+		return clause;
+	}
 
 	public ImpliesFormula normalize(ImpliesFormula impliesFormula) {
 		// Normalize the body of an ImpliesFormula.
@@ -30,7 +41,10 @@ public class ImpliesFormulaNormalizer {
 		FormulaNormalizer normalizer = new FormulaNormalizer();
 		Formula normalizedBody = normalizer.normalize(body);
 
-		impliesFormula.setBody(normalizedBody);
+		if (!normalizedBody.equals(body)) {
+			// TODO Use clone method.
+			return new ImpliesFormula(normalizedBody, impliesFormula.getHead());
+		}
 
 		return impliesFormula;
 	}

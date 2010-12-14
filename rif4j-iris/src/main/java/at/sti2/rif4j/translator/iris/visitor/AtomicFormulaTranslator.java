@@ -173,6 +173,8 @@ public class AtomicFormulaTranslator implements AtomicFormulaVisitor {
 							+ conjunct);
 				}
 			}
+		} else {
+			frames.add(frame);
 		}
 
 		for (Frame newFrame : frames) {

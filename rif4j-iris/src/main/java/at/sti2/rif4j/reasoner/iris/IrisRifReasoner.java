@@ -21,10 +21,12 @@ import org.deri.iris.EvaluationException;
 import org.deri.iris.api.IKnowledgeBase;
 import org.deri.iris.api.basics.IQuery;
 import org.deri.iris.storage.IRelation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.reasoner.AbstractRifReasoner;
 import at.sti2.rif4j.rule.Document;
-import at.sti2.rif4j.rule.Rule;
 import at.sti2.rif4j.translator.iris.RifToIrisTranslator;
 
 /**
@@ -32,8 +34,11 @@ import at.sti2.rif4j.translator.iris.RifToIrisTranslator;
  */
 public class IrisRifReasoner extends AbstractRifReasoner {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(IrisRifReasoner.class);
+
 	@Override
-	public boolean entails(Document phi, Rule psi) {
+	public boolean entails(Document phi, Formula psi) {
 		try {
 			IKnowledgeBase irisKnowledgeBase = toKnowledgeBase(phi);
 			List<IQuery> irisQueries = toQueries(psi);
@@ -44,17 +49,18 @@ public class IrisRifReasoner extends AbstractRifReasoner {
 				if (relation.size() == 0) {
 					return false;
 				}
+
+				return true;
 			}
 		} catch (EvaluationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error evaluating knowledge base", e);
 		}
 
 		return false;
 	}
 
 	@Override
-	public boolean query(Document document, Rule query) {
+	public boolean query(Document document, Formula query) {
 		return entails(document, query);
 	}
 
@@ -67,11 +73,12 @@ public class IrisRifReasoner extends AbstractRifReasoner {
 		return knowledgeBase;
 	}
 
-	private List<IQuery> toQueries(Rule rule) {
+	private List<IQuery> toQueries(Formula formula) {
 		RifToIrisTranslator translator = new RifToIrisTranslator();
-		translator.translate(rule);
+		translator.translate(formula);
 
 		List<IQuery> queries = translator.getQueries();
+
 		return queries;
 	}
 
