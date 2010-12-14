@@ -124,6 +124,7 @@ public enum XmlSchemaDatatype {
 	POSITIVE_INTEGER("positiveInteger");
 
 	private String uri;
+	private String name;
 
 	private XmlSchemaDatatype(String name) {
 		this(Namespaces.XSD_NAMESPACE, name);
@@ -131,8 +132,14 @@ public enum XmlSchemaDatatype {
 
 	private XmlSchemaDatatype(String namespace, String name) {
 		this.uri = namespace + name;
+		this.name = name;
 	}
 
+	public String getName()
+	{
+		return name;
+	}
+	
 	public String getUri() {
 		return this.uri;
 	}
