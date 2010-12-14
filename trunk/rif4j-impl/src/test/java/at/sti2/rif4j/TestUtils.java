@@ -17,13 +17,19 @@ package at.sti2.rif4j;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.junit.Ignore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.Rule;
@@ -38,10 +44,24 @@ import at.sti2.rif4j.rule.Rule;
 @Ignore
 public class TestUtils {
 
-	public static Reader getFileReader(String fileName) {
-		return new InputStreamReader(TestUtils.class.getClassLoader()
-				.getResourceAsStream(fileName));
+	private static Logger logger = LoggerFactory.getLogger(TestUtils.class);
 
+	public static Reader getFileReader(String fileName) {
+		URL url = TestUtils.class.getClassLoader().getResource(fileName);
+
+		if (url == null) {
+			logger.error("Could not find " + fileName);
+			return null;
+		}
+		
+		try {
+			InputStream input = url.openStream();
+			return new InputStreamReader(input);
+		} catch (IOException e) {
+			logger.error("Could not load " + fileName);
+		}
+
+		return null;
 	}
 
 	public static String[] getRIFTestFiles(String path) {
@@ -95,6 +115,21 @@ public class TestUtils {
 		}
 
 		return rule;
+	}
+
+	public static Formula parseFormula(String fileName) {
+		XmlParser parser = new XmlParser();
+
+		Reader reader = getFileReader(fileName);
+		Formula formula = null;
+
+		try {
+			formula = parser.parseFormula(reader);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return formula;
 	}
 
 }
