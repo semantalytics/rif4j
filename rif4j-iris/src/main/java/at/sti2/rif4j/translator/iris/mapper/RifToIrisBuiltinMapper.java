@@ -31,7 +31,7 @@ public class RifToIrisBuiltinMapper {
 			ITerm... terms) {
 		RifBuiltIn rifBuiltin = RifBuiltIn.from(rifBuiltinIri);
 
-		if (rifBuiltin == null) {
+		if (rifBuiltin == null) {			
 			return null;
 		}
 
@@ -461,7 +461,101 @@ public class RifToIrisBuiltinMapper {
 		case YEARMONTHDURATION_LESS_THAN_OR_EQUAL:
 			return factory.createYearMonthDurationLessEqual(terms);
 		case YEARS_FROM_DURATION:
-			return factory.createYearsFromDuration(terms);
+			return factory.createYearsFromDuration(terms);			
+		case TO_STRING:
+			return factory.createToString(terms);
+		case TO_BOOLEAN:
+			return factory.createToBoolean(terms);
+		case TO_DECIMAL:
+			return factory.createToDecimal(terms);
+		case TO_FLOAT:
+			return factory.createToFloat(terms);
+		case TO_DOUBLE:
+			return factory.createToDouble(terms);
+		case TO_DURATION:
+			return factory.createToDuration(terms);
+		case TO_DAYTIMEDURATION:
+			return factory.createToDayTimeDuration(terms);
+		case TO_YEARMONTHDURATION:
+			return factory.createToYearMonthDuration(terms);
+		case TO_DATETIME:
+			return factory.createToDateTime(terms);
+		case TO_DATETIMESTAMP:
+			//TODO Iris equivalent?
+		case TO_TIME:
+			return factory.createToTime(terms);
+		case TO_DATE:
+			return factory.createToDate(terms);
+		case TO_GYEARMONTH:
+			return factory.createToGYearMonth(terms);
+		case TO_GYEAR:
+			return factory.createToGYear(terms);
+		case TO_GMONTHDAY:
+			return factory.createToGMonthDay(terms);
+		case TO_GDAY:
+			return factory.createToGDay(terms);
+		case TO_GMONTH:
+			return factory.createToGMonth(terms);
+		case TO_HEXBINARY:
+			return factory.createToHexBinary(terms);
+		case TO_BASE64BINARY:
+			return factory.createToBase64Binary(terms);
+		case TO_ANYURI:
+//			return factory.createToAnyUri(terms);
+		case TO_QNAME:
+//			return factory.createToqname(terms);
+		case TO_NOTATION:
+//			return factory.createTonotation(terms);
+		case TO_NORMALIZED_STRING:
+//			return factory.createTonormalized_string(terms);
+		case TO_TOKEN:
+//			return factory.createToToken(terms);
+		case TO_LANGUAGE:
+//			return factory.createToLanguage(terms);
+		case TO_NMTOKEN:
+//			return factory.createTonmtoken(terms);
+		case TO_NMTOKENS:
+//			return factory.createTonmtokens(terms);
+		case TO_NAME:
+//			return factory.createToname(terms);
+		case TO_NCNAME:
+//			return factory.createToncname(terms);
+		case TO_ID:
+//			return factory.createToid(terms);
+		case TO_IDREF:
+//			return factory.createToidref(terms);
+		case TO_IDREFS:
+//			return factory.createToidrefs(terms);
+		case TO_ENTITY:
+//			return factory.createToentity(terms);
+		case TO_ENTITIES:
+//			return factory.createToEntities(terms);
+		case TO_INTEGER:
+			return factory.createToInteger(terms);
+		case TO_NON_POSITIVE_INTEGER:
+//			return factory.createToon_positive_integer(terms);
+		case TO_NEGATIVE_INTEGER:
+//			return factory.createTonegative_integer(terms);
+		case TO_LONG:
+//			return factory.createTolong(terms);
+		case TO_INT:
+//			return factory.createToint(terms);
+		case TO_SHORT:
+//			return factory.createToshort(terms);
+		case TO_BYTE:
+//			return factory.createTobyte(terms);
+		case TO_NON_NEGATIVE_INTEGER:
+//			return factory.createTonon_negative_integer(terms);
+		case TO_UNSIGNED_LONG:
+//			return factory.createTounsigned_long(terms);
+		case TO_UNSIGNED_INT:
+//			return factory.createTounsigned_int(terms);
+		case TO_UNSIGNED_SHORT:
+//			return factory.createTounsigned_short(terms);
+		case TO_UNSIGNED_BYTE:
+//			return factory.createTounsigned_byte(terms);
+		case TO_POSITIVE_INTEGER:
+//			return factory.createTopositive_integer(terms);			
 		}
 
 		return null;
