@@ -9,6 +9,7 @@ import org.deri.iris.api.basics.ILiteral;
 import org.deri.iris.api.basics.IPredicate;
 import org.deri.iris.api.basics.IRule;
 import org.deri.iris.api.basics.ITuple;
+import org.deri.iris.builtins.EqualBuiltin;
 import org.deri.iris.factory.Factory;
 import org.deri.iris.facts.Facts;
 import org.deri.iris.facts.IFacts;
@@ -60,20 +61,34 @@ public class ClauseTranslator implements ClauseVisitor {
 		for (ImpliesFormula transformedFormula : transformedFormulas) {
 			for (AtomicFormula atomicFormula : transformedFormula.getHead()) {
 				List<ILiteral> headLiterals = new ArrayList<ILiteral>();
+				List<ILiteral> additionalBodyLiterals = new ArrayList<ILiteral>();
 
 				AtomicFormulaTranslator atomicFormulaTranslator = new AtomicFormulaTranslator();
 				atomicFormula.accept(atomicFormulaTranslator);
 
-				// The translator should only create one literal.
-				if (atomicFormulaTranslator.getLiterals().size() > 1) {
-					logger.error("Found more than one literal in the head");
-				}
+				// The translator should only create one literal. If there are
+				// more than one literal in the head, we shift all others but
+				// the first literal to the body (see
+				// Equality_in_conclusion2-premise).
+				List<ILiteral> transformedHeadLiterals = atomicFormulaTranslator
+						.getLiterals();
+				if (transformedHeadLiterals.size() > 1) {
+					logger.debug("Found more than one literal in the head of an implication. "
+							+ "Shifting all literals but the first one to the body.");
+					headLiterals.add(transformedHeadLiterals.get(0));
 
-				headLiterals.addAll(atomicFormulaTranslator.getLiterals());
+					for (int i = 1; i < transformedHeadLiterals.size(); i++) {
+						additionalBodyLiterals.add(transformedHeadLiterals
+								.get(i));
+					}
+				} else {
+					headLiterals.addAll(atomicFormulaTranslator.getLiterals());
+				}
 
 				FormulaTranslator formulaTranslator = new FormulaTranslator();
 				transformedFormula.getBody().accept(formulaTranslator);
 				List<ILiteral> bodyLiterals = formulaTranslator.getLiterals();
+				bodyLiterals.addAll(additionalBodyLiterals);
 
 				rules.add(Factory.BASIC.createRule(headLiterals, bodyLiterals));
 			}
@@ -93,15 +108,25 @@ public class ClauseTranslator implements ClauseVisitor {
 			IPredicate predicate = literal.getAtom().getPredicate();
 			ITuple tuple = literal.getAtom().getTuple();
 
-			IRelation relation = factsFactory.get(predicate);
+			// We have an equality atom, therefore we create a rule of the form
+			// EQUAl(?x, ?y) :- true.
+			if (predicate.equals(EqualBuiltin.PREDICATE)) {
+				IRule rule = Factory.BASIC.createRule(literals,
+						new ArrayList<ILiteral>());
 
-			// Only add ground tuples, i.e. tuples without any variables, to the
-			// relation.
-			if (tuple.isGround()) {
-				relation.add(tuple);
+				rules.add(rule);
+			} else {
+				IRelation relation = factsFactory.get(predicate);
+
+				// Only add ground tuples, i.e. tuples without any variables, to
+				// the relation.
+				if (tuple.isGround()) {
+					relation.add(tuple);
+				}
+
+				facts.put(predicate, relation);
 			}
 
-			facts.put(predicate, relation);
 		}
 	}
 
