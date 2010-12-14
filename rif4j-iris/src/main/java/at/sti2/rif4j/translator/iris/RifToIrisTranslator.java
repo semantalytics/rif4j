@@ -27,6 +27,8 @@ import org.deri.iris.api.IKnowledgeBase;
 import org.deri.iris.api.basics.IPredicate;
 import org.deri.iris.api.basics.IQuery;
 import org.deri.iris.api.basics.IRule;
+import org.deri.iris.evaluation.wellfounded.WellFoundedEvaluationStrategyFactory;
+import org.deri.iris.rules.safety.AugmentingRuleSafetyProcessor;
 import org.deri.iris.storage.IRelation;
 
 import at.sti2.rif4j.condition.Formula;
@@ -122,6 +124,10 @@ public class RifToIrisTranslator {
 		if (facts != null && rules != null) {
 			Configuration configuration = KnowledgeBaseFactory
 					.getDefaultConfiguration();
+			
+			// Use well-founded evaluation.
+			configuration.evaluationStrategyFactory = new WellFoundedEvaluationStrategyFactory();
+			configuration.ruleSafetyProcessor = new AugmentingRuleSafetyProcessor();
 
 			// Add the meta-level rules.
 			rules.addAll(0, AtomicFormulaTranslator.getMetaLevelRules());
