@@ -46,14 +46,24 @@ public class TestUtils {
 
 	private static Logger logger = LoggerFactory.getLogger(TestUtils.class);
 
-	public static Reader getFileReader(String fileName) {
+	public static URL getFileUrl(String fileName) {
 		URL url = TestUtils.class.getClassLoader().getResource(fileName);
 
 		if (url == null) {
 			logger.error("Could not find " + fileName);
 			return null;
 		}
-		
+
+		return url;
+	}
+
+	public static Reader getFileReader(String fileName) {
+		URL url = getFileUrl(fileName);
+
+		if (url == null) {
+			return null;
+		}
+
 		try {
 			InputStream input = url.openStream();
 			return new InputStreamReader(input);
