@@ -96,6 +96,5 @@ public class RifToIrisTranslatorHelperTest {
 		
 		assertEquals(3 + 2 + 2 + 2 + 1, irisBody.size());
 		assertEquals(expectedBody.toString(),irisBody.toString());		
-	}
-	
+	}	
 }
