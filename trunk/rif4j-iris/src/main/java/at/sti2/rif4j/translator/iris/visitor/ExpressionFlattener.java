@@ -1,6 +1,8 @@
 package at.sti2.rif4j.translator.iris.visitor;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.deri.iris.api.basics.IAtom;
@@ -72,6 +74,7 @@ public class ExpressionFlattener {
 
 	private void flatten(String operatorIri, List<Argument> arguments,
 			boolean isExpression) {
+		List<Argument> sortedArguments = sort(arguments);
 		java.util.List<ITerm> irisTerms = new ArrayList<ITerm>();
 
 		// A list of additional literals, which are conjuncted with the
@@ -83,7 +86,7 @@ public class ExpressionFlattener {
 
 		TermTranslator termTranslator = new TermTranslator();
 
-		for (Argument argument : arguments) {
+		for (Argument argument : sortedArguments) {
 			termTranslator.reset();
 
 			// In IRIS an argument can not be named, therefore, we can ignore
@@ -130,9 +133,38 @@ public class ExpressionFlattener {
 		this.literals.add(literal);
 		this.literals.addAll(irisLiterals);
 	}
-	
-	public static int getCurrentVariableNumber()
-	{
+
+	public static int getCurrentVariableNumber() {
 		return uniqueVariableCounter;
 	}
+
+	private static List<Argument> sort(List<Argument> arguments) {
+		// Create a copy of the list.
+		List<Argument> newArguments = new ArrayList<Argument>(arguments);
+
+		// Sort the arguments using their names in order to have a deterministic
+		// order of named arguments.
+		ArgumentComparator comparator = new ArgumentComparator();
+		Collections.sort(newArguments, comparator);
+
+		return newArguments;
+	}
+
+	private static class ArgumentComparator implements Comparator<Argument> {
+
+		@Override
+		public int compare(Argument argument1, Argument argument2) {
+			String name1 = argument1.getName();
+			String name2 = argument2.getName();
+
+			if (name1 == null || name1.isEmpty() || name2 == null
+					|| name2.isEmpty()) {
+				return 0;
+			}
+
+			return argument1.getName().compareTo(argument2.getName());
+		}
+
+	}
+
 }
