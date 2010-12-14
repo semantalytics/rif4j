@@ -34,6 +34,7 @@ import at.sti2.rif4j.RdfDatatype;
 import at.sti2.rif4j.RifDatatype;
 import at.sti2.rif4j.XmlSchemaDatatype;
 import at.sti2.rif4j.condition.Constant;
+import at.sti2.rif4j.translator.iris.mapper.datetypes.XSDFloatChecker;
 
 /**
  * Maps RIF constants to IRIS terms.
@@ -153,7 +154,7 @@ public class RifToIrisConstantMapper {
 			case ENTITY:
 				return factory.createEntity(value);
 			case FLOAT:
-				return factory.createFloat(Float.valueOf(value));
+				return factory.createFloat(XSDFloatChecker.valueOf(value));
 			case GDAY:
 				String[] gregorian = extractGregorian(value);
 				return factory.createGDay(Integer.valueOf(gregorian[0]));
