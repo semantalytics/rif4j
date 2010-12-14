@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.deri.iris.api.basics.ILiteral;
 import org.deri.iris.api.basics.ITuple;
 import org.deri.iris.api.terms.ITerm;
+import org.deri.iris.api.terms.IVariable;
 import org.deri.iris.api.terms.concrete.IList;
 import org.deri.iris.factory.Factory;
 import org.slf4j.Logger;
@@ -104,12 +105,15 @@ public class TermTranslator implements TermVisitor {
 		// FIXME Create a list with all terms from irisTerms.
 		IList irisList = new org.deri.iris.terms.concrete.List();
 
-		terms.addAll(irisList);
+		terms.add(irisList);
 		literals.addAll(irisLiterals);
 	}
 
 	@Override
 	public void visit(Variable variable) {
-		terms.add(Factory.TERM.createVariable(variable.getName()));
+		IVariable irisVariable = Factory.TERM
+				.createVariable(variable.getName());
+
+		terms.add(irisVariable);
 	}
 }
