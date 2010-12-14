@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.deri.iris.api.basics.ILiteral;
 import org.deri.iris.api.basics.ITuple;
+import org.deri.iris.api.terms.IConcreteTerm;
 import org.deri.iris.api.terms.ITerm;
 import org.deri.iris.api.terms.IVariable;
 import org.deri.iris.api.terms.concrete.IList;
@@ -103,7 +104,18 @@ public class TermTranslator implements TermVisitor {
 		}
 
 		// FIXME Create a list with all terms from irisTerms.
-		IList irisList = new org.deri.iris.terms.concrete.List();
+		java.util.List<IConcreteTerm> concreteTerms = new ArrayList<IConcreteTerm>();
+
+		for (ITerm irisTerm : irisTerms) {
+			if (irisTerm instanceof IConcreteTerm) {
+				concreteTerms.add((IConcreteTerm) irisTerm);
+			}
+		}
+
+		IConcreteTerm[] irisTermArray = new IConcreteTerm[concreteTerms.size()];
+		concreteTerms.toArray(irisTermArray);
+
+		IList irisList = Factory.CONCRETE.createList(irisTermArray);
 
 		terms.add(irisList);
 		literals.addAll(irisLiterals);
