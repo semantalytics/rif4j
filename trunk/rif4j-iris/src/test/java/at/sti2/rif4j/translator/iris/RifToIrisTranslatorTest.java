@@ -138,6 +138,32 @@ public class RifToIrisTranslatorTest {
 		this.testTranslation(rifXmlFileName, expectedFacts, expectedRules);
 	}
 
+	@Test
+	public void testBuiltin_PlainLiteral_premise() throws SAXException, IOException, ParserConfigurationException
+	{
+		String rifXmlFileName = TEST_DIR + "Builtins_PlainLiteral-premise.rif";
+		
+		List<String> expectedRules = new ArrayList<String>();
+		expectedRules.add("http://example.org/example#ok() :- IS_BOOLEAN(?var"+ varNumber +"), TO_BOOLEAN('1', ?var"+ varNumber +").");
+		
+		List<String> expectedFacts = new ArrayList<String>();
+		
+		this.testTranslation(rifXmlFileName, expectedFacts, expectedRules);
+	}
+	
+	@Test
+	public void testBuiltin_PlainLiteral_premise_simplified() throws SAXException, IOException, ParserConfigurationException
+	{
+		String rifXmlFileName = TEST_DIR + "Builtins_PlainLiteral-premise_simplified.rif";
+		
+		List<String> expectedRules = new ArrayList<String>();
+		expectedRules.add("http://example.org/example#ok() :- IS_BOOLEAN(?var"+ varNumber +"), TO_BOOLEAN('1', ?var"+ varNumber +").");
+		
+		List<String> expectedFacts = new ArrayList<String>();
+		
+		this.testTranslation(rifXmlFileName, expectedFacts, expectedRules);
+	}
+	
 //	@Test
 //	public void testMakeXSD()
 //	{
