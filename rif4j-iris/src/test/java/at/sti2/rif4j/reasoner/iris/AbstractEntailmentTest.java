@@ -65,9 +65,6 @@ public abstract class AbstractEntailmentTest {
 				+ conclusionFileName;
 
 		Document document = TestUtils.parseDocument(premisePath);
-		
-		System.out.println(document);
-		
 		Formula formula = TestUtils.parseFormula(conclusionPath);
 
 		boolean entails = reasoner.entails(document, formula);
