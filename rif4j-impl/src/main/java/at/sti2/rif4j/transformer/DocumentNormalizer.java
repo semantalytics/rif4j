@@ -30,8 +30,12 @@ import at.sti2.rif4j.rule.Rule;
 public class DocumentNormalizer {
 
 	public Document normalize(Document document) {
+		if (document.getGroup() == null) {
+			return document;
+		}
+		
 		Group normalizedGroup = normalize(document.getGroup());
-
+		
 		if (!document.getGroup().equals(normalizedGroup)) {
 			Document normalizedDocument = new Document();
 			normalizedDocument.setGroup(normalizedGroup);
