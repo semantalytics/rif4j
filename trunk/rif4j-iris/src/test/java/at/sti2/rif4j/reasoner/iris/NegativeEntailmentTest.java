@@ -32,13 +32,13 @@ import org.junit.runners.Parameterized.Parameters;
  * @author Adrian Marte
  */
 @RunWith(Parameterized.class)
-public class PositiveEntailmentTest extends AbstractEntailmentTest {
+public class NegativeEntailmentTest extends AbstractEntailmentTest {
 
-	private static final String POSITIVE_ENTAILMENT_DIR = "BLD_v1.22/Approved/PositiveEntailmentTest/";
+	private static final String POSITIVE_ENTAILMENT_DIR = "BLD_v1.22/Approved/NegativeEntailmentTest/";
 
-	private static final boolean EXPECTED_EVALUATION = true;
+	private static final boolean EXPECTED_EVALUATION = false;
 
-	public PositiveEntailmentTest(String testDirecotry, String testCaseName,
+	public NegativeEntailmentTest(String testDirecotry, String testCaseName,
 			boolean expectedEvaluation) {
 		super(testDirecotry, testCaseName, expectedEvaluation);
 	}
