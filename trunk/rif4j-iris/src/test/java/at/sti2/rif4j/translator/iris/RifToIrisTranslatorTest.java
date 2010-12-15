@@ -1,12 +1,13 @@
 package at.sti2.rif4j.translator.iris;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,13 +21,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import at.sti2.rif4j.Namespaces;
 import at.sti2.rif4j.TestUtils;
-import at.sti2.rif4j.XmlSchemaDatatype;
 import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
-import at.sti2.rif4j.translator.iris.RifToIrisTranslator;
 import at.sti2.rif4j.translator.iris.visitor.ExpressionFlattener;
 
 public class RifToIrisTranslatorTest {
@@ -301,8 +299,20 @@ public class RifToIrisTranslatorTest {
 		
 		this.testTranslation(rifXmlFileName, expectedFacts, expectedRules);
 	}
-
 	
+	@Test
+	public void testChaining_strategy_numeric_add_1_premise() throws SAXException, IOException, ParserConfigurationException
+	{
+		String rifXmlFileName = TEST_DIR + "Chaining_strategy_numeric-add_1-premise.rif";
+		
+		List<String> expectedRules = new ArrayList<String>();
+		//TODO 
+		expectedRules.add("http://example.org/example#ok() :- .");
+		
+		List<String> expectedFacts = new ArrayList<String>();
+		
+		this.testTranslation(rifXmlFileName, expectedFacts, expectedRules);
+	}	
 	
 //	@Test
 //	public void testMakeXSD()
@@ -334,7 +344,7 @@ public class RifToIrisTranslatorTest {
 		List<IRule> rules = translator.getRules();
 		Map<IPredicate, IRelation> facts = translator.getFacts();
 
-		assertEquals("Unexpected number of facts", expectedFacts.size(),expectedFacts.size());
+		assertEquals("Unexpected number of facts", expectedFacts.size(),facts.size());
 		assertEquals("Unexpected number of rules", expectedRules.size(),rules.size());		
 		
 		boolean allRulesContained = true;
