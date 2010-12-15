@@ -70,7 +70,10 @@ public class DocumentTranslator implements DocumentVisitor {
 		// }
 
 		Group group = document.getGroup();
-		group.accept(this);
+		
+		if (group != null) {
+			group.accept(this);
+		}
 	}
 
 	@Override
