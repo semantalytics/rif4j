@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -49,8 +50,10 @@ public class TestUtils {
 	public static URI getFileUri(String fileName) {
 		try {
 			// Check if this is already a URL.
-			return URI.create(fileName);
-		} catch (IllegalArgumentException e) {
+			URL url = new URL(fileName);
+			return url.toURI();
+		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
 		}
 
 		URL url = TestUtils.class.getClassLoader().getResource(fileName);
@@ -75,7 +78,7 @@ public class TestUtils {
 		if (uri == null) {
 			return null;
 		}
-
+		
 		try {
 			InputStream input = uri.toURL().openStream();
 			return new InputStreamReader(input);
