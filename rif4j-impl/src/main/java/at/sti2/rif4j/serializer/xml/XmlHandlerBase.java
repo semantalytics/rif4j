@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  */
 public class XmlHandlerBase {
 
-	protected boolean useValidation = false;
+	protected boolean useValidation;
 
 	protected static final String BLD_RULE_XSD = "BLDRule.xsd";
 
@@ -45,6 +45,7 @@ public class XmlHandlerBase {
 	protected static final String RIF_BLD_SCHEMA = "BLDRule.xsd";
 
 	protected XmlHandlerBase() {
+		this(false);
 	}
 
 	protected XmlHandlerBase(boolean useValidation) {

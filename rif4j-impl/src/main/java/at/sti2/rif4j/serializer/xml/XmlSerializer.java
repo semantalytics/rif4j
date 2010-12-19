@@ -434,16 +434,13 @@ public class XmlSerializer extends XmlHandlerBase implements RifSerializer,
 		// for testing purposes
 		// elementStack.peek().setAttribute("ordered", "yes");
 
+		// RIF provides to ways to serialize a list. The first one is to have a
+		// list of terms, and the second one is to have one term followed by a
+		// list, which contains the remaining elements of the list. We serialize
+		// the list according the former.
 		if (list.getElements().size() > 0) {
 			appendAndPush("items");
 			for (Term item : list.getElements())
-				item.accept(this);
-			elementStack.pop();
-		}
-
-		if (list.getRestElements().size() > 0) {
-			appendAndPush("rest");
-			for (Term item : list.getRestElements())
 				item.accept(this);
 			elementStack.pop();
 		}

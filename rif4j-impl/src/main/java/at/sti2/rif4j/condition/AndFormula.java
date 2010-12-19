@@ -31,6 +31,7 @@ public class AndFormula extends AbstractCompositeFormula implements Formula {
 		super(formulas);
 	}
 
+	@Override
 	public void accept(FormulaVisitor visitor) {
 		visitor.visit(this);
 	}

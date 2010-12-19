@@ -45,38 +45,46 @@ public class Atom extends AbstractDescribable implements AtomicFormula, Uniterm 
 		this.arguments = arguments;
 	}
 
+	@Override
 	public Constant getOperator() {
 		return operator;
 	}
 
+	@Override
 	public void setOperator(Constant operator) {
 		Assertions.notNull("operator", operator);
 
 		this.operator = operator;
 	}
 
+	@Override
 	public List<Argument> getArguments() {
 		return arguments;
 	}
 
+	@Override
 	public void setArguments(List<Argument> arguments) {
 		Assertions.notNull("arguments", arguments);
 
 		this.arguments = arguments;
 	}
 
+	@Override
 	public void accept(AtomicFormulaVisitor visitor) {
 		visitor.visit(this);
 	}
 
+	@Override
 	public void accept(ClauseVisitor visitor) {
 		visitor.visit(this);
 	}
 
+	@Override
 	public void accept(FormulaVisitor visitor) {
 		visitor.visit(this);
 	}
 
+	@Override
 	public void accept(RuleVisitor visitor) {
 		visitor.visit(this);
 	}

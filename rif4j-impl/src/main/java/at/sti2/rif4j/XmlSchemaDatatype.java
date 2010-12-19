@@ -124,6 +124,7 @@ public enum XmlSchemaDatatype {
 	POSITIVE_INTEGER("positiveInteger");
 
 	private String uri;
+	
 	private String name;
 
 	private XmlSchemaDatatype(String name) {

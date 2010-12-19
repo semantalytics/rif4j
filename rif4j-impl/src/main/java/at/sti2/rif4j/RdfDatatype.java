@@ -19,12 +19,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Defines the RDF data types.
+ * 
  * @author Adrian Marte
  */
 public enum RdfDatatype {
 
+	/**
+	 * The rdf:PlainLiteral (former known as rdf:text) data type.
+	 */
 	PLAIN_LITERAL("PlainLiteral"),
 
+	/**
+	 * The rdf:XMLLiteral data type.
+	 */
 	XML_LITERAL("XMLLiteral");
 
 	private String uri;

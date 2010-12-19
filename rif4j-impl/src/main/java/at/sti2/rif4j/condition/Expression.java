@@ -30,6 +30,7 @@ public class Expression extends AbstractExpression {
 		super(operator, arguments);
 	}
 
+	@Override
 	public void accept(TermVisitor visitor) {
 		visitor.visit(this);
 	}

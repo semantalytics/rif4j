@@ -340,19 +340,6 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 			element.accept(this);
 		}
 
-		if (list.getRestElements().size() > 0) {
-			appendInline(" | ");
-
-			i = 0;
-			for (Term element : list.getRestElements()) {
-				if (i++ > 0) {
-					appendInline(" ");
-				}
-
-				element.accept(this);
-			}
-		}
-
 		appendInline(")");
 	}
 

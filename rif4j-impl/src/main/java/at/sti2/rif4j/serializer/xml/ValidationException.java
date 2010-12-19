@@ -16,6 +16,8 @@
 package at.sti2.rif4j.serializer.xml;
 
 /**
+ * Thrown when an a validation against a XML Schema fails.
+ * 
  * @author Iker Larizgoitia Abad
  */
 public class ValidationException extends RuntimeException {

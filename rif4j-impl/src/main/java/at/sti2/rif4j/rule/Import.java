@@ -24,8 +24,14 @@ import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
  * @author Adrian Marte
  */
 public class Import extends AbstractDescribable implements Describable {
+	
 	private String location;
+	
 	private String profile;
+	
+	public Import(String location) {
+		this.location = location;
+	}
 
 	public Import(String location, String profile) {
 		this.location = location;
@@ -47,7 +53,6 @@ public class Import extends AbstractDescribable implements Describable {
 	}
 
 	public void setProfile(String profile) {
-		Assertions.notNull("profile", profile);
 		this.profile = profile;
 	}
 

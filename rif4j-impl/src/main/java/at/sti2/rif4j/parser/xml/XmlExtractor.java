@@ -811,12 +811,16 @@ class XmlExtractor {
 			Node itemsNode = queryNode(listNode, RIF_ITEMS);
 			java.util.List<Term> listTerms = extractTerms(itemsNode);
 
+			// Flatten the "rest list" by recursively extracting the items of
+			// the "rest list".
 			Node restNode = queryNode(listNode, RIF_REST);
-			java.util.List<Term> restTerms = extractTerms(restNode);
+			if (restNode != null) {
+				java.util.List<Term> restTerms = extractTerms(restNode);
+				listTerms.addAll(restTerms);
+			}
 
 			List list = new List();
 			list.setElements(listTerms);
-			list.setRestElements(restTerms);
 
 			setMetadata(listNode, list);
 			setPosition(listNode, list, positions);

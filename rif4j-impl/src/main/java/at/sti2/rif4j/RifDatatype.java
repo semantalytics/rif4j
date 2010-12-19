@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Defines the list of RIF datatypes.
+ * Defines the list of RIF data types.
  * 
  * @author Adrian Marte
  */

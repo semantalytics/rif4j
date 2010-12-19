@@ -42,6 +42,7 @@ public class Variable extends AbstractDescribable implements Term {
 		this.name = name;
 	}
 
+	@Override
 	public void accept(TermVisitor visitor) {
 		visitor.visit(this);
 	}
