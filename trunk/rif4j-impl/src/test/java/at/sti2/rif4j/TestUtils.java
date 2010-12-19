@@ -46,7 +46,13 @@ public class TestUtils {
 
 	private static Logger logger = LoggerFactory.getLogger(TestUtils.class);
 
-	public static URL getFileUrl(String fileName) {
+	public static URI getFileUri(String fileName) {
+		try {
+			// Check if this is already a URL.
+			return URI.create(fileName);
+		} catch (IllegalArgumentException e) {
+		}
+
 		URL url = TestUtils.class.getClassLoader().getResource(fileName);
 
 		if (url == null) {
@@ -54,18 +60,24 @@ public class TestUtils {
 			return null;
 		}
 
-		return url;
+		try {
+			return url.toURI();
+		} catch (URISyntaxException e) {
+			logger.error("Invalid URI", e);
+		}
+
+		return null;
 	}
 
 	public static Reader getFileReader(String fileName) {
-		URL url = getFileUrl(fileName);
+		URI uri = getFileUri(fileName);
 
-		if (url == null) {
+		if (uri == null) {
 			return null;
 		}
 
 		try {
-			InputStream input = url.openStream();
+			InputStream input = uri.toURL().openStream();
 			return new InputStreamReader(input);
 		} catch (IOException e) {
 			logger.error("Could not load " + fileName);
@@ -83,18 +95,6 @@ public class TestUtils {
 		};
 
 		return dir.list(filter);
-	}
-
-	public static URI getFileURI(String fileName) {
-		try {
-			return TestUtils.class.getClassLoader().getResource(fileName)
-					.toURI();
-		} catch (NullPointerException npe) {
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-
-		return null;
 	}
 
 	public static Document parseDocument(String fileName) {
@@ -136,7 +136,7 @@ public class TestUtils {
 		try {
 			formula = parser.parseFormula(reader);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Failed to parse " + fileName, e);
 		}
 
 		return formula;

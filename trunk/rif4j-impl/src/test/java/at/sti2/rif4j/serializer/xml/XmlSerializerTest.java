@@ -93,7 +93,7 @@ public class XmlSerializerTest extends XMLTestCase {
 		String serializedRIFXmlDocument = serializer.serialize(rifDocument);
 
 		// Compare to original
-		File file = new File(TestUtils.getFileURI(fileName));
+		File file = new File(TestUtils.getFileUri(fileName));
 		String originalRIFXml = FileUtils.readFileToString(file);
 		originalRIFXml = originalRIFXml.replaceAll("ordered=\"yes\"", "");
 
