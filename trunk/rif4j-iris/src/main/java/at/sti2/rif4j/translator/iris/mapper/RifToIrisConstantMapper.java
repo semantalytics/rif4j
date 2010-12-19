@@ -219,7 +219,15 @@ public class RifToIrisConstantMapper {
 			case POSITIVE_INTEGER:
 				return factory.createPositiveInteger(new BigInteger(value));
 			case QNAME:
-				// FIXME Extract values form string.
+				String[] parts = value.split(":");
+
+				if (parts.length == 2) {
+					String namespaceName = parts[0];
+					String localPart = parts[1];
+
+					return factory.createQName(namespaceName, localPart);
+				}
+
 				break;
 			case SHORT:
 				return factory.createShort(Short.valueOf(value));
