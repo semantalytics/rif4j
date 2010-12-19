@@ -29,7 +29,7 @@ public class RifToIrisBuiltinMapper {
 
 	public static IBuiltinAtom toIrisBuiltin(String rifBuiltinIri,
 			ITerm... terms) {
-		RifBuiltIn rifBuiltin = RifBuiltIn.from(rifBuiltinIri);
+		RifBuiltIn rifBuiltin = RifBuiltIn.forUri(rifBuiltinIri);
 
 		if (rifBuiltin == null) {			
 			return null;
@@ -128,8 +128,7 @@ public class RifToIrisBuiltinMapper {
 		case DURATION_NOT_EQUAL:
 			return factory.createDurationNotEqual(terms);
 		case ENCODE_FOR_URI:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createEncodeForUri(terms);
 		case ENDS_WITH:
 			return factory.createStringEndsWith(terms);
 		case ESCAPE_HTML_URI:
@@ -160,8 +159,7 @@ public class RifToIrisBuiltinMapper {
 		case IRI_TO_URI:
 			return factory.createStringIriToUri(terms);
 		case IS_LIST:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createIsList(terms);
 		case IS_LITERAL_ANYURI:
 			return factory.createIsAnyURI(terms);
 		case IS_LITERAL_BASE64BINARY:
@@ -481,7 +479,7 @@ public class RifToIrisBuiltinMapper {
 		case TO_DATETIME:
 			return factory.createToDateTime(terms);
 		case TO_DATETIMESTAMP:
-			//TODO Iris equivalent?
+			return factory.createToDateTimeStamp(terms);
 		case TO_TIME:
 			return factory.createToTime(terms);
 		case TO_DATE:
@@ -562,12 +560,12 @@ public class RifToIrisBuiltinMapper {
 	}
 
 	public static boolean isBuiltin(String rifBuiltinIri) {
-		boolean isBuiltIn = (RifBuiltIn.from(rifBuiltinIri) != null);
+		boolean isBuiltIn = (RifBuiltIn.forUri(rifBuiltinIri) != null);
 		return isBuiltIn;
 	}
 
 	public static boolean isPredicate(String rifBuiltinIri) {
-		RifBuiltIn rifBuiltin = RifBuiltIn.from(rifBuiltinIri);
+		RifBuiltIn rifBuiltin = RifBuiltIn.forUri(rifBuiltinIri);
 
 		if (rifBuiltin != null) {
 			return rifBuiltin.isPredicate();
@@ -577,7 +575,7 @@ public class RifToIrisBuiltinMapper {
 	}
 
 	public static boolean isFunction(String rifBuiltinIri) {
-		RifBuiltIn rifBuiltin = RifBuiltIn.from(rifBuiltinIri);
+		RifBuiltIn rifBuiltin = RifBuiltIn.forUri(rifBuiltinIri);
 
 		if (rifBuiltin != null) {
 			return rifBuiltin.isFunction();
