@@ -65,18 +65,22 @@ public class Frame extends AbstractDescribable implements AtomicFormula {
 		this.attributes = attributes;
 	}
 
+	@Override
 	public void accept(AtomicFormulaVisitor visitor) {
 		visitor.visit(this);
 	}
 
+	@Override
 	public void accept(ClauseVisitor visitor) {
 		visitor.visit(this);
 	}
 
+	@Override
 	public void accept(FormulaVisitor visitor) {
 		visitor.visit(this);
 	}
 
+	@Override
 	public void accept(RuleVisitor visitor) {
 		visitor.visit(this);
 	}

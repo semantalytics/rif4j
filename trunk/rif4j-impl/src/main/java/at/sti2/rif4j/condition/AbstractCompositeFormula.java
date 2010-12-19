@@ -22,7 +22,8 @@ import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
 
 /**
- * A composite formula is a formula consisting of multiple formulas.
+ * A composite formula is a formula consisting of multiple formulas, e.g.
+ * {@link AndFormula} or {@link OrFormula}.
  * 
  * @author Adrian Marte
  * @see Formula
@@ -31,6 +32,10 @@ abstract class AbstractCompositeFormula extends AbstractDescribable {
 
 	private List<Formula> formulas;
 
+	/**
+	 * Creates a new composite formula and initializes the formulas with an
+	 * empty list.
+	 */
 	public AbstractCompositeFormula() {
 		formulas = new ArrayList<Formula>();
 	}

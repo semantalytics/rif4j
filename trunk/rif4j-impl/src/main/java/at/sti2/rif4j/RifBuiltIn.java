@@ -19,11 +19,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Defines the list of built-ins from RIF DTB 1.0, except the built-ins for
+ * <p>
+ * Defines the list of built-ins from RIF DTB 1.0. The built-ins for
  * datatype conversion and casting, which are basically identified by the XML
  * Schema and RDF datatype URIs defined in {@link XmlSchemaDatatype} and
- * {@link RdfDatatype}. See <a href="http://www.w3.org/2005/rules/wiki/DTB">RIF
+ * {@link RdfDatatype}, are defined by the TO_<data type> enumerations.
+ * </p>
+ * <p>
+ * See <a href="http://www.w3.org/2005/rules/wiki/DTB">RIF
  * Datatypes and Built-Ins</a> for more information.
+ * </p>
  * 
  * @author Adrian Marte
  * @see XmlSchemaDatatype
@@ -516,51 +521,97 @@ public enum RifBuiltIn {
 	//Automatically generated from XmlSchemaDatatype enumeration
 	
 	TO_STRING(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.STRING.getName()),
+	
 	TO_BOOLEAN(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.BOOLEAN.getName()),
+	
 	TO_DECIMAL(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.DECIMAL.getName()),
+	
 	TO_FLOAT(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.FLOAT.getName()),
+	
 	TO_DOUBLE(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.DOUBLE.getName()),
+	
 	TO_DURATION(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.DURATION.getName()),
+	
 	TO_DAYTIMEDURATION(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.DAYTIMEDURATION.getName()),
+	
 	TO_YEARMONTHDURATION(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.YEARMONTHDURATION.getName()),
+	
 	TO_DATETIME(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.DATETIME.getName()),
+	
 	TO_DATETIMESTAMP(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.DATETIMESTAMP.getName()),
+	
 	TO_TIME(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.TIME.getName()),
+	
 	TO_DATE(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.DATE.getName()),
+	
 	TO_GYEARMONTH(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.GYEARMONTH.getName()),
+	
 	TO_GYEAR(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.GYEAR.getName()),
+	
 	TO_GMONTHDAY(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.GMONTHDAY.getName()),
+	
 	TO_GDAY(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.GDAY.getName()),
+	
 	TO_GMONTH(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.GMONTH.getName()),
+	
 	TO_HEXBINARY(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.HEXBINARY.getName()),
+	
 	TO_BASE64BINARY(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.BASE64BINARY.getName()),
+	
 	TO_ANYURI(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.ANYURI.getName()),
+	
 	TO_QNAME(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.QNAME.getName()),
+	
 	TO_NOTATION(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.NOTATION.getName()),
+	
 	TO_NORMALIZED_STRING(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.NORMALIZED_STRING.getName()),
+	
 	TO_TOKEN(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.TOKEN.getName()),
+	
 	TO_LANGUAGE(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.LANGUAGE.getName()),
+	
 	TO_NMTOKEN(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.NMTOKEN.getName()),
+	
 	TO_NMTOKENS(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.NMTOKENS.getName()),
+	
 	TO_NAME(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.NAME.getName()),
+	
 	TO_NCNAME(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.NCNAME.getName()),
+	
 	TO_ID(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.ID.getName()),
+	
 	TO_IDREF(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.IDREF.getName()),
+	
 	TO_IDREFS(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.IDREFS.getName()),
+	
 	TO_ENTITY(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.ENTITY.getName()),
+	
 	TO_ENTITIES(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.ENTITIES.getName()),
+	
 	TO_INTEGER(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.INTEGER.getName()),
+	
 	TO_NON_POSITIVE_INTEGER(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.NON_POSITIVE_INTEGER.getName()),
+	
 	TO_NEGATIVE_INTEGER(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.NEGATIVE_INTEGER.getName()),
+	
 	TO_LONG(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.LONG.getName()),
+	
 	TO_INT(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.INT.getName()),
+	
 	TO_SHORT(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.SHORT.getName()),
+	
 	TO_BYTE(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.BYTE.getName()),
+	
 	TO_NON_NEGATIVE_INTEGER(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.NON_NEGATIVE_INTEGER.getName()),
+	
 	TO_UNSIGNED_LONG(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.UNSIGNED_LONG.getName()),
+	
 	TO_UNSIGNED_INT(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.UNSIGNED_INT.getName()),
+	
 	TO_UNSIGNED_SHORT(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.UNSIGNED_SHORT.getName()),
+	
 	TO_UNSIGNED_BYTE(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.UNSIGNED_BYTE.getName()),
+	
 	TO_POSITIVE_INTEGER(Namespaces.XSD_NAMESPACE, XmlSchemaDatatype.POSITIVE_INTEGER.getName());
 	
 	;
@@ -639,7 +690,7 @@ public enum RifBuiltIn {
 	 * @return The corresponding built-in for the specified URI, or
 	 *         <code>null</code> if no such built-in can be found.
 	 */
-	public static RifBuiltIn from(String uri) {
+	public static RifBuiltIn forUri(String uri) {
 		return Lookup.table.get(uri);
 	}
 
@@ -651,7 +702,7 @@ public enum RifBuiltIn {
 	 * @return true if the specified URI represents a built-in, false otherwise.
 	 */
 	public static boolean isBuiltIn(String uri) {
-		return from(uri) != null;
+		return forUri(uri) != null;
 	}
 
 	public static boolean isDatatypeCast(String uri) {

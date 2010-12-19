@@ -48,18 +48,22 @@ class SimpleUniterm extends AbstractDescribable implements Uniterm {
 		this.arguments = arguments;
 	}
 
+	@Override
 	public Constant getOperator() {
 		return operator;
 	}
 
+	@Override
 	public void setOperator(Constant operator) {
 		this.operator = operator;
 	}
 
+	@Override
 	public List<Argument> getArguments() {
 		return arguments;
 	}
 
+	@Override
 	public void setArguments(List<Argument> arguments) {
 		this.arguments = arguments;
 	}

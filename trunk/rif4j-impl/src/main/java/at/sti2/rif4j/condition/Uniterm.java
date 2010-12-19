@@ -20,6 +20,8 @@ import java.util.List;
 import at.sti2.rif4j.Describable;
 
 /**
+ * A Uniterm is an entity that has an operator and some arguments.
+ * 
  * @author Adrian Marte
  * @author Daniel Winkler
  */
@@ -32,5 +34,5 @@ public interface Uniterm extends Describable {
 	public Constant getOperator();
 
 	public void setOperator(Constant operator);
-
+	
 }

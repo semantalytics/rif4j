@@ -42,6 +42,7 @@ public class ExternalFormula extends AbstractDescribable implements Formula {
 		this.atom = atom;
 	}
 
+	@Override
 	public void accept(FormulaVisitor visitor) {
 		visitor.visit(this);
 	}

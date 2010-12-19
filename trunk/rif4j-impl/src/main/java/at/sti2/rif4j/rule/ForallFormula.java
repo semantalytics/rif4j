@@ -59,6 +59,7 @@ public class ForallFormula extends AbstractDescribable implements Rule {
 		this.clause = clause;
 	}
 
+	@Override
 	public void accept(RuleVisitor visitor) {
 		visitor.visit(this);
 	}
@@ -69,4 +70,5 @@ public class ForallFormula extends AbstractDescribable implements Rule {
 		accept(serializer);
 		return serializer.getString();
 	}
+	
 }

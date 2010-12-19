@@ -44,20 +44,24 @@ abstract class AbstractExpression extends AbstractDescribable implements Term,
 		this.arguments = arguments;
 	}
 
+	@Override
 	public Constant getOperator() {
 		return operator;
 	}
 
+	@Override
 	public void setOperator(Constant operator) {
 		Assertions.notNull("operator", operator);
 
 		this.operator = operator;
 	}
 
+	@Override
 	public List<Argument> getArguments() {
 		return arguments;
 	}
 
+	@Override
 	public void setArguments(List<Argument> arguments) {
 		Assertions.notNull("arguments", arguments);
 

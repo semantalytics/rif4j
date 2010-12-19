@@ -82,6 +82,7 @@ public class Constant extends AbstractDescribable implements Term {
 		this.text = text;
 	}
 
+	@Override
 	public void accept(TermVisitor visitor) {
 		visitor.visit(this);
 	}

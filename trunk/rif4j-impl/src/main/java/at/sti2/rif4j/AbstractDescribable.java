@@ -32,22 +32,29 @@ public abstract class AbstractDescribable implements Describable {
 
 	private List<Frame> data;
 
+	/**
+	 * Creates a new {@link AbstractDescribable} with empty ID and data.
+	 */
 	public AbstractDescribable() {
 		data = new ArrayList<Frame>();
 	}
 
+	@Override
 	public Constant getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(Constant id) {
 		this.id = id;
 	}
 
+	@Override
 	public List<Frame> getMetadata() {
 		return data;
 	}
 
+	@Override
 	public void setMetadata(List<Frame> data) {
 		this.data = data;
 	}

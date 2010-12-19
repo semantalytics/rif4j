@@ -42,6 +42,7 @@ public class ExternalExpression extends AbstractDescribable implements Term {
 		this.expression = expression;
 	}
 
+	@Override
 	public void accept(TermVisitor visitor) {
 		visitor.visit(this);
 	}

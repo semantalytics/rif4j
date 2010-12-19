@@ -55,18 +55,22 @@ public class EqualAtom extends AbstractDescribable implements AtomicFormula {
 		this.terms = terms;
 	}
 
+	@Override
 	public void accept(AtomicFormulaVisitor visitor) {
 		visitor.visit(this);
 	}
 
+	@Override
 	public void accept(ClauseVisitor visitor) {
 		visitor.visit(this);
 	}
 
+	@Override
 	public void accept(FormulaVisitor visitor) {
 		visitor.visit(this);
 	}
 
+	@Override
 	public void accept(RuleVisitor visitor) {
 		visitor.visit(this);
 	}

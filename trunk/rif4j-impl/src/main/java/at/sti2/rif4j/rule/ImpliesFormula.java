@@ -120,10 +120,12 @@ public class ImpliesFormula extends AbstractDescribable implements Clause,
 		this.body = body;
 	}
 
+	@Override
 	public void accept(ClauseVisitor visitor) {
 		visitor.visit(this);
 	}
 
+	@Override
 	public void accept(RuleVisitor visitor) {
 		visitor.visit(this);
 	}
