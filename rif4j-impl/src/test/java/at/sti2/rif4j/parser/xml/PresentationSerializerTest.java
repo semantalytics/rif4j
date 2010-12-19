@@ -75,7 +75,7 @@ public class PresentationSerializerTest extends XMLTestCase {
 
 	private void testSerializePresentation_RIF_BLD(String fileName)
 			throws SAXException, IOException, ParserConfigurationException {
-		if (TestUtils.getFileURI(fileName + "ps") == null)
+		if (TestUtils.getFileUri(fileName + "ps") == null)
 			return;
 
 		logger.debug("Serializing " + fileName);
@@ -95,7 +95,7 @@ public class PresentationSerializerTest extends XMLTestCase {
 				.replace(" ", "").trim();
 
 		// Compare to original
-		File file = new File(TestUtils.getFileURI(fileName + "ps"));
+		File file = new File(TestUtils.getFileUri(fileName + "ps"));
 		String originalRIF = FileUtils.readFileToString(file).replace("\t", "")
 				.replace("\r", "").replace("\n", "").replace(" ", "").trim();
 
