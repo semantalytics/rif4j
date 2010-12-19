@@ -94,36 +94,23 @@ public class LloydToporTransformer {
 
 	private static List<ImpliesFormula> eraseOrFormulaInBody(
 			ImpliesFormula impliesFormula) {
-		// Create a new implies formula of the form H :- Bi for each atom Bi in
-		// a OrFormula.
-		BodyVisitor bodyVisitor = new BodyVisitor(impliesFormula);
-		impliesFormula.getBody().accept(bodyVisitor);
+		List<ImpliesFormula> newFormulas = new ArrayList<ImpliesFormula>();
 
-		List<ImpliesFormula> eraseOrformulas = bodyVisitor.newImpliesFormulas;
-		return eraseOrformulas;
-	}
+		if (impliesFormula.getBody() instanceof OrFormula) {
+			OrFormula orFormula = (OrFormula) impliesFormula.getBody();
 
-	private static class BodyVisitor extends DefaultFormulaVisitor {
-
-		public List<ImpliesFormula> newImpliesFormulas = new ArrayList<ImpliesFormula>();
-
-		private ImpliesFormula impliesFormula;
-
-		public BodyVisitor(ImpliesFormula impliesFormula) {
-			this.impliesFormula = impliesFormula;
-		}
-
-		@Override
-		public void visit(OrFormula orFormula) {
+			// Create a new implies formula of the form H :- Bi for each atom Bi
+			// in an OrFormula.
 			List<AtomicFormula> head = impliesFormula.getHead();
 
 			for (Formula bodyFormula : orFormula.getFormulas()) {
 				ImpliesFormula newImplies = new ImpliesFormula(bodyFormula,
 						head);
-				newImpliesFormulas.add(newImplies);
+				newFormulas.add(newImplies);
 			}
 		}
 
+		return newFormulas;
 	}
 
 }
