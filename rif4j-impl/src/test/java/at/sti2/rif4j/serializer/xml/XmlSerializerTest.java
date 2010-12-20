@@ -103,8 +103,6 @@ public class XmlSerializerTest extends XMLTestCase {
 		// Serialize to XML
 		String serializedRIFXmlDocument = serializer.serialize(rifDocument);
 		
-		System.out.println(serializedRIFXmlDocument);
-
 		// Compare to original
 		File file = new File(TestUtils.getFileUri(fileName));
 		String originalRIFXml = FileUtils.readFileToString(file);
