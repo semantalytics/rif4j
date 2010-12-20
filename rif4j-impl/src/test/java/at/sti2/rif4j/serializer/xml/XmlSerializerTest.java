@@ -18,15 +18,20 @@ package at.sti2.rif4j.serializer.xml;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.FileUtils;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -39,46 +44,52 @@ import at.sti2.rif4j.rule.Document;
  * @author Daniel Winkler
  * @author Iker Larizgoitia Abad
  */
+@RunWith(Parameterized.class)
 public class XmlSerializerTest extends XMLTestCase {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(XmlSerializerTest.class);
 
+	private String fileName;
+
 	private XmlParser parser = null;
+
 	private XmlSerializer serializer = null;
+
+	public XmlSerializerTest(String fileName) {
+		this.fileName = fileName;
+	}
+
+	@Parameters
+	public static Collection<Object[]> data() {
+		List<Object[]> data = new ArrayList<Object[]>();
+
+		String[] rifFiles = TestUtils.getRIFTestFiles("src/test/resources");
+		assertNotNull(rifFiles);
+
+		for (int i = 0; i < rifFiles.length; i++) {
+			String fileName = rifFiles[i];
+
+			data.add(new Object[] { fileName });
+		}
+
+		return data;
+	}
 
 	@Before
 	public void setUp() throws Exception {
+		parser = new XmlParser(true);
+		serializer = new XmlSerializer(true);
+
 		XMLUnit.setIgnoreAttributeOrder(true);
 		XMLUnit.setIgnoreComments(true);
 		XMLUnit.setIgnoreWhitespace(true);
 		XMLUnit.setIgnoreDiffBetweenTextAndCDATA(true);
 	}
 
-	@After
-	public void tearDown() throws Exception {
-	}
-
 	@Test
-	public void testSerialize_RIF_BLD() throws SAXException,
-			IOException, ParserConfigurationException {
-		String[] rifFiles = TestUtils.getRIFTestFiles("src/test/resources");
-		assertNotNull(rifFiles);
-
-		for (int i = 0; i < rifFiles.length; i++) {
-			parser = new XmlParser(true);
-			serializer = new XmlSerializer(true);
-
-			String fileName = rifFiles[i];
-			testParseAndSerializeXML_RIF_BLD(fileName);
-
-			parser = null;
-			serializer = null;
-		}
-	}
-
-	private void testParseAndSerializeXML_RIF_BLD(String fileName)
-			throws SAXException, IOException, ParserConfigurationException {
+	public void testSerialize_RIF_BLD() throws SAXException, IOException,
+			ParserConfigurationException {
 		logger.debug("Serializing " + fileName);
 
 		// Parse RIFDocument
@@ -91,6 +102,8 @@ public class XmlSerializerTest extends XMLTestCase {
 
 		// Serialize to XML
 		String serializedRIFXmlDocument = serializer.serialize(rifDocument);
+		
+		System.out.println(serializedRIFXmlDocument);
 
 		// Compare to original
 		File file = new File(TestUtils.getFileUri(fileName));
