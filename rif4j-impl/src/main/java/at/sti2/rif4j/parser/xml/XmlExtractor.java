@@ -811,16 +811,18 @@ class XmlExtractor {
 			Node itemsNode = queryNode(listNode, RIF_ITEMS);
 			java.util.List<Term> listTerms = extractTerms(itemsNode);
 
-			// Flatten the "rest list" by recursively extracting the items of
-			// the "rest list".
+			boolean isOpen = false;
+			
 			Node restNode = queryNode(listNode, RIF_REST);
 			if (restNode != null) {
+				isOpen = true;
 				java.util.List<Term> restTerms = extractTerms(restNode);
 				listTerms.addAll(restTerms);
 			}
 
 			List list = new List();
 			list.setElements(listTerms);
+			list.setOpen(isOpen);
 
 			setMetadata(listNode, list);
 			setPosition(listNode, list, positions);

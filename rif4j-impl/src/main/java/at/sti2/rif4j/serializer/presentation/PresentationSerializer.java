@@ -331,13 +331,25 @@ public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 		describeInline(list);
 		appendInline("List(");
 
+		String delimiter = " ";
+		String lastDelimiter = " ";
+
+		if (list.isOpen()) {
+			lastDelimiter = " | ";
+		}
+
 		int i = 0;
+		int size = list.getElements().size();
+
 		for (Term element : list.getElements()) {
-			if (i++ > 0) {
-				appendInline(" ");
+			if (i == size - 1) {
+				appendInline(lastDelimiter);
+			} else if (i > 0) {
+				appendInline(delimiter);
 			}
 
 			element.accept(this);
+			i++;
 		}
 
 		appendInline(")");
