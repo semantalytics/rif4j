@@ -17,24 +17,24 @@ package at.sti2.wsmo4j.reasoner.rif;
 
 import java.util.Properties;
 
-import at.sti2.rif4j.reasoner.RifReasoner;
-import at.sti2.rif4j.reasoner.RifReasonerFactory;
+import at.sti2.rif4j.reasoner.Reasoner;
+import at.sti2.rif4j.reasoner.ReasonerFactory;
 
 /**
- * A {@link RifReasonerFactory} that creates instances of
+ * A {@link ReasonerFactory} that creates instances of
  * {@link WsmlRifReasoner}.
  * 
  * @author Adrian Marte
  */
-public class WsmlRifReasonerFactory implements RifReasonerFactory {
+public class WsmlRifReasonerFactory implements ReasonerFactory {
 
 	@Override
-	public RifReasoner createReasoner() {
+	public Reasoner createReasoner() {
 		return new WsmlRifReasoner();
 	}
 
 	@Override
-	public RifReasoner createReasoner(Properties configuration) {
+	public Reasoner createReasoner(Properties configuration) {
 		return new WsmlRifReasoner();
 	}
 

@@ -22,7 +22,7 @@ import at.sti2.rif4j.rule.Rule;
 
 /**
  * <p>
- * A {@link RifReasoner} is a RIF-BLD reasoner, which is able to check if a
+ * A {@link Reasoner} is a RIF-BLD reasoner, which is able to check if a
  * RIF-BLD rule (or document or group) entails another rule (or document or
  * group).
  * </p>
@@ -48,7 +48,7 @@ import at.sti2.rif4j.rule.Rule;
  * @see <a href="http://www.w3.org/2005/rules/wiki/BLD#sec-logical-entailment"
  *      >http://www.w3.org/2005/rules/wiki/BLD#sec-logical-entailment</a>
  */
-public interface RifReasoner {
+public interface Reasoner {
 
 	public boolean entails(Document phi, Formula psi);
 

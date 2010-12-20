@@ -18,16 +18,16 @@ package at.sti2.rif4j.reasoner;
 import java.util.Properties;
 
 /**
- * A {@link RifReasonerFactory} is a point for creating instances of
- * {@link RifReasoner} objects. A RIF-BLD reasoner is able to check if a RIF-BLD
+ * A {@link ReasonerFactory} is a point for creating instances of
+ * {@link Reasoner} objects. A RIF-BLD reasoner is able to check if a RIF-BLD
  * rule (or document or group) entails another rule (or document or group).
  * 
  * @author Adrian Marte
  */
-public interface RifReasonerFactory {
+public interface ReasonerFactory {
 
-	public RifReasoner createReasoner();
+	public Reasoner createReasoner();
 
-	public RifReasoner createReasoner(Properties configuration);
+	public Reasoner createReasoner(Properties configuration);
 
 }
