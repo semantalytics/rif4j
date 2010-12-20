@@ -55,7 +55,7 @@ import at.sti2.rif4j.rule.Import;
 import at.sti2.rif4j.rule.Prefix;
 import at.sti2.rif4j.rule.Rule;
 import at.sti2.rif4j.rule.RuleVisitor;
-import at.sti2.rif4j.serializer.RifSerializer;
+import at.sti2.rif4j.serializer.Serializer;
 
 /**
  * @author Adrian Marte
@@ -64,7 +64,7 @@ import at.sti2.rif4j.serializer.RifSerializer;
  */
 public class PresentationSerializer implements DocumentVisitor, TermVisitor,
 		ClauseVisitor, FormulaVisitor, AtomicFormulaVisitor, RuleVisitor,
-		UnitermVisitor, RifSerializer {
+		UnitermVisitor, Serializer {
 
 	public static final String LINE_SEPARATOR = System
 			.getProperty("line.separator");

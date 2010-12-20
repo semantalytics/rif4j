@@ -70,13 +70,13 @@ import at.sti2.rif4j.rule.Import;
 import at.sti2.rif4j.rule.Prefix;
 import at.sti2.rif4j.rule.Rule;
 import at.sti2.rif4j.rule.RuleVisitor;
-import at.sti2.rif4j.serializer.RifSerializer;
+import at.sti2.rif4j.serializer.Serializer;
 
 /**
  * @author Daniel Winkler
  * @author Iker Larizgoitia Abad
  */
-public class XmlSerializer extends XmlHandlerBase implements RifSerializer,
+public class XmlSerializer extends XmlHandlerBase implements Serializer,
 		DocumentVisitor, TermVisitor, ClauseVisitor, FormulaVisitor,
 		AtomicFormulaVisitor, RuleVisitor, UnitermVisitor {
 
