@@ -17,7 +17,7 @@ package at.sti2.rif4j.serializer;
 
 import at.sti2.rif4j.rule.Document;
 
-public interface RifSerializer {
+public interface Serializer {
 
 	public String serialize(Document document);
 
