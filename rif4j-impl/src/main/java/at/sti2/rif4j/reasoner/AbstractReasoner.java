@@ -24,12 +24,12 @@ import at.sti2.rif4j.rule.Rule;
 
 /**
  * Subclasses of this class only need to implement
- * {@link RifReasoner#entails(Document, Document)} and
- * {@link RifReasoner#query(Document, Rule)}.
+ * {@link Reasoner#entails(Document, Document)} and
+ * {@link Reasoner#query(Document, Rule)}.
  * 
  * @author Adrian Marte
  */
-public abstract class AbstractRifReasoner implements RifReasoner {
+public abstract class AbstractReasoner implements Reasoner {
 
 	@Override
 	public boolean entails(Group phi, Formula psi) {

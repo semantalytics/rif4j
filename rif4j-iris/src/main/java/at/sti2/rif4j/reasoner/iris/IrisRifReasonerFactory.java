@@ -17,21 +17,21 @@ package at.sti2.rif4j.reasoner.iris;
 
 import java.util.Properties;
 
-import at.sti2.rif4j.reasoner.RifReasoner;
-import at.sti2.rif4j.reasoner.RifReasonerFactory;
+import at.sti2.rif4j.reasoner.Reasoner;
+import at.sti2.rif4j.reasoner.ReasonerFactory;
 
 /**
  * @author Adrian Marte
  */
-public class IrisRifReasonerFactory implements RifReasonerFactory {
+public class IrisRifReasonerFactory implements ReasonerFactory {
 
 	@Override
-	public RifReasoner createReasoner() {
+	public Reasoner createReasoner() {
 		return new IrisRifReasoner();
 	}
 
 	@Override
-	public RifReasoner createReasoner(Properties configuration) {
+	public Reasoner createReasoner(Properties configuration) {
 		// TODO Respect configuration.
 		return new IrisRifReasoner();
 	}

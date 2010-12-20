@@ -25,14 +25,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.sti2.rif4j.condition.Formula;
-import at.sti2.rif4j.reasoner.AbstractRifReasoner;
+import at.sti2.rif4j.reasoner.AbstractReasoner;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.translator.iris.RifToIrisTranslator;
 
 /**
  * @author Adrian Marte
  */
-public class IrisRifReasoner extends AbstractRifReasoner {
+public class IrisRifReasoner extends AbstractReasoner {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(IrisRifReasoner.class);

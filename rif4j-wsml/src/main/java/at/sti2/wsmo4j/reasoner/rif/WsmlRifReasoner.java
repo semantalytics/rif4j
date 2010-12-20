@@ -30,7 +30,7 @@ import org.wsmo.factory.FactoryContainer;
 import org.wsmo.factory.WsmoFactory;
 
 import at.sti2.rif4j.condition.Formula;
-import at.sti2.rif4j.reasoner.AbstractRifReasoner;
+import at.sti2.rif4j.reasoner.AbstractReasoner;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.wsmo4j.translator.rif.RifToWsmlTranslator;
 
@@ -39,7 +39,7 @@ import at.sti2.wsmo4j.translator.rif.RifToWsmlTranslator;
  * 
  * @author Adrian Marte
  */
-public class WsmlRifReasoner extends AbstractRifReasoner {
+public class WsmlRifReasoner extends AbstractReasoner {
 
 	@Override
 	public boolean entails(Document phi, Formula psi) {
