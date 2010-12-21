@@ -31,7 +31,7 @@ public class RifToIrisBuiltinMapper {
 			ITerm... terms) {
 		RifBuiltIn rifBuiltin = RifBuiltIn.forUri(rifBuiltinIri);
 
-		if (rifBuiltin == null) {			
+		if (rifBuiltin == null) {
 			return null;
 		}
 
@@ -53,8 +53,7 @@ public class RifToIrisBuiltinMapper {
 		case ADD_YEARMONTHDURATIONS:
 			return factory.createAddYearMonthDurations(terms);
 		case APPEND:
-			// TODO What to do?
-			break;
+			return factory.createAppend(terms);
 		case BOOLEAN_EQUAL:
 			return factory.createBooleanEqual(terms);
 		case BOOLEAN_GREATER_THAN:
@@ -66,13 +65,11 @@ public class RifToIrisBuiltinMapper {
 		case CONCAT:
 			return factory.createStringConcat(terms);
 		case CONCATENATE:
-			// TODO What to do?
-			break;
+			return factory.createConcatenate(terms);
 		case CONTAINS:
 			return factory.createStringContains(terms);
 		case COUNT:
-			// TODO What to do?
-			break;
+			return factory.createCount(terms);
 		case DATE_EQUAL:
 			return factory.createDateEqual(terms);
 		case DATE_GREATER_THAN:
@@ -112,8 +109,7 @@ public class RifToIrisBuiltinMapper {
 		case DAYTIMEDURATION_LESS_THAN_OR_EQUAL:
 			return factory.createDayTimeDurationLessEqual(terms);
 		case DISTINCT_VALUES:
-			// FIXME What to do?
-			break;
+			return factory.createDistinctValues(terms);
 		case DIVIDE_DAYTIMEDURATION:
 			return factory.createDayTimeDurationDivide(terms);
 		case DIVIDE_DAYTIMEDURATION_BY_DAYTIMEDURATION:
@@ -134,11 +130,9 @@ public class RifToIrisBuiltinMapper {
 		case ESCAPE_HTML_URI:
 			return factory.createStringEscapeHtmlUri(terms);
 		case EXCEPT:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createExcept(terms);
 		case GET:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createget(terms);
 		case HOURS_FROM_DATETIME:
 			return factory.createHoursFromDateTime(terms);
 		case HOURS_FROM_DURATION:
@@ -146,14 +140,11 @@ public class RifToIrisBuiltinMapper {
 		case HOURS_FROM_TIME:
 			return factory.createHoursFromTime(terms);
 		case INDEX_OF:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createIndexOf(terms);
 		case INSERT_BEFORE:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createInsertBefore(terms);
 		case INTERSECT:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createIntersect(terms);
 		case IRI_STRING:
 			return factory.createIriString(terms);
 		case IRI_TO_URI:
@@ -299,23 +290,20 @@ public class RifToIrisBuiltinMapper {
 		case IS_LITERAL_YEARMONTHDURATION:
 			return factory.createIsYearMonthDuration(terms);
 		case LANG_FROM_PLAINLITERAL:
-			// FIXME Rename method to createLangFromPlainLiteral.
+			// TODO Rename method to createLangFromPlainLiteral.
 			return factory.createLangFromText(terms);
 		case LIST_CONTAINS:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createListContains(terms);
 		case LITERAL_NOT_IDENTICAL:
 			return factory.createNotExactEqual(terms);
 		case LOWER_CASE:
 			return factory.createStringToLower(terms);
 		case MAKE_LISTS:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createMakeList(terms);
 		case MATCHES:
 			return factory.createStringMatches(terms);
 		case MATCHES_LANGUAGE_RANGE:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createMatchesLanguageRange(terms);
 		case MINUTES_FROM_DATETIME:
 			return factory.createMinutesFromDateTime(terms);
 		case MINUTES_FROM_DURATION:
@@ -359,22 +347,20 @@ public class RifToIrisBuiltinMapper {
 		case NUMERIC_SUBTRACT:
 			return factory.createNumericSubtract(terms);
 		case PLAINLITERAL_COMPARE:
-			// FIXME Rename method.
+			// TODO Rename method.
 			return factory.createTextCompare(terms);
 		case PLAINLITERAL_FROM_STRING_LANG:
-			// FIXME Rename method.
+			// TODO Rename method.
 			return factory.createTextFromStringLang(terms);
 		case PLAINLITERAL_LENGTH:
-			// FIXME Rename method.
+			// TODO Rename method.
 			return factory.createTextLength(terms);
 		case REMOVE:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createRemove(terms);
 		case REPLACE:
 			return factory.createStringReplace(terms);
 		case REVERSE:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createReverse(terms);
 		case SECONDS_FROM_DATETIME:
 			return factory.createSecondsFromDateTime(terms);
 		case SECONDS_FROM_DURATION:
@@ -384,15 +370,18 @@ public class RifToIrisBuiltinMapper {
 		case STARTS_WITH:
 			return factory.createStringStartsWith(terms);
 		case STRING_FROM_PLAINLITERAL:
-			// FIXME Rename method.
+			// TODO Rename method.
 			return factory.createStringFromText(terms);
 		case STRING_JOIN:
 			return factory.createStringJoin(terms);
 		case STRING_LENGTH:
 			return factory.createStringLength(terms);
 		case SUBLIST:
-			// FIXME IRIS built-in missing.
-			break;
+			if (terms.length == 2) {
+				return factory.createSubListFrom(terms);
+			} else {
+				return factory.createSubListFromTo(terms);
+			}
 		case SUBSTRING:
 			return factory.createStringSubstring(terms);
 		case SUBSTRING_AFTER:
@@ -438,8 +427,7 @@ public class RifToIrisBuiltinMapper {
 		case TIMEZONE_FROM_TIME:
 			return factory.createTimezoneFromTime(terms);
 		case UNION:
-			// FIXME IRIS built-in missing.
-			break;
+			return factory.createUnion(terms);
 		case UPPER_CASE:
 			return factory.createStringToUpper(terms);
 		case XMLLITERAL_EQUAL:
@@ -459,7 +447,7 @@ public class RifToIrisBuiltinMapper {
 		case YEARMONTHDURATION_LESS_THAN_OR_EQUAL:
 			return factory.createYearMonthDurationLessEqual(terms);
 		case YEARS_FROM_DURATION:
-			return factory.createYearsFromDuration(terms);			
+			return factory.createYearsFromDuration(terms);
 		case TO_STRING:
 			return factory.createToString(terms);
 		case TO_BOOLEAN:
@@ -499,61 +487,66 @@ public class RifToIrisBuiltinMapper {
 		case TO_BASE64BINARY:
 			return factory.createToBase64Binary(terms);
 		case TO_ANYURI:
-//			return factory.createToAnyUri(terms);
+			return factory.createToAnyURI(terms);
 		case TO_QNAME:
-//			return factory.createToqname(terms);
+			return factory.createToQName(terms);
 		case TO_NOTATION:
-//			return factory.createTonotation(terms);
+			// Casting to xs:NOTATION is not permitted because it is an abstract
+			// type.
+			break;
 		case TO_NORMALIZED_STRING:
-//			return factory.createTonormalized_string(terms);
+			return factory.createToNormalizedString(terms);
 		case TO_TOKEN:
-//			return factory.createToToken(terms);
+			return factory.createToToken(terms);
 		case TO_LANGUAGE:
-//			return factory.createToLanguage(terms);
+			return factory.createToLanguage(terms);
 		case TO_NMTOKEN:
-//			return factory.createTonmtoken(terms);
+			return factory.createToNMTOKEN(terms);
 		case TO_NMTOKENS:
-//			return factory.createTonmtokens(terms);
+			// Data type is not supported in IRIS.
+			break;
 		case TO_NAME:
-//			return factory.createToname(terms);
+			return factory.createToName(terms);
 		case TO_NCNAME:
-//			return factory.createToncname(terms);
+			return factory.createToNCName(terms);
 		case TO_ID:
-//			return factory.createToid(terms);
+			return factory.createToID(terms);
 		case TO_IDREF:
-//			return factory.createToidref(terms);
+			return factory.createToIDREF(terms);
 		case TO_IDREFS:
-//			return factory.createToidrefs(terms);
+			// Data type is not supported in IRIS.
+			break;
 		case TO_ENTITY:
-//			return factory.createToentity(terms);
+			return factory.createToENTITY(terms);
 		case TO_ENTITIES:
-//			return factory.createToEntities(terms);
+			// Data type is not supported in IRIS.
+			break;
 		case TO_INTEGER:
 			return factory.createToInteger(terms);
 		case TO_NON_POSITIVE_INTEGER:
-//			return factory.createToon_positive_integer(terms);
+			return factory.createToNonPositiveInteger(terms);
 		case TO_NEGATIVE_INTEGER:
-//			return factory.createTonegative_integer(terms);
+			return factory.createToNegativeInteger(terms);
 		case TO_LONG:
-//			return factory.createTolong(terms);
+			return factory.createToLong(terms);
 		case TO_INT:
-//			return factory.createToint(terms);
+			return factory.createToInt(terms);
 		case TO_SHORT:
-//			return factory.createToshort(terms);
+			return factory.createToShort(terms);
 		case TO_BYTE:
-//			return factory.createTobyte(terms);
+			return factory.createToByte(terms);
 		case TO_NON_NEGATIVE_INTEGER:
-//			return factory.createTonon_negative_integer(terms);
+			return factory.createToNonNegativeInteger(terms);
 		case TO_UNSIGNED_LONG:
-//			return factory.createTounsigned_long(terms);
+			return factory.createToUnsignedLong(terms);
 		case TO_UNSIGNED_INT:
-//			return factory.createTounsigned_int(terms);
+			return factory.createToUnsignedInt(terms);
 		case TO_UNSIGNED_SHORT:
-//			return factory.createTounsigned_short(terms);
+			return factory.createToUnsignedShort(terms);
 		case TO_UNSIGNED_BYTE:
-//			return factory.createTounsigned_byte(terms);
+			return factory.createToUnsignedByte(terms);
 		case TO_POSITIVE_INTEGER:
-//			return factory.createTopositive_integer(terms);			
+			return factory.createToPositiveInteger(terms);
 		}
 
 		return null;
