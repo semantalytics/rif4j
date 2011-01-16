@@ -41,36 +41,14 @@ public class DocumentTranslator implements DocumentVisitor {
 
 	@Override
 	public void visit(Document document) {
-		// We can ignore the base URI, sinc the names of the predicates, etc.,
+		// We can ignore the base URI, since the names of the predicates, etc.,
 		// should already be absolute URIs.
 
-		// Constant base = document.getBase();
-		// if (base != null && base.getText() != null) {
-		// try {
-		// URI.create(base.getText());
-		// } catch (IllegalArgumentException e) {
-		// logger.error("Base URI is not a valid URI", e);
-		// }
-		// }
-
-		// List<Import> imports = document.getImports();
-		// for (Import import1 : imports) {
-		// import1.accept(this);
-		// }
-
-		// We can ignore the metadata.
-		// List<Frame> metadata = document.getMetadata();
-		// for (Frame frame : metadata) {
-		// frame.accept((AtomicFormulaVisitor) this);
-		// }
-
-		// List<Prefix> prefixes = document.getPrefixes();
-		// for (Prefix prefix : prefixes) {
-		// prefix.accept(this);
-		// }
+		// We can ignore the metadata, prefixes, etc., and only handle the group
+		// of this document.
 
 		Group group = document.getGroup();
-		
+
 		if (group != null) {
 			group.accept(this);
 		}
