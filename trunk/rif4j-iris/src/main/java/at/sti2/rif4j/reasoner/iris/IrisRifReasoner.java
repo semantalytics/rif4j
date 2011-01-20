@@ -64,7 +64,7 @@ public class IrisRifReasoner extends AbstractReasoner {
 		return entails(document, query);
 	}
 
-	private IKnowledgeBase toKnowledgeBase(Document document)
+	protected IKnowledgeBase toKnowledgeBase(Document document)
 			throws EvaluationException {
 		RifToIrisTranslator translator = new RifToIrisTranslator();
 		translator.translate(document);
@@ -73,7 +73,7 @@ public class IrisRifReasoner extends AbstractReasoner {
 		return knowledgeBase;
 	}
 
-	private List<IQuery> toQueries(Formula formula) {
+	protected List<IQuery> toQueries(Formula formula) {
 		RifToIrisTranslator translator = new RifToIrisTranslator();
 		translator.translate(formula);
 
