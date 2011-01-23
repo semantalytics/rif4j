@@ -15,7 +15,13 @@
  */
 package at.sti2.rif4j.condition;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import at.sti2.rif4j.AbstractDescribable;
+import at.sti2.rif4j.RdfDatatype;
+import at.sti2.rif4j.RifDatatype;
+import at.sti2.rif4j.XmlSchemaDatatype;
 import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
@@ -30,20 +36,66 @@ public class Constant extends AbstractDescribable implements Term {
 	private String text;
 
 	public Constant(String type, String language, String text) {
-		if (type == null) {
-			type = "";
-		}
+		this.text = text;
+		this.language = language;
 		this.type = type;
 
-		if (language == null) {
-			language = "";
-		}
-		this.language = language;
+		this.type = determineType();
+	}
 
+	private String determineType() {
 		if (text == null) {
 			text = "";
 		}
-		this.text = text;
+
+		if (type != null && !type.isEmpty()) {
+			return type;
+		}
+
+		if (!text.isEmpty()) {
+			if (language == null || language.isEmpty()) {
+				int index = text.indexOf("@");
+
+				if (index > 0) {
+					text = text.substring(0, index);
+
+					if ((index + 1) < text.length()) {
+						language = text.substring(index + 1);
+					}
+
+					return RdfDatatype.PLAIN_LITERAL.getUri();
+				}
+			} else {
+				return RdfDatatype.PLAIN_LITERAL.getUri();
+			}
+
+			try {
+				new BigInteger(text);
+				return XmlSchemaDatatype.INTEGER.getUri();
+			} catch (NumberFormatException e) {
+				// Ignore.
+			}
+
+			try {
+				Double.valueOf(text);
+				return XmlSchemaDatatype.DOUBLE.getUri();
+			} catch (NumberFormatException e) {
+				// Ignore.
+			}
+
+			try {
+				new BigDecimal(text);
+				return XmlSchemaDatatype.DECIMAL.getUri();
+			} catch (NumberFormatException e) {
+				// Ignore.
+			}
+
+			if (text.startsWith("_")) {
+				return RifDatatype.LOCAL.getUri();
+			}
+		}
+
+		return XmlSchemaDatatype.STRING.getUri();
 	}
 
 	/**
