@@ -153,6 +153,11 @@ public enum XmlSchemaDatatype {
 		return Lookup.table.containsKey(uri);
 	}
 
+	@Override
+	public String toString() {
+		return getUri();
+	}
+	
 	/**
 	 * Maps the URI of each datatype to the datatype itself.
 	 */
