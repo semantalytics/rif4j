@@ -45,7 +45,8 @@ public class RuleTranslator implements RuleVisitor {
 			if (targetRelation == null) {
 				target.put(predicate, sourceRelation);
 			} else {
-				for (int i = 0; i < sourceRelation.size(); i++) {
+				int size = sourceRelation.size();
+				for (int i = 0; i < size; i++) {
 					targetRelation.add(sourceRelation.get(i));
 				}
 			}
