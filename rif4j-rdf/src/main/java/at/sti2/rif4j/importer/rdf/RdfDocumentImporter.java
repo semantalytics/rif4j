@@ -17,6 +17,7 @@ import org.ontoware.rdf2go.RDF2Go;
 import org.ontoware.rdf2go.Reasoning;
 import org.ontoware.rdf2go.model.Model;
 import org.ontoware.rdf2go.model.Statement;
+import org.ontoware.rdf2go.model.node.BlankNode;
 import org.ontoware.rdf2go.model.node.DatatypeLiteral;
 import org.ontoware.rdf2go.model.node.LanguageTagLiteral;
 import org.ontoware.rdf2go.model.node.Node;
@@ -148,9 +149,9 @@ public class RdfDocumentImporter implements DocumentImporter {
 
 	private Term toTerm(Node node) {
 		// FIXME Handle blank nodes correctly.
-		// if (node instanceof BlankNode) {
-		// return new at.sti2.rif4j.condition.Variable("X");
-		// }
+		if (node instanceof BlankNode) {
+			// return new at.sti2.rif4j.condition.Variable("X");
+		}
 
 		String language = null;
 		String text = node.toString();
@@ -181,18 +182,4 @@ public class RdfDocumentImporter implements DocumentImporter {
 		return PROFILES.contains(profile);
 	}
 
-	public static void main(String[] args) throws ImportException,
-			URISyntaxException {
-		URL resource = RdfDocumentImporter.class.getClassLoader().getResource(
-				"RDF_example.rdf");
-		URI uri = resource.toURI();
-
-		RdfDocumentImporter importer = new RdfDocumentImporter();
-
-		Document document = importer.importDocument(uri,
-				URI.create("http://www.w3.org/ns/entailment/RDFS"));
-		System.out.println(document);
-	}
-
 }
-
