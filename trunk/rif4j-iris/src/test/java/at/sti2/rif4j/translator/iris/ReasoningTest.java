@@ -43,14 +43,12 @@ import org.deri.iris.factory.Factory;
 import org.deri.iris.storage.IRelation;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import at.sti2.rif4j.TestUtils;
 import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
-import at.sti2.rif4j.translator.iris.RifToIrisTranslator;
 
 public class ReasoningTest {
 
