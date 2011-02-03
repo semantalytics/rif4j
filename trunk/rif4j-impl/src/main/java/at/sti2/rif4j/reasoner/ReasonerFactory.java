@@ -20,7 +20,7 @@ import java.util.Properties;
 /**
  * A {@link ReasonerFactory} is a point for creating instances of
  * {@link Reasoner} objects. A RIF-BLD reasoner is able to check if a RIF-BLD
- * rule (or document or group) entails another rule (or document or group).
+ * formula (or document or group) entails another formula.
  * 
  * @author Adrian Marte
  */
