@@ -8,6 +8,7 @@ public interface DocumentImporter {
 
 	public boolean supports(URI profile);
 
-	public Document importDocument(URI uri, URI profile) throws ImportException;
+	public Document importDocument(URI uri, URI profile)
+			throws ImportException, UnsupportedProfileException;
 
 }
