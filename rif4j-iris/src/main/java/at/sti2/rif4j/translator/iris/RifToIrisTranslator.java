@@ -20,15 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.deri.iris.Configuration;
-import org.deri.iris.EvaluationException;
-import org.deri.iris.KnowledgeBaseFactory;
-import org.deri.iris.api.IKnowledgeBase;
 import org.deri.iris.api.basics.IPredicate;
 import org.deri.iris.api.basics.IQuery;
 import org.deri.iris.api.basics.IRule;
-import org.deri.iris.evaluation.wellfounded.WellFoundedEvaluationStrategyFactory;
-import org.deri.iris.rules.safety.AugmentingRuleSafetyProcessor;
 import org.deri.iris.storage.IRelation;
 
 import at.sti2.rif4j.condition.Formula;
@@ -37,7 +31,6 @@ import at.sti2.rif4j.rule.Rule;
 import at.sti2.rif4j.transformer.DocumentNormalizer;
 import at.sti2.rif4j.transformer.FormulaNormalizer;
 import at.sti2.rif4j.transformer.RuleNormalizer;
-import at.sti2.rif4j.translator.iris.visitor.AtomicFormulaTranslator;
 import at.sti2.rif4j.translator.iris.visitor.DocumentTranslator;
 import at.sti2.rif4j.translator.iris.visitor.FormulaTranslator;
 import at.sti2.rif4j.translator.iris.visitor.RuleTranslator;
@@ -118,27 +111,6 @@ public class RifToIrisTranslator {
 		normalizedFormula.accept(translator);
 
 		queries.addAll(translator.getQueries());
-	}
-
-	public IKnowledgeBase getKnowledgeBase() throws EvaluationException {
-		if (facts != null && rules != null) {
-			Configuration configuration = KnowledgeBaseFactory
-					.getDefaultConfiguration();
-			
-			// Use well-founded evaluation.
-			configuration.evaluationStrategyFactory = new WellFoundedEvaluationStrategyFactory();
-			configuration.ruleSafetyProcessor = new AugmentingRuleSafetyProcessor();
-
-			// Add the meta-level rules.
-			rules.addAll(0, AtomicFormulaTranslator.getMetaLevelRules());
-
-			IKnowledgeBase irisKnowledgeBase = KnowledgeBaseFactory
-					.createKnowledgeBase(facts, rules, configuration);
-
-			return irisKnowledgeBase;
-		}
-
-		return null;
 	}
 
 }
