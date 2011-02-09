@@ -46,7 +46,8 @@ public class IrisRifReasonerTest {
 		Formula formula = TestUtils.parseFormula(CLASS_MEMBERSHIPT_PREFIX
 				+ "-conclusion.rif");
 
-		Assert.assertTrue(reasoner.entails(document, formula));
+		reasoner.register(document);
+		Assert.assertTrue(reasoner.entails(formula));
 	}
 
 }

@@ -52,7 +52,8 @@ public abstract class AbstractEntailmentTest {
 		Document document = TestUtils.parseDocument(premiseUri.toString());
 		Formula formula = TestUtils.parseFormula(conclusionUri.toString());
 
-		boolean entails = reasoner.entails(document, formula);
+		reasoner.register(document);
+		boolean entails = reasoner.entails(formula);
 		logger.debug("Result is: " + entails);
 
 		Assert.assertEquals(testName, expectedEvaluation, entails);

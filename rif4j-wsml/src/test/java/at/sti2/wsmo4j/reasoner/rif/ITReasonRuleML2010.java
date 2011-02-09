@@ -48,7 +48,9 @@ public class ITReasonRuleML2010 {
 	public void testRuleML2010() {
 		Document document = TestUtils.parseDocument("RuleML2010_Document.xml");
 		Formula formula = TestUtils.parseFormula("RuleML2010_Query.xml");
-		boolean entailed = reasoner.query(document, formula);
+		
+		reasoner.register(document);
+		boolean entailed = reasoner.query(formula);
 
 		Assert.assertTrue(entailed);
 	}
