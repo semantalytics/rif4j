@@ -24,25 +24,23 @@ import at.sti2.rif4j.rule.Rule;
 
 /**
  * Subclasses of this class only need to implement
- * {@link Reasoner#entails(Document, Document)} and
- * {@link Reasoner#query(Document, Rule)}.
+ * {@link Reasoner#register(Document)}, {@link Reasoner#entails(Formula)} and
+ * {@link Reasoner#query(Formula))}.
  * 
  * @author Adrian Marte
  */
 public abstract class AbstractReasoner implements Reasoner {
 
 	@Override
-	public boolean entails(Group phi, Formula psi) {
-		Document phiDocument = toDocument(phi);
-
-		return entails(phiDocument, psi);
+	public void register(Group group) {
+		Document document = toDocument(group);
+		register(document);
 	}
 
 	@Override
-	public boolean entails(Rule phi, Formula psi) {
-		Document phiDocument = toDocument(phi);
-
-		return entails(phiDocument, psi);
+	public void register(Rule rule) {
+		Document document = toDocument(rule);
+		register(document);
 	}
 
 	protected Document toDocument(Group group) {

@@ -15,6 +15,8 @@
  */
 package at.sti2.rif4j.reasoner.iris;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +38,7 @@ import at.sti2.rif4j.reasoner.AbstractReasoner;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.translator.iris.RifToIrisTranslator;
 import at.sti2.rif4j.translator.iris.visitor.AtomicFormulaTranslator;
+import at.sti2.rif4j.translator.iris.visitor.RuleTranslator;
 
 /**
  * @author Adrian Marte
@@ -45,14 +48,39 @@ public class IrisRifReasoner extends AbstractReasoner {
 	private static final Logger logger = LoggerFactory
 			.getLogger(IrisRifReasoner.class);
 
+	private boolean hasChanged = true;
+
+	private Map<IPredicate, IRelation> facts = new HashMap<IPredicate, IRelation>();
+
+	private List<IRule> rules = new ArrayList<IRule>();
+
+	private IKnowledgeBase knowledgeBase;
+
 	@Override
-	public boolean entails(Document phi, Formula psi) {
+	public void register(Document document) {
+		RifToIrisTranslator translator = new RifToIrisTranslator();
+		translator.translate(document);
+
+		RuleTranslator.mergeFacts(translator.getFacts(), facts);
+		rules.addAll(translator.getRules());
+
+		hasChanged = true;
+	}
+
+	@Override
+	public boolean entails(Formula query) {
 		try {
-			IKnowledgeBase irisKnowledgeBase = toKnowledgeBase(phi);
-			List<IQuery> irisQueries = toQueries(psi);
+			createKnowledgeBase();
+		} catch (EvaluationException e) {
+			logger.error("Failed to evaluate knowledge base", e);
+			return false;
+		}
+
+		try {
+			List<IQuery> irisQueries = toQueries(query);
 
 			for (IQuery irisQuery : irisQueries) {
-				IRelation relation = irisKnowledgeBase.execute(irisQuery);
+				IRelation relation = knowledgeBase.execute(irisQuery);
 
 				if (relation.size() == 0) {
 					return false;
@@ -68,21 +96,29 @@ public class IrisRifReasoner extends AbstractReasoner {
 	}
 
 	@Override
-	public boolean query(Document document, Formula query) {
-		return entails(document, query);
+	public boolean query(Formula query) {
+		return entails(query);
 	}
 
-	protected IKnowledgeBase toKnowledgeBase(Document document)
-			throws EvaluationException {
-		RifToIrisTranslator translator = new RifToIrisTranslator();
-		translator.translate(document);
+	private void createKnowledgeBase() throws EvaluationException {
+		if (!hasChanged) {
+			return;
+		}
 
-		Map<IPredicate, IRelation> facts = translator.getFacts();
-		List<IRule> rules = translator.getRules();
+		List<IRule> newRules = new ArrayList<IRule>();
+
+		// Add the program rules.
+		newRules.addAll(this.rules);
 
 		// Add the meta-level rules.
-		rules.addAll(0, AtomicFormulaTranslator.getMetaLevelRules());
+		newRules.addAll(0, AtomicFormulaTranslator.getMetaLevelRules());
 
+		knowledgeBase = toKnowledgeBase(facts, newRules);
+		hasChanged = false;
+	}
+
+	protected IKnowledgeBase toKnowledgeBase(Map<IPredicate, IRelation> facts,
+			List<IRule> rules) throws EvaluationException {
 		Configuration configuration = KnowledgeBaseFactory
 				.getDefaultConfiguration();
 
@@ -90,10 +126,10 @@ public class IrisRifReasoner extends AbstractReasoner {
 		configuration.evaluationStrategyFactory = new WellFoundedEvaluationStrategyFactory();
 		configuration.ruleSafetyProcessor = new AugmentingRuleSafetyProcessor();
 
-		IKnowledgeBase irisKnowledgeBase = KnowledgeBaseFactory
+		IKnowledgeBase knowledgeBase = KnowledgeBaseFactory
 				.createKnowledgeBase(facts, rules, configuration);
 
-		return irisKnowledgeBase;
+		return knowledgeBase;
 	}
 
 	protected List<IQuery> toQueries(Formula formula) {

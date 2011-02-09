@@ -49,14 +49,16 @@ import at.sti2.rif4j.rule.Rule;
  *      >http://www.w3.org/2005/rules/wiki/BLD#sec-logical-entailment</a>
  */
 public interface Reasoner {
+	
+	public void register(Document document);
+	
+	public void register(Group group);
+	
+	public void register(Rule rule);
 
-	public boolean entails(Document phi, Formula psi);
-
-	public boolean entails(Group phi, Formula psi);
-
-	public boolean entails(Rule phi, Formula psi);
+	public boolean entails(Formula formula);
 	
 	// FIXME Return value should be a binding set.
-	public boolean query(Document document, Formula query);
+	public boolean query(Formula query);
 
 }

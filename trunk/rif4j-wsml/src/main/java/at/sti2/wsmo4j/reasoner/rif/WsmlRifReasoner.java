@@ -15,11 +15,17 @@
  */
 package at.sti2.wsmo4j.reasoner.rif;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.omwg.logicalexpression.LogicalExpression;
 import org.omwg.ontology.Axiom;
 import org.omwg.ontology.Ontology;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sti2.wsmo4j.factory.WsmlFactoryContainer;
 import org.wsml.reasoner.api.LPReasoner;
 import org.wsml.reasoner.api.inconsistency.InconsistencyException;
@@ -41,34 +47,45 @@ import at.sti2.wsmo4j.translator.rif.RifToWsmlTranslator;
  */
 public class WsmlRifReasoner extends AbstractReasoner {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(WsmlRifReasoner.class);
+
+	private boolean hasChanged = true;
+
+	private Set<Document> documents = new HashSet<Document>();
+
+	private LPReasoner reasoner;
+
 	@Override
-	public boolean entails(Document phi, Formula psi) {
-		Ontology wsmlOntology = toOntology(phi);
-		List<LogicalExpression> wsmlRules = toQueries(psi);
-
-		LPReasoner reasoner = DefaultWSMLReasonerFactory.getFactory()
-				.createFlightReasoner(null);
-
-		try {
-			reasoner.registerOntology(wsmlOntology);
-		} catch (InconsistencyException e) {
-			e.printStackTrace();
-		}
-
-		for (LogicalExpression wsmlRule : wsmlRules) {
-			boolean entailed = reasoner.ask(wsmlRule);
-
-			if (!entailed) {
-				return entailed;
-			}
-		}
-
-		return true;
+	public void register(Document document) {
+		hasChanged |= documents.add(document);
 	}
 
 	@Override
-	public boolean query(Document document, Formula query) {
-		return entails(document, query);
+	public boolean query(Formula query) {
+		return entails(query);
+	}
+
+	@Override
+	public boolean entails(Formula formula) {
+		try {
+			createOntology();
+		} catch (InvalidModelException e) {
+			logger.error("Failed to create WSML ontology", e);
+			return false;
+		} catch (InconsistencyException e) {
+			logger.error("Found an inconsitent WSML ontology", e);
+			return false;
+		}
+
+		List<LogicalExpression> wsmlRules = toQueries(formula);
+		boolean entails = true;
+
+		for (LogicalExpression wsmlRule : wsmlRules) {
+			entails &= reasoner.ask(wsmlRule);
+		}
+
+		return entails;
 	}
 
 	private List<LogicalExpression> toQueries(Formula rule) {
@@ -78,9 +95,29 @@ public class WsmlRifReasoner extends AbstractReasoner {
 		return expressions;
 	}
 
-	private Ontology toOntology(Document document) {
-		RifToWsmlTranslator translator = new RifToWsmlTranslator();
-		List<LogicalExpression> expressions = translator.translate(document);
+	private void createOntology() throws InvalidModelException,
+			InconsistencyException {
+		if (!hasChanged) {
+			return;
+		}
+
+		reasoner = DefaultWSMLReasonerFactory.getFactory()
+				.createFlightReasoner(null);
+
+		Ontology ontology = toOntology(documents);
+		reasoner.registerOntology(ontology);
+
+		hasChanged = false;
+	}
+
+	protected Ontology toOntology(Collection<Document> documents)
+			throws InvalidModelException {
+		List<LogicalExpression> expressions = new ArrayList<LogicalExpression>();
+
+		for (Document document : documents) {
+			RifToWsmlTranslator translator = new RifToWsmlTranslator();
+			expressions.addAll(translator.translate(document));
+		}
 
 		FactoryContainer container = new WsmlFactoryContainer();
 		WsmoFactory wsmoFactory = container.getWsmoFactory();
@@ -97,15 +134,9 @@ public class WsmlRifReasoner extends AbstractReasoner {
 			axiom.addDefinition(logicalExpression);
 		}
 
-		try {
-			ontology.addAxiom(axiom);
-			return ontology;
-		} catch (InvalidModelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ontology.addAxiom(axiom);
 
-		return null;
+		return ontology;
 	}
 
 }
