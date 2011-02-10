@@ -39,7 +39,7 @@
 		<dependency>
 			<groupId>at.sti2.iris</groupId>
 			<artifactId>iris-impl</artifactId>
-			<version>0.7.3-SNAPSHOT</version>
+			<version>0.8.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
