@@ -42,6 +42,15 @@
 		</dependency>
 	</dependencies>
 
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources/services</directory>
+				<targetPath>META-INF/services</targetPath>
+			</resource>
+		</resources>
+	</build>
+
 	<repositories>
 		<repository>
 			<id>semweb4j-repo</id>
