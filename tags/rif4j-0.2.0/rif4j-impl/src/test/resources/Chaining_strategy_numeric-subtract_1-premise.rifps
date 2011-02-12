@@ -1,0 +1,6 @@
+Document(
+  Group  (
+    Forall ?x ( <http://example.org/example#a>(?x) :- <http://example.org/example#a>(External(<http://www.w3.org/2007/rif-builtin-function#numeric-subtract>(?x "1"^^<http://www.w3.org/2001/XMLSchema#integer>))) )
+    <http://example.org/example#a>("1"^^<http://www.w3.org/2001/XMLSchema#integer>)
+  ) 
+)

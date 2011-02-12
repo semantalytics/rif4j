@@ -1,0 +1,8 @@
+Document(
+  Group  (
+    Forall ?x ?y  ?z  ( ?y=?z   :-  And ( <http://example.org/example#p>(?x ?y)  <http://example.org/example#p>(?x ?z) ) )
+
+    <http://example.org/example#p>(<http://example.org/example#a> <http://example.org/example#b>)
+    <http://example.org/example#p>(<http://example.org/example#a> <http://example.org/example#c>)
+  ) 
+)

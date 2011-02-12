@@ -1,0 +1,6 @@
+Document(
+  Import(<http://www.w3.org/2005/rules/test/repository/tc/Individual-Data_Separation_Inconsistency/Individual-Data_Separation_Inconsistency-import001> <http://www.w3.org/ns/entailment/OWL-Direct>)
+  Group (
+   Forall ?x (?x[<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> -> <http://example.org/example#A>])
+  )
+ )

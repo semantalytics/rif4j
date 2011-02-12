@@ -1,0 +1,5 @@
+Document(
+  Group  (
+    <http://example.org/example#p>(a->"1"^^<http://www.w3.org/2001/XMLSchema#integer> b->"2"^^<http://www.w3.org/2001/XMLSchema#integer>)
+  ) 
+)

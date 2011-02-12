@@ -1,0 +1,22 @@
+Document(
+  Import(<http://www.w3.org/2005/rules/test/repository/tc/YoungParentDiscount_1/YoungParentDiscount_1-import001> <http://www.w3.org/ns/entailment/RDF>)
+  Group  (
+    Forall ?c ?p ?ca ?pa(
+         ?p # <http://example.org/example#YoungParent>  :-
+             And( ?c[ <http://example.org/example#parent> -> ?p <http://example.org/example#age> -> ?ca ]
+                  ?p[ <http://example.org/example#age> -> ?pa ]
+                  External( <http://www.w3.org/2007/rif-builtin-predicate#is-literal-integer>( ?pa ) )
+                  External( <http://www.w3.org/2007/rif-builtin-predicate#is-literal-integer>( ?ca ) )
+                  External( <http://www.w3.org/2007/rif-builtin-predicate#numeric-less-than>(External( <http://www.w3.org/2007/rif-builtin-function#numeric-subtract>( ?pa ?ca ) ) "25"^^<http://www.w3.org/2001/XMLSchema#integer> ) )
+                )
+    )
+
+    Forall ?c ?p ?ca ?pa(
+         ?p # <http://example.org/example#ParentToBeChecked>  :-
+             And( ?c[ <http://example.org/example#parent> -> ?p <http://example.org/example#age> -> ?ca ]
+                  ?p[ <http://example.org/example#age> -> ?pa ]
+                  Or ( External( <http://www.w3.org/2007/rif-builtin-predicate#is-literal-not-integer>( ?pa ) )
+                       External( <http://www.w3.org/2007/rif-builtin-predicate#is-literal-not-integer>( ?ca ) ) ) )
+    )
+  ) 
+)

@@ -1,0 +1,11 @@
+Document(
+  Group(
+   Forall ?x ( 
+     <http://example.org/example#root>(?x) :-
+       And (External(<http://www.w3.org/2007/rif-builtin-predicate#is-literal-decimal>(?x))
+              External(<http://www.w3.org/2007/rif-builtin-function#numeric-subtract>(External(<http://www.w3.org/2007/rif-builtin-function#numeric-multiply>(?x External(<http://www.w3.org/2007/rif-builtin-function#numeric-multiply>(?x ?x)))) ?x))
+                  = "0"^^<http://www.w3.org/2001/XMLSchema#decimal>
+       )
+   )
+  )
+ )
