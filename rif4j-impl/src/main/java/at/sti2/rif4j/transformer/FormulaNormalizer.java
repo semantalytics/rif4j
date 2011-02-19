@@ -28,6 +28,7 @@ import at.sti2.rif4j.condition.OrFormula;
 /**
  * @author Adrian Marte
  */
+// FIXME What about external formulas, exists formulas?
 public class FormulaNormalizer {
 
 	/**
@@ -43,7 +44,7 @@ public class FormulaNormalizer {
 	public Formula normalize(Formula formula) {
 		FormulaSimplifier simplifier = new FormulaSimplifier();
 		Formula simplifiedFormula = simplifier.simplify(formula);
-
+		
 		Formula newFormula;
 
 		newFormula = normalizeAndFormula(simplifiedFormula);
@@ -58,6 +59,7 @@ public class FormulaNormalizer {
 			return newFormula;
 		}
 
+		// t[p1->v1 ... pn->vn] => And(t[p1->v1] ... t[pn->vn])
 		newFormula = normalizeFrame(simplifiedFormula);
 
 		if (newFormula != null) {
@@ -84,7 +86,8 @@ public class FormulaNormalizer {
 			return orFormula;
 		}
 
-		return new OrFormula(newDisjuncts);
+		// Normalize again, in order to simplify any Or(Or(a b) c).
+		return normalize(new OrFormula(newDisjuncts));
 	}
 
 	private Formula normalizeFrame(Formula formula) {
@@ -152,16 +155,19 @@ public class FormulaNormalizer {
 
 		boolean hasChanged = false;
 
+		// And(F1 ... Fn)
 		for (int i = 0; i < conjuncts.size(); i++) {
 			int j = i + 1;
 			Formula conjunct = conjuncts.get(i);
 
 			if (j < conjuncts.size()) {
+				// And(F1 F2 ... Fi Or(G1, ..., Gm) Fi+2 Fi+3 ... Fn)
 				if (conjuncts.get(j) instanceof OrFormula) {
 					OrFormula orConjunct = (OrFormula) conjuncts.get(j);
 
 					List<Formula> andFormulas = new ArrayList<Formula>();
 
+					// And(Fi G1) ... And(Fi Gm)
 					for (Formula disjunct : orConjunct.getFormulas()) {
 						List<Formula> formulas = new ArrayList<Formula>();
 						formulas.add(normalize(conjunct));
@@ -171,7 +177,10 @@ public class FormulaNormalizer {
 						andFormulas.add(temp);
 					}
 
+					// Or(And(Fi G1) ... And(Fi Gm))
 					Formula orFormula = new OrFormula(andFormulas);
+
+					// normalize(Or(And(Fi G1) ... And(Fi Gm)))
 					newConjuncts.add(normalize(orFormula));
 
 					hasChanged = true;
@@ -185,9 +194,12 @@ public class FormulaNormalizer {
 
 		if (hasChanged) {
 			if (newConjuncts.size() > 1) {
+				// normalize(And(...)) is either an atomic, an or formula or a
+				// and formula.
 				return normalize(new AndFormula(newConjuncts));
 			} else {
-				return normalize(newConjuncts.get(0));
+				// Either an atomic formula or an or formula.
+				return newConjuncts.get(0);
 			}
 		}
 
@@ -235,11 +247,11 @@ public class FormulaNormalizer {
 			if (newConjuncts.size() > 1) {
 				return normalize(new AndFormula(newConjuncts));
 			} else {
-				return normalize(newConjuncts.get(0));
+				return newConjuncts.get(0);
 			}
 		}
 
 		return null;
 	}
-	
+
 }
