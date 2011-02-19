@@ -50,7 +50,7 @@ public class ITReasonRuleML2010 {
 		Formula formula = TestUtils.parseFormula("RuleML2010_Query.xml");
 		
 		reasoner.register(document);
-		boolean entailed = reasoner.query(formula);
+		boolean entailed = reasoner.entails(formula);
 
 		Assert.assertTrue(entailed);
 	}

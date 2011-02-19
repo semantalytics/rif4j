@@ -62,11 +62,6 @@ public class WsmlRifReasoner extends AbstractReasoner {
 	}
 
 	@Override
-	public boolean query(Formula query) {
-		return entails(query);
-	}
-
-	@Override
 	public boolean entails(Formula formula) {
 		try {
 			createOntology();
