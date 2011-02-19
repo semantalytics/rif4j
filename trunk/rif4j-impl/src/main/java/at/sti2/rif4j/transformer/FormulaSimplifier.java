@@ -29,9 +29,9 @@ public class FormulaSimplifier {
 
 	public Formula simplify(Formula formula) {
 		if (formula instanceof OrFormula) {
-			simplify((OrFormula) formula);
+			return simplify((OrFormula) formula);
 		} else if (formula instanceof AndFormula) {
-			simplify((AndFormula) formula);
+			return simplify((AndFormula) formula);
 		}
 
 		return formula;
@@ -39,17 +39,23 @@ public class FormulaSimplifier {
 
 	private Formula simplify(OrFormula orFormula) {
 		List<Formula> newDisjuncts = new ArrayList<Formula>();
+		
+		// Or(F1 ... Fn)
 		for (Formula disjunct : orFormula.getFormulas()) {
 			Formula newDisjunct = simplify(disjunct);
 
+			// Or(s(F1) ... s(Fi) Or(G1 ... Gm) s(Fi+2) ... s(Fn))
 			if (newDisjunct instanceof OrFormula) {
+				/// Or(s(F1) ... s(Fi) G1 ... Gm s(Fi+2) ... s(Fn))
 				newDisjuncts.addAll(((OrFormula) newDisjunct).getFormulas());
 			} else {
 				newDisjuncts.add(newDisjunct);
 			}
 		}
 
+		// Or(F1)
 		if (orFormula.getFormulas().size() == 1) {
+			// F1
 			return orFormula.getFormulas().get(0);
 		}
 
@@ -62,17 +68,23 @@ public class FormulaSimplifier {
 
 	private Formula simplify(AndFormula andFormula) {
 		List<Formula> newConjuncts = new ArrayList<Formula>();
+		
+		// And(F1 ... Fn)
 		for (Formula conjunct : andFormula.getFormulas()) {
 			Formula newConjunct = simplify(conjunct);
 
+			// And(s(F1) ... s(Fi) And(G1 ... Gm) s(Fi+2) ... s(Fn))
 			if (newConjunct instanceof AndFormula) {
+				/// And(s(F1) ... s(Fi) G1 ... Gm s(Fi+2) ... s(Fn))
 				newConjuncts.addAll(((AndFormula) newConjunct).getFormulas());
 			} else {
 				newConjuncts.add(newConjunct);
 			}
 		}
 
+		// And(F1)
 		if (andFormula.getFormulas().size() == 1) {
+			// F1
 			return andFormula.getFormulas().get(0);
 		}
 
