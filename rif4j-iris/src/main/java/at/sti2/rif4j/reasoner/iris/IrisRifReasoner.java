@@ -95,11 +95,6 @@ public class IrisRifReasoner extends AbstractReasoner {
 		return false;
 	}
 
-	@Override
-	public boolean query(Formula query) {
-		return entails(query);
-	}
-
 	private void createKnowledgeBase() throws EvaluationException {
 		if (!hasChanged) {
 			return;

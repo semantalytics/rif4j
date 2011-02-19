@@ -57,8 +57,5 @@ public interface Reasoner {
 	public void register(Rule rule);
 
 	public boolean entails(Formula formula);
-	
-	// FIXME Return value should be a binding set.
-	public boolean query(Formula query);
 
 }
