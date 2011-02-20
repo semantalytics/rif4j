@@ -1,7 +1,0 @@
-Document(
-  Prefix(ex  <http://example.org/example#>)
-  Prefix(pred <http://www.w3.org/2007/rif-builtin-predicate#>)
-  Group(
-   ex:a="http://example.org/example#a"
-  )
- )

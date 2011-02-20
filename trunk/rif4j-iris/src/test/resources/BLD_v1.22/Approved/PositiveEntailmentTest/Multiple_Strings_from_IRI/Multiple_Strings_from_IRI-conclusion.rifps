@@ -1,4 +1,0 @@
-And (
-    pred:iri-string("http://example.org/example#a"^^rif:iri "http://example.org/example#a")
-    pred:iri-string("http://example.org/example#a"^^rif:iri "http://example.org/example#b")
-  )

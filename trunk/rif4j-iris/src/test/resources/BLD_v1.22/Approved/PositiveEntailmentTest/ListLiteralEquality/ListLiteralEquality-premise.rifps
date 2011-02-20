@@ -1,6 +1,0 @@
-Document(
-  Prefix(ex  <http://example.org/example#>)
-  Group(
-   "a"=List(ex:b)
-  )
- )
