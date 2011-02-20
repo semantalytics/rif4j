@@ -16,8 +16,13 @@
 package at.sti2.rif4j.serializer.presentation;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +44,6 @@ import org.xml.sax.SAXException;
 import at.sti2.rif4j.TestUtils;
 import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
-import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
  * @author Adrian Marte
@@ -51,27 +55,66 @@ public class PresentationSerializerTest extends XMLTestCase {
 	private static final Logger logger = LoggerFactory
 			.getLogger(PresentationSerializerTest.class);
 
-	private String fileName;
-
 	private XmlParser parser = null;
 
 	private PresentationSerializer presentationSerializer = null;
 
-	public PresentationSerializerTest(String fileName) {
-		this.fileName = fileName;
+	private final URI fileUri;
+
+	public PresentationSerializerTest(URI xmlFileUri) {
+		this.fileUri = xmlFileUri;
 	}
+
+	// @Parameters
+	// public static Collection<Object[]> data() throws FileNotFoundException {
+	// Collection<Object[]> positiveEntailmentTests =
+	// AbstractLocalPositiveEntailmentTest
+	// .data();
+	//
+	// List<URI> uris = new ArrayList<URI>();
+	//
+	// for (Object[] test : positiveEntailmentTests) {
+	// uris.add((URI) test[1]);
+	// uris.add((URI) test[2]);
+	// }
+	//
+	// Collection<Object[]> negativeEntailmentTests =
+	// AbstractLocalPositiveEntailmentTest
+	// .data();
+	//
+	// for (Object[] test : negativeEntailmentTests) {
+	// uris.add((URI) test[1]);
+	// uris.add((URI) test[2]);
+	// }
+	//
+	// List<Object[]> data = new ArrayList<Object[]>();
+	//
+	// for (URI uri : uris) {
+	// data.add(new Object[] { uri });
+	// }
+	//
+	// return data;
+	// }
 
 	@Parameters
 	public static Collection<Object[]> data() {
 		List<Object[]> data = new ArrayList<Object[]>();
 
-		String[] rifFiles = TestUtils.getRIFTestFiles("src/test/resources");
+		String directory = "src/test/resources";
+		String[] rifFiles = TestUtils.getRIFTestFiles(directory);
 		assertNotNull(rifFiles);
+
+		ClassLoader loader = PresentationSerializerTest.class.getClassLoader();
 
 		for (int i = 0; i < rifFiles.length; i++) {
 			String fileName = rifFiles[i];
+			URL url = loader.getResource(fileName);
 
-			data.add(new Object[] { fileName });
+			try {
+				data.add(new Object[] { url.toURI() });
+			} catch (URISyntaxException e) {
+				logger.error("Could not create URI for " + url);
+			}
 		}
 
 		return data;
@@ -91,14 +134,12 @@ public class PresentationSerializerTest extends XMLTestCase {
 	@Test
 	public void testSerialize_RIF_BLD() throws SAXException, IOException,
 			ParserConfigurationException {
-		if (TestUtils.getFileUri(fileName + "ps") == null)
-			return;
+		logger.debug("Serializing " + fileUri);
 
-		logger.debug("Serializing " + fileName);
-
-		// Parse RIFDocument
-		Reader rifXmlFileReader = TestUtils.getFileReader(fileName);
-		assertNotNull("Test file " + fileName + " could not be found",
+		// Parse RIF document.
+		Reader rifXmlFileReader = new InputStreamReader(fileUri.toURL()
+				.openStream());
+		assertNotNull("Test file could not be found: " + fileUri,
 				rifXmlFileReader);
 
 		Document rifDocument = parser.parseDocument(rifXmlFileReader);
@@ -109,13 +150,26 @@ public class PresentationSerializerTest extends XMLTestCase {
 		serializedRIF = presentationSerializer.getString().replace("\r", "")
 				.replace("\t", "").replace("\n", "").replace(" ", "").trim();
 
-		// Compare to original
-		File file = new File(TestUtils.getFileUri(fileName + "ps"));
-		String originalRIF = FileUtils.readFileToString(file).replace("\t", "")
-				.replace("\r", "").replace("\n", "").replace(" ", "").trim();
+		try {
+			// Compare to original
+			File file = new File(TestUtils.getFileUri(fileUri + "ps"));
+			String originalRIF = FileUtils.readFileToString(file)
+					.replace("\t", "").replace("\r", "").replace("\n", "")
+					.replace(" ", "").trim();
 
-		assertEquals("Serialized and original documents do not match for file "
-				+ fileName, originalRIF, serializedRIF);
+			boolean areEqual = originalRIF.equals(serializedRIF);
+			if (!areEqual && logger.isDebugEnabled()) {
+				logger.debug("Serialized and original documents do not match");
+				logger.debug(originalRIF);
+				logger.debug(serializedRIF);
+			}
+
+			assertEquals(
+					"Serialized and original documents do not match for file "
+							+ fileUri, originalRIF, serializedRIF);
+		} catch (FileNotFoundException e) {
+			// If the one of the files can not be found, we just skip the test.
+		}
 	}
 
 }
