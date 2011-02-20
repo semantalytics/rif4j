@@ -62,7 +62,7 @@ public abstract class AbstractEntailmentTest {
 
 	@Test
 	public void testEntailment() throws FileNotFoundException {
-		logger.debug("Testing positive entailment of " + premiseUri);
+		logger.debug("Testing entailment of " + testName);
 
 		Document document = TestUtils.parseDocument(premiseUri.toString());
 		Formula formula = TestUtils.parseFormula(conclusionUri.toString());

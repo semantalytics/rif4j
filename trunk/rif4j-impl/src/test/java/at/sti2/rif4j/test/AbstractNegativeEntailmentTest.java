@@ -31,19 +31,19 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import at.sti2.rif4j.test.suite.NegativeEntailmentTest;
 import at.sti2.rif4j.test.suite.ObjectFactory;
-import at.sti2.rif4j.test.suite.PositiveEntailmentTest;
 import at.sti2.rif4j.test.suite.TestSuite;
 
 @RunWith(Parameterized.class)
-public abstract class AbstractPositiveEntailmentTest extends
+public abstract class AbstractNegativeEntailmentTest extends
 		AbstractEntailmentTest {
 
 	public static final String RIF_BLD_URL = "http://www.w3.org/2005/rules/test/repository/BLDTests.xml";
 
-	public static final boolean EXPECTED_EVALUATION = true;
+	public static final boolean EXPECTED_EVALUATION = false;
 
-	public AbstractPositiveEntailmentTest(String testName, URI premiseUri,
+	public AbstractNegativeEntailmentTest(String testName, URI premiseUri,
 			URI conclusionUri, boolean expectedEvaluation) {
 		super(testName, premiseUri, conclusionUri, expectedEvaluation);
 	}
@@ -62,16 +62,16 @@ public abstract class AbstractPositiveEntailmentTest extends
 		List<Object> testCases = suite.getTestCase();
 
 		for (Object testCase : testCases) {
-			if (testCase instanceof PositiveEntailmentTest) {
-				PositiveEntailmentTest positiveTestCase = (PositiveEntailmentTest) testCase;
+			if (testCase instanceof NegativeEntailmentTest) {
+				NegativeEntailmentTest negativeTestCase = (NegativeEntailmentTest) testCase;
 
-				List<String> premiseUrls = positiveTestCase
+				List<String> premiseUrls = negativeTestCase
 						.getPremiseDocument().getNormative().getRemote();
-				List<String> conclusionUrls = positiveTestCase
-						.getConclusionDocument().getNormative().getRemote();
+				List<String> conclusionUrls = negativeTestCase
+						.getNonConclusionDocument().getNormative().getRemote();
 
 				if (premiseUrls.size() > 0 && conclusionUrls.size() > 0) {
-					String testName = positiveTestCase.getId();
+					String testName = negativeTestCase.getId();
 					URI premiseUrl = URI.create(premiseUrls.get(0));
 					URI conclusionUrl = URI.create(conclusionUrls.get(0));
 
