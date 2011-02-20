@@ -356,8 +356,8 @@ public class XmlSerializer extends XmlHandlerBase implements Serializer,
 		visitDescribable(constant);
 
 		elementStack.peek().setAttribute("type", constant.getType());
-		String language = null;
-		if (!(language = constant.getLanguage()).isEmpty())
+		String language = constant.getLanguage();
+		if (language != null && !language.isEmpty())
 			elementStack.peek().setAttribute("xml:lang", language);
 		elementStack.peek().setTextContent(constant.getText());
 
