@@ -15,7 +15,7 @@
  */
 package at.sti2.rif4j.importer;
 
-public class UnsupportedProfileException extends ImportException {
+public class UnsupportedProfileException extends DocumentImportException {
 
 	/**
 	 * Generated serial version UID.
