@@ -77,7 +77,8 @@ public class Group extends AbstractDescribable implements Describable {
 
 	/**
 	 * Returns the list of rules of this group. Note that the rules of the
-	 * groups contained in this group are not included in this list.
+	 * groups contained in this group are not included in this list. Never
+	 * returns <code>null</code>.
 	 * 
 	 * @return The rules of this group, excluding the rules of the groups
 	 *         contained in this group.
@@ -101,7 +102,8 @@ public class Group extends AbstractDescribable implements Describable {
 	}
 
 	/**
-	 * Returns the list of groups of this group.
+	 * Returns the list of groups of this group. Never returns <code>null</code>
+	 * .
 	 * 
 	 * @return The list of groups of this group.
 	 */
