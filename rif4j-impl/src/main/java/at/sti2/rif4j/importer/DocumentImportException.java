@@ -15,26 +15,26 @@
  */
 package at.sti2.rif4j.importer;
 
-public class ImportException extends Exception {
+public class DocumentImportException extends Exception {
 
 	/**
 	 * Generated serial version UID.
 	 */
 	private static final long serialVersionUID = -7025642229170910583L;
 
-	public ImportException() {
+	public DocumentImportException() {
 		super();
 	}
 
-	public ImportException(String message, Throwable cause) {
+	public DocumentImportException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public ImportException(String message) {
+	public DocumentImportException(String message) {
 		super(message);
 	}
 
-	public ImportException(Throwable cause) {
+	public DocumentImportException(Throwable cause) {
 		super(cause);
 	}
 

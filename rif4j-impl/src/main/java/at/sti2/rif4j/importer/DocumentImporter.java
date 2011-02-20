@@ -19,11 +19,16 @@ import java.net.URI;
 
 import at.sti2.rif4j.rule.Document;
 
+/**
+ * Imports a RIF-BLD document with a location and an optional profile.
+ * 
+ * @author Adrian Marte
+ */
 public interface DocumentImporter {
 
 	public boolean supports(URI profile);
 
-	public Document importDocument(URI uri, URI profile)
-			throws ImportException, UnsupportedProfileException;
+	public Document importDocument(URI location, URI profile)
+			throws DocumentImportException, UnsupportedProfileException;
 
 }

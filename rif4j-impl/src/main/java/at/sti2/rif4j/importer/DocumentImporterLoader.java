@@ -28,15 +28,15 @@ import java.util.Set;
  * 
  * @author Adrian Marte
  */
-public class ImporterLoader {
+public class DocumentImporterLoader {
 
 	private ServiceLoader<DocumentImporter> loader;
 
 	/**
-	 * Creates a new {@link ImporterLoader}, that loads the classes using it's
+	 * Creates a new {@link DocumentImporterLoader}, that loads the classes using it's
 	 * own {@link ClassLoader}.
 	 */
-	public ImporterLoader() {
+	public DocumentImporterLoader() {
 		loader = ServiceLoader.load(DocumentImporter.class, getClass()
 				.getClassLoader());
 	}
