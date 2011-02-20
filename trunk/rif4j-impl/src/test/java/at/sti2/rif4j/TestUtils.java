@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.sti2.rif4j.condition.Formula;
+import at.sti2.rif4j.manager.DocumentManager;
 import at.sti2.rif4j.parser.xml.XmlParser;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.Rule;
@@ -101,13 +102,14 @@ public class TestUtils {
 	}
 
 	public static Document parseDocument(String fileName) {
-		XmlParser parser = new XmlParser();
+//		XmlParser parser = new XmlParser();
+		DocumentManager manager = new DocumentManager();
 
 		Reader reader = getFileReader(fileName);
 		Document document = null;
 
 		try {
-			document = parser.parseDocument(reader);
+			document = manager.loadDocument(reader);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
