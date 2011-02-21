@@ -124,10 +124,19 @@ public class FormulaNormalizerTest {
 
 		// (a or (b and c)) and (d and e)
 		AndFormula andFormula3 = new AndFormula(formulas);
+		
+		formulas = new ArrayList<Formula>();
+		formulas.add(andFormula3);
+		formulas.add(e);
+		
+		// ((a or (b and c)) and (d and e)) or e
+		OrFormula orFormula2 = new OrFormula(formulas);
 
 		// Should result in the following DNF:
-		// (a and d and e) or (b and c and d and e)
-		Formula normalizedFormula = normalizer.normalize(andFormula3);
+		// (a and d and e) or (b and c and d and e) or e
+		Formula normalizedFormula = normalizer.normalize(orFormula2);
+		
+		System.out.println(normalizedFormula);
 
 		Assert.assertNotNull(normalizedFormula);
 		Assert.assertFalse(andFormula3.equals(normalizedFormula));
