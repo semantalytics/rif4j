@@ -31,6 +31,7 @@ import org.deri.iris.factory.Factory;
 import at.sti2.rif4j.condition.Argument;
 import at.sti2.rif4j.condition.Atom;
 import at.sti2.rif4j.condition.Expression;
+import at.sti2.rif4j.condition.ExternalExpression;
 import at.sti2.rif4j.translator.iris.mapper.RifToIrisBuiltinMapper;
 
 public class ExpressionFlattener {
@@ -73,22 +74,24 @@ public class ExpressionFlattener {
 		return Factory.TERM.createVariable("var" + uniqueVariableCounter);
 	}
 
-	public void flatten(Expression expression) {
+	public void flatten(ExternalExpression externalExpression) {
+		Expression expression = externalExpression.getExpression();
+
 		String operatorIri = expression.getOperator().getText().trim();
 		java.util.List<Argument> arguments = expression.getArguments();
 
-		flatten(operatorIri, arguments, true);
+		flatten(operatorIri, arguments, true, true);
 	}
 
 	public void flatten(Atom atom) {
 		String operatorIri = atom.getOperator().getText().trim();
 		java.util.List<Argument> arguments = atom.getArguments();
 
-		flatten(operatorIri, arguments, false);
+		flatten(operatorIri, arguments, false, false);
 	}
 
 	private void flatten(String operatorIri, List<Argument> arguments,
-			boolean isExpression) {
+			boolean isExpression, boolean isExternal) {
 		List<Argument> sortedArguments = sort(arguments);
 		java.util.List<ITerm> irisTerms = new ArrayList<ITerm>();
 
@@ -119,7 +122,7 @@ public class ExpressionFlattener {
 
 		IAtom atom = null;
 
-		if (isExpression) {
+		if (isExpression && isExternal) {
 			// Create a unique variable representing the result of the
 			// expression. As in IRIS the result is always at the last position,
 			// we put the variable at the end of the list of terms.
@@ -153,7 +156,7 @@ public class ExpressionFlattener {
 		return uniqueVariableCounter;
 	}
 
-	private static List<Argument> sort(List<Argument> arguments) {
+	public static List<Argument> sort(List<Argument> arguments) {
 		// Create a copy of the list.
 		List<Argument> newArguments = new ArrayList<Argument>(arguments);
 
