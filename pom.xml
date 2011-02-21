@@ -15,6 +15,7 @@
 		<module>rif4j-wsml</module>
 		<module>rif4j-iris</module>
 		<module>rif4j-rdf</module>
+		<module>rif4j-integration-test</module>
 	</modules>
 
 	<properties>

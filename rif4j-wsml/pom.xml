@@ -22,13 +22,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>at.sti2.rif4j</groupId>
-			<artifactId>rif4j-impl</artifactId>
-			<version>${project.version}</version>
-			<type>test-jar</type>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>net.sourceforge.wsml2reasoner</groupId>
 			<artifactId>wsml2reasoner-impl</artifactId>
 			<version>${wsml2reasoner.version}</version>
