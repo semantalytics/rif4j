@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import at.sti2.rif4j.importer.DocumentImporter;
-import at.sti2.rif4j.importer.ImportException;
+import at.sti2.rif4j.importer.DocumentImportException;
 
 public class RdfDocumentImporterTest {
 
@@ -36,7 +36,7 @@ public class RdfDocumentImporterTest {
 	}
 
 	@Test
-	public void testImportDocument() throws URISyntaxException, ImportException {
+	public void testImportDocument() throws URISyntaxException, DocumentImportException {
 		URL resource = RdfDocumentImporter.class.getClassLoader().getResource(
 				"RDF_example.rdf");
 		URI uri = resource.toURI();
