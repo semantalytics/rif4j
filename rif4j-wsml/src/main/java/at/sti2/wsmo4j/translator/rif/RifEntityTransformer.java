@@ -200,6 +200,7 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 		term = wsmlTerm;
 	}
 
+	// FIXME Expression translates to a functional symbol.
 	public void visit(Expression expression) {
 		String operatorIri = expression.getOperator().getText().trim();
 		String wsmlOperatorIri = builtinMapper.toWsmlBuiltin(operatorIri);
@@ -252,6 +253,7 @@ class RifEntityTransformer implements TermVisitor, ClauseVisitor,
 		}
 	}
 
+	// FIXME External expression translates to a built-in.
 	public void visit(ExternalExpression externalExpression) {
 		externalExpression.getExpression().accept(this);
 	}
