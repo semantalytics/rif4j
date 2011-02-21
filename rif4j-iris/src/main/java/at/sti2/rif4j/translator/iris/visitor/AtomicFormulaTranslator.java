@@ -49,7 +49,7 @@ public class AtomicFormulaTranslator implements AtomicFormulaVisitor {
 			.getLogger(AtomicFormulaTranslator.class);
 
 	public static IPredicate SUBCLASS_PREDICATE = Factory.BASIC
-			.createPredicate("RIF_SUB_CONCEPT_OF", 2);
+			.createPredicate("RIF_SUBCLASS_OF", 2);
 
 	public static IPredicate MEMBER_PREDICATE = Factory.BASIC.createPredicate(
 			"RIF_MEMBER_OF", 2);
