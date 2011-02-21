@@ -21,7 +21,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import at.sti2.rif4j.TestUtils;
 import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.rule.Document;
 
