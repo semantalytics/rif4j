@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import org.deri.iris.api.basics.ILiteral;
 import org.deri.iris.api.basics.ITuple;
 import org.deri.iris.api.terms.IConcreteTerm;
+import org.deri.iris.api.terms.IConstructedTerm;
 import org.deri.iris.api.terms.ITerm;
 import org.deri.iris.api.terms.IVariable;
 import org.deri.iris.api.terms.concrete.IList;
@@ -27,6 +28,7 @@ import org.deri.iris.factory.Factory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.sti2.rif4j.condition.Argument;
 import at.sti2.rif4j.condition.Constant;
 import at.sti2.rif4j.condition.Expression;
 import at.sti2.rif4j.condition.ExternalExpression;
@@ -93,16 +95,38 @@ public class TermTranslator implements TermVisitor {
 
 	@Override
 	public void visit(Expression expression) {
-		ExpressionFlattener flattener = new ExpressionFlattener();
-		flattener.flatten(expression);
+		String operatorIri = expression.getOperator().getText().trim();
 
-		terms.add(flattener.getVariable());
-		literals.addAll(flattener.getLiterals());
+		java.util.List<Argument> arguments = expression.getArguments();
+		java.util.List<Argument> sortedArguments = ExpressionFlattener
+				.sort(arguments);
+
+		java.util.List<ITerm> expressionTerms = new ArrayList<ITerm>();
+		java.util.List<ILiteral> expressionLiterals = new ArrayList<ILiteral>();
+
+		for (Argument argument : sortedArguments) {
+			TermTranslator translator = new TermTranslator();
+			argument.getValue().accept(translator);
+
+			expressionTerms.addAll(translator.getTerms());
+			expressionLiterals.addAll(translator.getLiterals());
+		}
+
+		// Create a constructed term (functional symbol) for the expression.
+		IConstructedTerm constructedTerm = Factory.TERM.createConstruct(
+				operatorIri, expressionTerms);
+
+		terms.add(constructedTerm);
+		literals.addAll(expressionLiterals);
 	}
 
 	@Override
 	public void visit(ExternalExpression externalExpression) {
-		externalExpression.getExpression().accept(this);
+		ExpressionFlattener flattener = new ExpressionFlattener();
+		flattener.flatten(externalExpression);
+
+		terms.add(flattener.getVariable());
+		literals.addAll(flattener.getLiterals());
 	}
 
 	@Override
