@@ -49,7 +49,7 @@ import at.sti2.rif4j.condition.MemberAtom;
 import at.sti2.rif4j.condition.SubclassAtom;
 import at.sti2.rif4j.condition.Term;
 import at.sti2.rif4j.importer.DocumentImporter;
-import at.sti2.rif4j.importer.ImportException;
+import at.sti2.rif4j.importer.DocumentImportException;
 import at.sti2.rif4j.importer.UnsupportedProfileException;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.Group;
@@ -77,7 +77,7 @@ public class RdfDocumentImporter implements DocumentImporter {
 	}
 
 	@Override
-	public Document importDocument(URI uri, URI profile) throws ImportException {
+	public Document importDocument(URI uri, URI profile) throws DocumentImportException {
 		if (profile == null) {
 			throw new UnsupportedProfileException(
 					"Default RIF profile is not supported");
@@ -94,9 +94,9 @@ public class RdfDocumentImporter implements DocumentImporter {
 			InputStream uriStream = uri.toURL().openStream();
 			model.readFrom(uriStream);
 		} catch (MalformedURLException e) {
-			throw new ImportException(e);
+			throw new DocumentImportException(e);
 		} catch (IOException e) {
-			throw new ImportException(e);
+			throw new DocumentImportException(e);
 		}
 
 		Group group = new Group();
