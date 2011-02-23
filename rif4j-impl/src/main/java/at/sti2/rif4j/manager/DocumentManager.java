@@ -108,8 +108,6 @@ public class DocumentManager {
 							Document importedDocument = importer
 									.importDocument(location, profile);
 
-							logger.debug(importedDocument.toString());
-
 							Group group = importedDocument.getGroup();
 
 							// If the imported document contains a group
@@ -136,7 +134,7 @@ public class DocumentManager {
 				}
 
 				if (!foundImporter && logger.isDebugEnabled()) {
-					logger.debug("Could not find document importer for "
+					logger.warn("Could not find document importer for "
 							+ location + " with profile " + profile);
 				}
 			} catch (IllegalArgumentException e) {
