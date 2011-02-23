@@ -48,8 +48,8 @@ import at.sti2.rif4j.condition.Frame;
 import at.sti2.rif4j.condition.MemberAtom;
 import at.sti2.rif4j.condition.SubclassAtom;
 import at.sti2.rif4j.condition.Term;
-import at.sti2.rif4j.importer.DocumentImporter;
 import at.sti2.rif4j.importer.DocumentImportException;
+import at.sti2.rif4j.importer.DocumentImporter;
 import at.sti2.rif4j.importer.UnsupportedProfileException;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.Group;
@@ -77,7 +77,8 @@ public class RdfDocumentImporter implements DocumentImporter {
 	}
 
 	@Override
-	public Document importDocument(URI uri, URI profile) throws DocumentImportException {
+	public Document importDocument(URI uri, URI profile)
+			throws DocumentImportException {
 		if (profile == null) {
 			throw new UnsupportedProfileException(
 					"Default RIF profile is not supported");
@@ -130,7 +131,7 @@ public class RdfDocumentImporter implements DocumentImporter {
 				subject.toString());
 		Constant name = new Constant(RifDatatype.IRI.toString(), null,
 				predicate.toString());
-		Term value = toTerm(object);
+		Term value = toTerm(object, profile);
 
 		AtomicFormula atomicFormula = null;
 
@@ -160,7 +161,7 @@ public class RdfDocumentImporter implements DocumentImporter {
 		return atomicFormula;
 	}
 
-	private Term toTerm(Node node) {
+	private Term toTerm(Node node, URI profile) {
 		// FIXME Handle blank nodes correctly.
 		if (node instanceof BlankNode) {
 			// return new at.sti2.rif4j.condition.Variable("X");
@@ -169,6 +170,10 @@ public class RdfDocumentImporter implements DocumentImporter {
 		String language = null;
 		String text = node.toString();
 		String type = null;
+
+		if (node instanceof org.ontoware.rdf2go.model.node.URI) {
+			return new Constant(RifDatatype.IRI.toString(), null, text);
+		}
 
 		if (node instanceof LanguageTagLiteral) {
 			LanguageTagLiteral literal = (LanguageTagLiteral) node;
