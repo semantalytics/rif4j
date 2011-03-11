@@ -39,6 +39,8 @@ public abstract class AbstractLocalNegativeEntailmentTest extends
 	private static final String NONCONCLUSION_SUFFIX = "-nonconclusion";
 
 	private static final String FILE_EXTENSION = ".rif";
+	
+	public static String SINGLE_TEST = null;
 
 	public AbstractLocalNegativeEntailmentTest(String testName, URI premiseUri,
 			URI conclusionUri, boolean expectedEvaluation) {
@@ -64,6 +66,10 @@ public abstract class AbstractLocalNegativeEntailmentTest extends
 			String testCaseName = testCaseDirectory.getName();
 
 			if (testCaseName.startsWith(".")) {
+				continue;
+			}
+			
+			if (SINGLE_TEST != null && !testCaseName.equals(SINGLE_TEST)) {
 				continue;
 			}
 
