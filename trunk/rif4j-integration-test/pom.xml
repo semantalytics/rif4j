@@ -24,6 +24,11 @@
 		</dependency>
 		<dependency>
 			<groupId>at.sti2.rif4j</groupId>
+			<artifactId>rif4j-iris-rdb</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>at.sti2.rif4j</groupId>
 			<artifactId>rif4j-rdf</artifactId>
 			<version>${project.version}</version>
 			<exclusions>
