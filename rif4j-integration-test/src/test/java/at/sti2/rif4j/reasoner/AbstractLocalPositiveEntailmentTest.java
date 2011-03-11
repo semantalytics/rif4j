@@ -40,6 +40,8 @@ public abstract class AbstractLocalPositiveEntailmentTest extends
 
 	private static final String FILE_EXTENSION = ".rif";
 
+	public static String SINGLE_TEST = null;
+
 	public AbstractLocalPositiveEntailmentTest(String testName, URI premiseUri,
 			URI conclusionUri, boolean expectedEvaluation) {
 		super(testName, premiseUri, conclusionUri, expectedEvaluation);
@@ -67,6 +69,10 @@ public abstract class AbstractLocalPositiveEntailmentTest extends
 				continue;
 			}
 
+			if (SINGLE_TEST != null && !testCaseName.equals(SINGLE_TEST)) {
+				continue;
+			}
+
 			String premiseFileName = testCaseName + PREMISE_SUFFIX
 					+ FILE_EXTENSION;
 			String premisePath = directory + "/" + testCaseName + "/"
@@ -85,4 +91,5 @@ public abstract class AbstractLocalPositiveEntailmentTest extends
 
 		return data;
 	}
+
 }
