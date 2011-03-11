@@ -8,6 +8,7 @@
 
   <And  xmlns="&rif;">
     <formula>
+	<External><content>
       <Atom>
         <op>
           <Const type="&rif;iri">http://www.w3.org/2007/rif-builtin-predicate#iri-string</Const>
@@ -17,8 +18,10 @@
             <Const type="&xs;string">http://example.org/example#a</Const>
           </args>
       </Atom>
+	  </content></External>
     </formula>
     <formula>
+	<External><content>
       <Atom>
         <op>
           <Const type="&rif;iri">http://www.w3.org/2007/rif-builtin-predicate#iri-string</Const>
@@ -28,6 +31,7 @@
             <Const type="&xs;string">http://example.org/example#a</Const>
           </args>
       </Atom>
+	  </content></External>
     </formula>
   </And>
 <!--XML document generated on Sun Nov 07 10:38:00 EST 2010-->

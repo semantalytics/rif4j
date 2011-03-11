@@ -5,8 +5,9 @@
   <!ENTITY xs   "http://www.w3.org/2001/XMLSchema#">
   <!ENTITY rdf  "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 ]>
-
-  <Atom  xmlns="&rif;">
+ <External xmlns="&rif;">
+                     <content>
+  <Atom  >
     <op>
       <Const type="&rif;iri">http://www.w3.org/2007/rif-builtin-predicate#iri-string</Const>
     </op>
@@ -15,4 +16,6 @@
         <Const type="&rif;iri">http://example.org/example#a</Const>
       </args>
   </Atom>
+  </content>
+  </External>
 <!--XML document generated on Sun Nov 07 10:37:56 EST 2010-->
