@@ -24,6 +24,7 @@ import org.deri.iris.api.basics.IAtom;
 import org.deri.iris.api.basics.ILiteral;
 import org.deri.iris.api.basics.IPredicate;
 import org.deri.iris.api.basics.ITuple;
+import org.deri.iris.api.terms.IConstructedTerm;
 import org.deri.iris.api.terms.ITerm;
 import org.deri.iris.api.terms.IVariable;
 import org.deri.iris.factory.Factory;
@@ -32,13 +33,15 @@ import at.sti2.rif4j.condition.Argument;
 import at.sti2.rif4j.condition.Atom;
 import at.sti2.rif4j.condition.Expression;
 import at.sti2.rif4j.condition.ExternalExpression;
+import at.sti2.rif4j.condition.ExternalFormula;
 import at.sti2.rif4j.translator.iris.mapper.RifToIrisBuiltinMapper;
 
 public class ExpressionFlattener {
 
 	private static int uniqueVariableCounter = 0;
 
-	private IVariable variable;
+	/** Is either a variable or a constructed term. */
+	private ITerm term;
 
 	private java.util.List<ILiteral> literals;
 
@@ -47,21 +50,23 @@ public class ExpressionFlattener {
 	}
 
 	private void reset() {
-		variable = null;
+		term = null;
 		literals = new ArrayList<ILiteral>();
 	}
 
 	/**
-	 * Returns the variable representing the result of an expression. If the
-	 * flattened entity is not an expression and no new variable was created,
-	 * this method returns <code>null</code>
+	 * Returns either the variable representing the result of an external
+	 * expression or a constructed term in the case of a non-external
+	 * expression. If the flattened entity is not an expression and no new
+	 * variable was created, this method returns <code>null</code>
 	 * 
-	 * @return The variable representing the result of an expression. If the
-	 *         flattened entity is not an expression and no new variable was
+	 * @return The variable representing the result of an external expression or
+	 *         a constructed term in the case of a non-external expression. If
+	 *         the flattened entity is not an expression and no new variable was
 	 *         created, this method returns <code>null</code>
 	 */
-	public IVariable getVariable() {
-		return variable;
+	public ITerm getTerm() {
+		return term;
 	}
 
 	public java.util.List<ILiteral> getLiterals() {
@@ -74,6 +79,13 @@ public class ExpressionFlattener {
 		return Factory.TERM.createVariable("var" + uniqueVariableCounter);
 	}
 
+	public void flatten(Expression expression) {
+		String operatorIri = expression.getOperator().getText().trim();
+		java.util.List<Argument> arguments = expression.getArguments();
+
+		flatten(operatorIri, arguments, true, false);
+	}
+
 	public void flatten(ExternalExpression externalExpression) {
 		Expression expression = externalExpression.getExpression();
 
@@ -81,6 +93,14 @@ public class ExpressionFlattener {
 		java.util.List<Argument> arguments = expression.getArguments();
 
 		flatten(operatorIri, arguments, true, true);
+	}
+
+	public void flatten(ExternalFormula externalFormula) {
+		Atom atom = externalFormula.getAtom();
+		String operatorIri = atom.getOperator().getText().trim();
+		java.util.List<Argument> arguments = atom.getArguments();
+
+		flatten(operatorIri, arguments, false, true);
 	}
 
 	public void flatten(Atom atom) {
@@ -111,16 +131,9 @@ public class ExpressionFlattener {
 			// the name and only use the value.
 			argument.getValue().accept(termTranslator);
 
-			if (termTranslator.getTerms() != null) {
-				irisTerms.addAll(termTranslator.getTerms());
-			}
-
-			if (termTranslator.getLiterals() != null) {
-				irisLiterals.addAll(termTranslator.getLiterals());
-			}
+			irisTerms.addAll(termTranslator.getTerms());
+			irisLiterals.addAll(termTranslator.getLiterals());
 		}
-
-		IAtom atom = null;
 
 		if (isExpression && isExternal) {
 			// Create a unique variable representing the result of the
@@ -130,25 +143,37 @@ public class ExpressionFlattener {
 			irisTerms.add(variable);
 
 			// Store the variable in a field, so that I can later be retrieved.
-			this.variable = variable;
+			this.term = variable;
 		}
 
+		IAtom atom = null;
 		ITerm[] terms = TermTranslator.toArray(irisTerms);
-		atom = RifToIrisBuiltinMapper.toIrisBuiltin(operatorIri, terms);
 
-		// Create an ordinary atom if this is not a mappable built-in or if it
-		// is not an expression.
-		if (atom == null) {
+		if (isExternal) {
+			atom = RifToIrisBuiltinMapper.toIrisBuiltin(operatorIri, terms);
+		}
+		
+		if (atom != null) {
+			ILiteral literal = Factory.BASIC.createLiteral(true, atom);
+			irisLiterals.add(literal);
+		} else if (isExpression && !isExternal) {
+			// Create a constructed term (functional symbol) for the
+			// non-external expression.
+			IConstructedTerm constructedTerm = Factory.TERM.createConstruct(
+					operatorIri, irisTerms);
+			this.term = constructedTerm;
+		} else if (atom == null) {
+			// Create an ordinary atom if this is not a mappable built-in or if
+			// it is not an expression.
 			IPredicate predicate = Factory.BASIC.createPredicate(operatorIri,
 					irisTerms.size());
 			ITuple tuple = TermTranslator.toTuple(irisTerms);
 
 			atom = Factory.BASIC.createAtom(predicate, tuple);
+			ILiteral literal = Factory.BASIC.createLiteral(true, atom);
+			irisLiterals.add(literal);
 		}
 
-		ILiteral literal = Factory.BASIC.createLiteral(true, atom);
-
-		this.literals.add(literal);
 		this.literals.addAll(irisLiterals);
 	}
 
