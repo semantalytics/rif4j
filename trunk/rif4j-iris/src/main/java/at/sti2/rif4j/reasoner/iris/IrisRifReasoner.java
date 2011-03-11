@@ -27,7 +27,6 @@ import org.deri.iris.api.IKnowledgeBase;
 import org.deri.iris.api.basics.IPredicate;
 import org.deri.iris.api.basics.IQuery;
 import org.deri.iris.api.basics.IRule;
-import org.deri.iris.evaluation.wellfounded.WellFoundedEvaluationStrategyFactory;
 import org.deri.iris.rules.safety.AugmentingRuleSafetyProcessor;
 import org.deri.iris.storage.IRelation;
 import org.slf4j.Logger;
@@ -35,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.reasoner.AbstractReasoner;
+import at.sti2.rif4j.reasoner.ReasoningException;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.translator.iris.RifToIrisTranslator;
 import at.sti2.rif4j.translator.iris.visitor.AtomicFormulaTranslator;
@@ -68,19 +68,30 @@ public class IrisRifReasoner extends AbstractReasoner {
 	}
 
 	@Override
-	public boolean entails(Formula query) {
+	public boolean entails(Formula query) throws ReasoningException {
+		if (logger.isDebugEnabled()) {
+			for (IRule rule : rules) {
+				logger.debug(rule.toString());
+			}
+			
+			logger.debug(facts.toString());
+		}
+		
 		try {
 			createKnowledgeBase();
 		} catch (EvaluationException e) {
 			logger.error("Failed to evaluate knowledge base", e);
-			return false;
+			throw new ReasoningException(e);
 		}
 
 		try {
 			List<IQuery> irisQueries = toQueries(query);
 
 			for (IQuery irisQuery : irisQueries) {
+				logger.debug(irisQuery.toString());
+				
 				IRelation relation = knowledgeBase.execute(irisQuery);
+				logger.debug(relation.toString());
 
 				if (relation.size() == 0) {
 					return false;
@@ -90,6 +101,7 @@ public class IrisRifReasoner extends AbstractReasoner {
 			}
 		} catch (EvaluationException e) {
 			logger.error("Error evaluating knowledge base", e);
+			throw new ReasoningException(e);
 		}
 
 		return false;
@@ -117,8 +129,7 @@ public class IrisRifReasoner extends AbstractReasoner {
 		Configuration configuration = KnowledgeBaseFactory
 				.getDefaultConfiguration();
 
-		// Use well-founded evaluation.
-		configuration.evaluationStrategyFactory = new WellFoundedEvaluationStrategyFactory();
+		// Use an augmenting rule safety processor.
 		configuration.ruleSafetyProcessor = new AugmentingRuleSafetyProcessor();
 
 		IKnowledgeBase knowledgeBase = KnowledgeBaseFactory
