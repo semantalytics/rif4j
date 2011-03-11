@@ -21,6 +21,7 @@ import java.util.List;
 import at.sti2.rif4j.AbstractDescribable;
 import at.sti2.rif4j.Assertions;
 import at.sti2.rif4j.condition.Constant;
+import at.sti2.rif4j.importer.Profile;
 import at.sti2.rif4j.serializer.presentation.PresentationSerializer;
 
 /**
@@ -65,7 +66,7 @@ public class Document extends AbstractDescribable {
 	}
 
 	public void setImports(List<Import> imports) {
-		Assertions.notNull("prefixes", prefixes);
+		Assertions.notNull("imports", imports);
 
 		this.imports = imports;
 	}
@@ -87,6 +88,37 @@ public class Document extends AbstractDescribable {
 	 */
 	public void setGroup(Group group) {
 		this.group = group;
+	}
+
+	/**
+	 * <p>
+	 * Returns the profile of the document, where the profile is either
+	 * <code>null</code> for a RIF-BLD document, or the highest profile of
+	 * imported documents, where the order of the profiles is as follows.
+	 * </p>
+	 * <p>
+	 * Simple &lt; RDF &lt; RDFS &lt; D &lt; OWL RDF-Based
+	 * </p>
+	 * 
+	 * @return Returns the profile of the document.
+	 */
+	public Profile getProfile() {
+		Profile profile = null;
+
+		for (Import imprt : imports) {
+			if (imprt.getProfile() != null) {
+				Profile imprtProfile = Profile.forUri(imprt.getProfile());
+
+				if (imprtProfile != null) {
+					if (profile == null
+							|| (imprtProfile.ordinal() > profile.ordinal())) {
+						profile = imprtProfile;
+					}
+				}
+			}
+		}
+
+		return profile;
 	}
 
 	public void accept(DocumentVisitor visitor) {
