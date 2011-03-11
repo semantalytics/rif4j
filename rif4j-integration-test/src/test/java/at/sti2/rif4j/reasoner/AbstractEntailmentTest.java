@@ -61,7 +61,7 @@ public abstract class AbstractEntailmentTest {
 	}
 
 	@Test
-	public void testEntailment() throws FileNotFoundException {
+	public void testEntailment() throws FileNotFoundException, ReasoningException {
 		logger.debug("Testing entailment of " + testName);
 
 		Document document = TestUtils.parseDocument(premiseUri.toString());
