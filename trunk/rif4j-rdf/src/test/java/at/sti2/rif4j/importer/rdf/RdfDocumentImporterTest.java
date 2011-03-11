@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import at.sti2.rif4j.importer.DocumentImporter;
 import at.sti2.rif4j.importer.DocumentImportException;
+import at.sti2.rif4j.importer.Profile;
 
 public class RdfDocumentImporterTest {
 
@@ -43,14 +44,14 @@ public class RdfDocumentImporterTest {
 
 		// If there is no error, we assume the import works correctly.
 		// FIXME Implement a real test.
-		importer.importDocument(uri, RdfDocumentImporter.RDFS_PROFILE);
+		importer.importDocument(uri, Profile.RDFS.toUri());
 	}
 
 	@Test
 	public void testSupports() {
-		Assert.assertTrue(importer.supports(RdfDocumentImporter.SIMPLE_PROFILE));
-		Assert.assertTrue(importer.supports(RdfDocumentImporter.RDF_PROFILE));
-		Assert.assertTrue(importer.supports(RdfDocumentImporter.RDFS_PROFILE));
+		Assert.assertTrue(importer.supports(Profile.SIMPLE.toUri()));
+		Assert.assertTrue(importer.supports(Profile.RDF.toUri()));
+		Assert.assertTrue(importer.supports(Profile.RDFS.toUri()));
 	}
 
 }

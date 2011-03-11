@@ -50,6 +50,7 @@ import at.sti2.rif4j.condition.SubclassAtom;
 import at.sti2.rif4j.condition.Term;
 import at.sti2.rif4j.importer.DocumentImportException;
 import at.sti2.rif4j.importer.DocumentImporter;
+import at.sti2.rif4j.importer.Profile;
 import at.sti2.rif4j.importer.UnsupportedProfileException;
 import at.sti2.rif4j.rule.Document;
 import at.sti2.rif4j.rule.Group;
@@ -59,21 +60,12 @@ public class RdfDocumentImporter implements DocumentImporter {
 
 	private static final Set<URI> PROFILES;
 
-	public static final URI RDFS_PROFILE = URI
-			.create("http://www.w3.org/2007/rif-import-profile#RDFS");
-
-	public static final URI RDF_PROFILE = URI
-			.create("http://www.w3.org/2007/rif-import-profile#RDF");
-
-	public static final URI SIMPLE_PROFILE = URI
-			.create("http://www.w3.org/ns/entailment/Simple");
-
 	static {
 		PROFILES = new HashSet<URI>();
 
-		PROFILES.add(SIMPLE_PROFILE);
-		PROFILES.add(RDF_PROFILE);
-		PROFILES.add(RDFS_PROFILE);
+		PROFILES.add(Profile.SIMPLE.toUri());
+		PROFILES.add(Profile.RDF.toUri());
+		PROFILES.add(Profile.RDFS.toUri());
 	}
 
 	@Override
@@ -135,7 +127,7 @@ public class RdfDocumentImporter implements DocumentImporter {
 
 		AtomicFormula atomicFormula = null;
 
-		if (profile.equals(RDFS_PROFILE)) {
+		if (profile.equals(Profile.RDFS.toUri())) {
 			if (predicate.equals(RDF.type)) {
 				atomicFormula = new MemberAtom(instance, value);
 			} else if (predicate.equals(RDFS.subClassOf)) {
