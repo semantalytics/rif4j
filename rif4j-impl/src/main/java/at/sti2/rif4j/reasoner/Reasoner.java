@@ -22,16 +22,9 @@ import at.sti2.rif4j.rule.Rule;
 
 /**
  * <p>
- * A {@link Reasoner} is a RIF-BLD reasoner, which is able to check if a
- * RIF-BLD rule (or document or group) entails another rule (or document or
- * group).
- * </p>
- * <p>
- * We now define what it means for a set of RIF-BLD rules (embedded in a group
- * or a document formula) to entail another RIF-BLD formula. In RIF-BLD we are
- * mostly interested in entailment of RIF condition formulas, which can be
- * viewed as queries to RIF-BLD groups or documents. Entailment of condition
- * formulas provides formal underpinning to RIF-BLD queries.
+ * A {@link Reasoner} is a RIF-BLD reasoner, which is able to check if a RIF-BLD
+ * formula entails another formula. Logical entailment in RIF-BLD is defined as
+ * follows.
  * </p>
  * <p>
  * <b>Definition (Models).</b> A multi-structure Î is a model of a formula, φ,
@@ -49,13 +42,21 @@ import at.sti2.rif4j.rule.Rule;
  *      >http://www.w3.org/2005/rules/wiki/BLD#sec-logical-entailment</a>
  */
 public interface Reasoner {
-	
-	public void register(Document document);
-	
-	public void register(Group group);
-	
-	public void register(Rule rule);
 
-	public boolean entails(Formula formula);
+	public void register(Document document) throws ReasoningException;
+
+	public void register(Group group) throws ReasoningException;
+
+	public void register(Rule rule) throws ReasoningException;
+
+	/**
+	 * Returns <code>true</code> if the registered formulas entail the specified
+	 * formula, <code>false</code> otherwise.
+	 * 
+	 * @param formula
+	 * @return
+	 * @throws ReasoningException
+	 */
+	public boolean entails(Formula formula) throws ReasoningException;
 
 }

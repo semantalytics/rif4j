@@ -32,13 +32,13 @@ import at.sti2.rif4j.rule.Rule;
 public abstract class AbstractReasoner implements Reasoner {
 
 	@Override
-	public void register(Group group) {
+	public void register(Group group) throws ReasoningException {
 		Document document = toDocument(group);
 		register(document);
 	}
 
 	@Override
-	public void register(Rule rule) {
+	public void register(Rule rule) throws ReasoningException {
 		Document document = toDocument(rule);
 		register(document);
 	}
