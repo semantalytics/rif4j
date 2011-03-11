@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import at.sti2.rif4j.TestUtils;
 import at.sti2.rif4j.condition.Formula;
+import at.sti2.rif4j.reasoner.ReasoningException;
 import at.sti2.rif4j.rule.Document;
 
 /**
@@ -40,7 +41,7 @@ public class IrisRifReasonerIT {
 	}
 
 	@Test
-	public void testClassMembership() {
+	public void testClassMembership() throws ReasoningException {
 		Document document = TestUtils.parseDocument(CLASS_MEMBERSHIPT_PREFIX
 				+ "-premise.rif");
 		Formula formula = TestUtils.parseFormula(CLASS_MEMBERSHIPT_PREFIX
