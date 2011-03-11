@@ -60,10 +60,11 @@ public class FormulaTranslator implements FormulaVisitor {
 
 	@Override
 	public void visit(ExternalFormula externalFormula) {
-		AtomicFormulaTranslator atomicFormulaTranslator = new AtomicFormulaTranslator();
-		externalFormula.getAtom().accept(atomicFormulaTranslator);
+		// This is an externally defined predicate.
+		ExpressionFlattener flattener = new ExpressionFlattener();
+		flattener.flatten(externalFormula);
 
-		literals.addAll(atomicFormulaTranslator.getLiterals());
+		literals.addAll(flattener.getLiterals());
 
 		IQuery query = Factory.BASIC.createQuery(literals);
 		queries.add(query);
