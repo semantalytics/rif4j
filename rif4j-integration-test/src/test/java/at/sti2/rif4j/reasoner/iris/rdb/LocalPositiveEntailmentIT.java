@@ -2,6 +2,8 @@ package at.sti2.rif4j.reasoner.iris.rdb;
 
 import java.net.URI;
 
+import org.junit.After;
+
 import at.sti2.rif4j.reasoner.AbstractLocalPositiveEntailmentTest;
 import at.sti2.rif4j.reasoner.Reasoner;
 import at.sti2.rif4j.reasoner.ReasonerFactory;
@@ -19,6 +21,15 @@ public class LocalPositiveEntailmentIT extends
 	@Override
 	protected Reasoner createReasoner() {
 		return factory.createReasoner();
+	}
+	
+	@After
+	public void tearDown() {
+		Reasoner reasoner = getReasoner();
+		
+		if (reasoner instanceof IrisRdbRifReasoner) {
+			((IrisRdbRifReasoner) reasoner).dispose();
+		}
 	}
 
 }
