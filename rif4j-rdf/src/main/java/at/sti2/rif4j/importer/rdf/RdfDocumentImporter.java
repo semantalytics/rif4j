@@ -127,7 +127,9 @@ public class RdfDocumentImporter implements DocumentImporter {
 
 		AtomicFormula atomicFormula = null;
 
-		if (profile.equals(Profile.RDFS.toUri())) {
+		Profile rdfProfile = Profile.forUri(profile.toString());
+		
+		if (rdfProfile != null) {
 			if (predicate.equals(RDF.type)) {
 				atomicFormula = new MemberAtom(instance, value);
 			} else if (predicate.equals(RDFS.subClassOf)) {
