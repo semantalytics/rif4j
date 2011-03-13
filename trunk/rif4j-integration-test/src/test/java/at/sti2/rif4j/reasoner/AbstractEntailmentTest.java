@@ -61,7 +61,8 @@ public abstract class AbstractEntailmentTest {
 	}
 
 	@Test
-	public void testEntailment() throws FileNotFoundException, ReasoningException {
+	public void testEntailment() throws FileNotFoundException,
+			ReasoningException {
 		logger.debug("Testing entailment of " + testName);
 
 		Document document = TestUtils.parseDocument(premiseUri.toString());
@@ -75,5 +76,9 @@ public abstract class AbstractEntailmentTest {
 	}
 
 	protected abstract Reasoner createReasoner();
+
+	protected Reasoner getReasoner() {
+		return reasoner;
+	}
 
 }
