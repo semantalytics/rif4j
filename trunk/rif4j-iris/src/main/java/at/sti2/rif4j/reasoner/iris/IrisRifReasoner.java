@@ -33,9 +33,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.sti2.rif4j.condition.Formula;
+import at.sti2.rif4j.importer.Profile;
+import at.sti2.rif4j.manager.DocumentManager;
 import at.sti2.rif4j.reasoner.AbstractReasoner;
 import at.sti2.rif4j.reasoner.ReasoningException;
 import at.sti2.rif4j.rule.Document;
+import at.sti2.rif4j.translator.iris.RdfQueryTransformer;
 import at.sti2.rif4j.translator.iris.RifToIrisTranslator;
 import at.sti2.rif4j.translator.iris.visitor.AtomicFormulaTranslator;
 import at.sti2.rif4j.translator.iris.visitor.RuleTranslator;
@@ -45,8 +48,9 @@ import at.sti2.rif4j.translator.iris.visitor.RuleTranslator;
  */
 public class IrisRifReasoner extends AbstractReasoner {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(IrisRifReasoner.class);
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+	private Profile highestProfile;
 
 	private boolean hasChanged = true;
 
@@ -58,6 +62,14 @@ public class IrisRifReasoner extends AbstractReasoner {
 
 	@Override
 	public void register(Document document) {
+		if (document.getProfile() != null) {
+			if (highestProfile == null
+					|| highestProfile.ordinal() < document.getProfile()
+							.ordinal()) {
+				highestProfile = document.getProfile();
+			}
+		}
+
 		RifToIrisTranslator translator = new RifToIrisTranslator();
 		translator.translate(document);
 
@@ -73,10 +85,10 @@ public class IrisRifReasoner extends AbstractReasoner {
 			for (IRule rule : rules) {
 				logger.debug(rule.toString());
 			}
-			
+
 			logger.debug(facts.toString());
 		}
-		
+
 		try {
 			createKnowledgeBase();
 		} catch (EvaluationException e) {
@@ -85,11 +97,29 @@ public class IrisRifReasoner extends AbstractReasoner {
 		}
 
 		try {
-			List<IQuery> irisQueries = toQueries(query);
+			Formula rewrittenQuery = query;
+
+			// If the document manager supports the RDF profiles, we rewrite the
+			// query to match the imported frames.
+			if (highestProfile != null
+					&& (DocumentManager.supports(Profile.SIMPLE.toUri())
+							|| DocumentManager.supports(Profile.RDF.toUri()) || DocumentManager
+							.supports(Profile.RDFS.toUri()))) {
+				RdfQueryTransformer transformer = new RdfQueryTransformer();
+				query.accept(transformer);
+
+				if (transformer.getFormula() != null) {
+					rewrittenQuery = transformer.getFormula();
+					logger.debug("Rewritten RIF-BLD query to:\n"
+							+ rewrittenQuery);
+				}
+			}
+
+			List<IQuery> irisQueries = toQueries(rewrittenQuery);
 
 			for (IQuery irisQuery : irisQueries) {
 				logger.debug(irisQuery.toString());
-				
+
 				IRelation relation = knowledgeBase.execute(irisQuery);
 				logger.debug(relation.toString());
 
