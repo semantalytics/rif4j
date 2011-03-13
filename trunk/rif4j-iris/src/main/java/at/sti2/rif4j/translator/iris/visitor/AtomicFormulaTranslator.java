@@ -96,16 +96,24 @@ public class AtomicFormulaTranslator implements AtomicFormulaVisitor {
 				body);
 		metaLevelRules.add(rule);
 
-		// memberOf(a,y) :- memberOf(a,x), subClassOf(y,x).
+		// memberOf(a,y) :- memberOf(a,x), subClassOf(x,y).
 		headTuple = Factory.BASIC.createTuple(a, y);
 		head = Factory.BASIC.createLiteral(true, MEMBER_PREDICATE, headTuple);
 
 		bodyTuple1 = Factory.BASIC.createTuple(a, x);
 		body1 = Factory.BASIC.createLiteral(true, MEMBER_PREDICATE, bodyTuple1);
 
-		bodyTuple2 = Factory.BASIC.createTuple(y, x);
+		bodyTuple2 = Factory.BASIC.createTuple(x, y);
 		body2 = Factory.BASIC.createLiteral(true, SUBCLASS_PREDICATE,
 				bodyTuple2);
+		
+		body = new ArrayList<ILiteral>();
+		body.add(body1);
+		body.add(body2);
+		
+		rule = Factory.BASIC.createRule(Collections.singletonList(head),
+				body);
+		metaLevelRules.add(rule);
 	}
 
 	public void reset() {
