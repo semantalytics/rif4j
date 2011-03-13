@@ -82,7 +82,7 @@ public class RuleTranslator implements RuleVisitor {
 	public void visit(ForallFormula forallFormula) {
 		// We can ignore the variable definition.
 
-		ClauseTranslator clauseTranslator = new ClauseTranslator();
+		ClauseTranslator clauseTranslator = new ClauseTranslator(true);
 		forallFormula.getClause().accept(clauseTranslator);
 
 		rules.addAll(clauseTranslator.getRules());
