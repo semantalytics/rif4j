@@ -16,6 +16,7 @@
 package at.sti2.rif4j.translator.iris.visitor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,14 @@ public class ClauseTranslator implements ClauseVisitor {
 
 	private IFacts factsFactory;
 
+	private final boolean universallyQuantified;
+
 	public ClauseTranslator() {
+		this(false);
+	}
+
+	public ClauseTranslator(boolean universallyQuantified) {
+		this.universallyQuantified = universallyQuantified;
 		reset();
 	}
 
@@ -117,8 +125,14 @@ public class ClauseTranslator implements ClauseVisitor {
 
 		List<ILiteral> literals = atomicFormulatTranslator.getLiterals();
 
+		if (universallyQuantified) {
+			// FIXME What about (Forall ?X (foo(?X)))
+			IRule rule = Factory.BASIC.createRule(literals,
+					new ArrayList<ILiteral>());
+			rules.add(rule);
+		}
 		// Only add facts.
-		if (literals.size() == 1) {
+		else if (literals.size() == 1) {
 			ILiteral literal = literals.get(0);
 			IPredicate predicate = literal.getAtom().getPredicate();
 			ITuple tuple = literal.getAtom().getTuple();
