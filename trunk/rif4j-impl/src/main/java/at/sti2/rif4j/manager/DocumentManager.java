@@ -18,8 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import at.sti2.rif4j.importer.DocumentImporter;
 import at.sti2.rif4j.importer.DocumentImportException;
+import at.sti2.rif4j.importer.DocumentImporter;
 import at.sti2.rif4j.importer.DocumentImporterLoader;
 import at.sti2.rif4j.importer.UnsupportedProfileException;
 import at.sti2.rif4j.parser.xml.XmlParser;
@@ -43,6 +43,21 @@ public class DocumentManager {
 	static {
 		DocumentImporterLoader loader = new DocumentImporterLoader();
 		importers = loader.loadAll();
+	}
+
+	public static boolean supports(URI profile) {
+		// null represents the default RIF-BLD profile.
+		if (profile == null) {
+			return true;
+		}
+		
+		for (DocumentImporter importer : importers) {
+			if (importer.supports(profile)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public Document loadDocument(URI uri) throws DocumentLoadingException {
