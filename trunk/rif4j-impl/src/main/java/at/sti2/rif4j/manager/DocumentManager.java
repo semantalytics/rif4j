@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import at.sti2.rif4j.condition.Formula;
 import at.sti2.rif4j.importer.DocumentImportException;
 import at.sti2.rif4j.importer.DocumentImporter;
 import at.sti2.rif4j.importer.DocumentImporterLoader;
@@ -50,7 +51,7 @@ public class DocumentManager {
 		if (profile == null) {
 			return true;
 		}
-		
+
 		for (DocumentImporter importer : importers) {
 			if (importer.supports(profile)) {
 				return true;
@@ -58,6 +59,24 @@ public class DocumentManager {
 		}
 
 		return false;
+	}
+
+	public Formula loadFormula(URI uri) throws DocumentLoadingException {
+		try {
+			InputStreamReader reader = new InputStreamReader(uri.toURL()
+					.openStream());
+
+			XmlParser parser = new XmlParser(true);
+			return parser.parseFormula(reader);
+		} catch (MalformedURLException e) {
+			throw new DocumentLoadingException(e);
+		} catch (IOException e) {
+			throw new DocumentLoadingException(e);
+		} catch (ParserConfigurationException e) {
+			throw new DocumentLoadingException(e);
+		} catch (SAXException e) {
+			throw new DocumentLoadingException(e);
+		}
 	}
 
 	public Document loadDocument(URI uri) throws DocumentLoadingException {
