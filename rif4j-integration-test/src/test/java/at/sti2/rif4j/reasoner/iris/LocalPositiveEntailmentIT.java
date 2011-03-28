@@ -2,10 +2,13 @@ package at.sti2.rif4j.reasoner.iris;
 
 import java.net.URI;
 
+import org.junit.Ignore;
+
 import at.sti2.rif4j.reasoner.AbstractLocalPositiveEntailmentTest;
 import at.sti2.rif4j.reasoner.Reasoner;
 import at.sti2.rif4j.reasoner.ReasonerFactory;
 
+@Ignore
 public class LocalPositiveEntailmentIT extends
 		AbstractLocalPositiveEntailmentTest {
 
