@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>at.sti2.iris</groupId>
 			<artifactId>iris-rdb</artifactId>
-			<version>0.8.1-SNAPSHOT</version>
+			<version>0.8.1</version>
 		</dependency>		
 	</dependencies>
 </project>
