@@ -49,7 +49,11 @@ public class XmlHandlerBase {
 	}
 
 	protected XmlHandlerBase(boolean useValidation) {
-		this.useValidation = useValidation;
+		// The http://www.w3.org/2001/xml.xsd file is sometimes unavailable and,
+		// therefore, it takes ages to validate RIF documents.
+
+		// FIXME Enable validation.
+		this.useValidation = false;
 	}
 
 	protected void validate(org.w3c.dom.Document document,
