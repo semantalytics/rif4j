@@ -1,0 +1,14 @@
+Document(
+  Group
+  (
+    <http://example.org/example#factorial>("0"^^<http://www.w3.org/2001/XMLSchema#integer> "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
+
+    Forall ?N ?F ?N1 ?F1 (
+         <http://example.org/example#factorial>(?N ?F) :-  
+             And(External(<http://www.w3.org/2007/rif-builtin-predicate#numeric-greater-than>(?N "0"^^<http://www.w3.org/2001/XMLSchema#integer>)) 
+                   ?N1 = External(<http://www.w3.org/2007/rif-builtin-function#numeric-subtract>(?N "1"^^<http://www.w3.org/2001/XMLSchema#integer>)) 
+                   <http://example.org/example#factorial>(?N1 ?F1) 
+                   ?F = External(<http://www.w3.org/2007/rif-builtin-function#numeric-multiply>(?N ?F1)) )
+    )
+  )
+)

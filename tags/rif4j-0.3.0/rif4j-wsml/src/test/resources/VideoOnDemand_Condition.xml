@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- RIF Abstract Syntax 
+And (?Customer[ex:hasConnection->?Connection]#<http://example.org/onto#Customer>
+	?Connection[ex:providesBandwith->?Y]#<http://example.org/onto#NetworkConnection>
+	External(pred:numeric-greater-than(?Y 1000)))
+
+which corresponds to
+
+And (?Customer#<http://example.org/onto#Customer>
+	?Customer[<http://example.org/onto#hasConnection>->?Connection]
+	?Connection#<http://example.org/onto#NetworkConnection>
+	?Connection[<http://example.org/onto#providesBandwith>->?Y] 
+	External(<http://www.w3.org/2007/rif-builtin-predicate#numeric-greater-than>(?Y 1000)))
+-->
+
+<!-- WSML Abstract Syntax
+?Customer memberOf _"http://example.org/onto#Customer"
+ and ?Customer[_"http://example.org/onto#hasConnection" hasValue ?Connection]
+ and ?Connection memberOf _"http://example.org/onto#NetworkConnection"
+ and ?Connection[_"http://example.org/onto#providesBandwith" hasValue ?Y]
+ and _"http://www.w3.org/2007/rif-builtin-predicate#numeric-greater-than"(?Y,1000) . 
+ 
+which corresponds to
+
+?Customer[_"http://example.org/onto#hasConnection" hasValue ?Connection] memberOf _"http://example.org/onto#Customer"
+ and ?Connection[_"http://example.org/onto#providesBandwidth" hasValue ?y] memberOf _"http://example.org/onto#NetworkConnection"
+ and ?Y > 1000 .
+-->
+
+<And xmlns="http://www.w3.org/2007/rif#">
+	<formula>
+		<Member>
+			<instance>
+				<Var>Customer</Var>
+			</instance>
+			<class>
+				<Const type="http://www.w3.org/2007/rif#iri">http://example.org/onto#Customer
+				</Const>
+			</class>
+		</Member>
+	</formula>
+	<formula>
+		<Frame>
+			<object>
+				<Var>Customer</Var>
+			</object>
+			<slot ordered="yes">
+				<Const type="http://www.w3.org/2007/rif#iri">http://example.org/onto#hasConnection
+				</Const>
+				<Var>Connection</Var>
+			</slot>
+		</Frame>
+	</formula>
+	<formula>
+		<Member>
+			<instance>
+				<Var>Connection</Var>
+			</instance>
+			<class>
+				<Const type="http://www.w3.org/2007/rif#iri">http://example.org/onto#NetworkConnection
+				</Const>
+			</class>
+		</Member>
+	</formula>
+	<formula>
+		<Frame>
+			<object>
+				<Var>Connection</Var>
+			</object>
+			<slot ordered="yes">
+				<Const type="http://www.w3.org/2007/rif#iri">http://example.org/onto#providesBandwith
+				</Const>
+				<Var>Y</Var>
+			</slot>
+		</Frame>
+	</formula>
+	<formula>
+		<External>
+			<content>
+				<Atom>
+					<op>
+						<Const type="http://www.w3.org/2007/rif#iri">http://www.w3.org/2007/rif-builtin-predicate#numeric-greater-than
+						</Const>
+					</op>
+					<args ordered="yes">
+						<Var>Y</Var>
+						<Const type="http://www.w3.org/2001/XMLSchema#integer">1000</Const>
+					</args>
+				</Atom>
+			</content>
+		</External>
+	</formula>
+</And>

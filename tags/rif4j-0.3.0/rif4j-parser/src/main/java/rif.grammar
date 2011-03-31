@@ -1,0 +1,345 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * SableCC based grammar for RIF BLD,                      *
+ * available from                                          *    
+ * http://www.w3.org/TR/rif-bld/                           *     
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+Package at.sti2.rif4j.parser.presentation.compiler;
+
+/************************************************************
+ * Helpers                                                  *
+ ************************************************************/
+Helpers 
+
+    all = [0x0 .. 0xffff];
+    escape_char = '\';
+    
+    // Whitespace.
+	tab = 9;
+	cr = 13;
+	lf = 10;
+	eol = cr lf | cr | lf;
+	blank = (' ' | tab | eol )+;
+	
+	// These are copied from the XML names.
+    basechar = [0x0041 .. 0x005A] | [0x0061 .. 0x007A];
+    ideographic = [0x4E00 .. 0x9FA5] | 0x3007 | [0x3021 .. 0x3029];
+    letter = basechar | ideographic;
+    digit = [0x0030 .. 0x0039];
+    combiningchar = [0x0300 .. 0x0345] | [0x0360 .. 0x0361] | [0x0483 .. 0x0486];
+    extender = 0x00B7 | 0x02D0 | 0x02D1 | 0x0387 | 0x0640 | 0x0E46 | 0x0EC6 | 0x3005 | [0x3031 .. 0x3035] | [0x309D .. 0x309E] | [0x30FC .. 0x30FE];
+	
+	// Additional character classes.
+	alpha = ['a' .. 'z'] | ['A' .. 'Z'];
+	num = ['0' .. '9'];
+	alphanum = alpha | num;
+	anychar = alphanum | ' ' | tab | '/' | '#' | ':' | '.' | ',' | ';';
+	min = '-';
+	dot = '.';
+	comma = ',';
+	predtrailing = alpha | num | '_';
+
+	delim = ''';
+    hexdigit = ['0' .. '9'] | ['A' .. 'F'];
+
+    not_escaped_namechar = letter | digit |  '_' | combiningchar | extender;
+    escaped_namechar = '.' | '-' | not_escaped_namechar;
+    namechar = (escape_char escaped_namechar) | not_escaped_namechar | '-';
+    ncnamechar = namechar; // FIXME Substract ':'
+    ncnamestartchar = alpha | '_' | [0xC0 .. 0xD6] | [0xD8 .. 0xF6] | [0xF8 .. 0x2FF] | [0x370 .. 0x37D] | [0x37F .. 0x1FFF] | [0x200C .. 0x200D] | [0x2070 .. 0x218F] | [0x2C00 .. 0x2FEF] | [0x3001 .. 0xD7FF] | [0xF900 .. 0xFDCF] | [0xFDF0 .. 0xFFFD] | [0x10000 .. 0xEFFFF];
+    
+    pn_chars_base = alpha | [0x00C0 .. 0x00D6] | [0x00D8 .. 0x00F6] | [0x00F8 .. 0x02FF] | [0x0370 .. 0x037D] | [0x037F .. 0x1FFF] | [0x200C .. 0x200D] | [0x2070 .. 0x218F] | [0x2C00 .. 0x2FEF] | [0x3001 .. 0xD7FF] | [0xF900 .. 0xFDCF] | [0xFDF0 .. 0xFFFD] | [0x10000 .. 0xEFFFF];
+    pn_chars_u = pn_chars_base | '_';
+    pn_chars = pn_chars_u | '-' | num | 0x00B7 | [0x0300 .. 0x036F] | [0x203F .. 0x2040];
+     
+    
+    /****************************************
+     * IRI references                       *
+     ****************************************/
+    
+    reserved      = '/' | '?' | '!' | '#' | '[' | ']' | ';' |
+                   ':' | '@' | '&' | '=' | '+' | '$' | ',';
+    mark          = '-' | '_' | '.' | '!' | '~' | '*' | ''' |
+                   '(' | ')';
+    escaped       = '%' hexdigit hexdigit;
+    unreserved    = letter | digit | mark;
+
+    scheme        = letter ( letter | digit | '+' | '-' | '.' )*;
+    port          = digit*;
+    idomainlabel   = alphanum ( ( alphanum | '-' )* alphanum )?;
+    dec_octet     = digit                           // 0-9
+                 | ( [0x31 .. 0x39] digit )               // 10-99
+                 | ( '1' digit digit )                  // 100-199
+                 | ( '2' [0x30 .. 0x34] digit )           // 200-249
+                 | ( '25' [0x30 .. 0x35] );               // 250-255
+    ipv4address   = dec_octet '.' dec_octet '.' dec_octet '.' dec_octet;
+    h4            = hexdigit hexdigit? hexdigit? hexdigit?;
+    ls32          = ( h4 ':' h4 ) | ipv4address;
+    ipv6address   =  ( ( h4 ':' )* h4 )? '::'  ( h4 ':' )*  ls32
+                 | ( ( h4 ':' )* h4 )? '::'             h4
+                 | ( ( h4 ':' )* h4 )? '::';
+    ipv6reference = '[' ipv6address ']';
+    
+    ucschar        = [0xA0 .. 0xD7FF] | [0xF900 .. 0xFDCF] | [0xFDF0 .. 0xFFEF];
+    iunreserved    = unreserved | ucschar;
+    ipchar         = iunreserved | escaped | ';' |
+                        ':' | '@' | '&' | '=' | '+' | '$' | ',';
+    isegment       = ipchar*;
+    ipath_segments = isegment ( '/' isegment )*;
+    iuserinfo      = ( iunreserved | escaped | ';' |
+                     ':' | '&' | '=' | '+' | '$' | ',' )*;
+    iqualified     = ( '.' idomainlabel )* '.'?;
+    ihostname      = idomainlabel iqualified;
+    ihost          = ( ipv6reference | ipv4address | ihostname )?;
+    iauthority     = (iuserinfo '@' )? ihost ( ':' port )?;
+    iabs_path      = '/'  ipath_segments;
+    inet_path      = '//' iauthority ( iabs_path )?;
+    irel_path      = ipath_segments;
+    ihier_part     = inet_path | iabs_path | irel_path;
+    //SableCC cannot handle character ranges over 0xFFFF and therefore, these are commented
+    iprivate       = [0xE000 .. 0xF8FF];// | [0xF0000 .. 0xFFFFD] | [0x100000 .. 0x10FFFD];
+    iquery         = ( ipchar | iprivate | '/' | '?' )*;
+    ifragment      = ( ipchar | '/' | '?' )*;
+    iri_f            = scheme ':' ihier_part ( '?' iquery )? ( '#' ifragment )?;
+
+    squote = ''';
+    dquote = '"';
+    
+    not_cr_lf = [all - [cr + lf]];
+    escaped_char = escape_char all ;
+    not_escape_char_not_dquote = [all - ['"' + escape_char]] ;
+    string_content = escaped_char | not_escape_char_not_dquote ;
+
+    long_comment_content = [ all - '/' ] | [all - '*'] '/';
+    long_comment    =   '/*' long_comment_content * '*/';
+    begin_comment = '//';
+    short_comment = begin_comment not_cr_lf* eol;
+    comment = short_comment | long_comment;
+        
+    // Left URI delimiter       
+    luridel = '<';
+    
+    // Right URI delimiter
+    ruridel = '>';
+
+/************************************************************
+ * Tokens                                                   *
+ ************************************************************/  
+Tokens
+            
+    /********************************************************
+     * structural and helper tokens                         *
+     ********************************************************/
+    t_comment = comment;
+    t_blank = blank;
+    colon = ':';
+    at= '@';
+    arrow= '=>';    
+    comma = ',';
+    t_pipe = '|';
+    endpoint = '.' blank;
+    lpar = '(';
+    rpar = ')'; 
+    lbracket = '[';
+    rbracket = ']';
+    lbrace = '{';
+    rbrace = '}';
+    hash = '#';
+    dhash = '##';
+    rarrow = '->';
+    qmark = '?';   
+    emark = '!';
+    underscore = '_';
+    typedef = '^^';
+    
+    /********************************************************
+     * RIF keywords                                         *
+     ********************************************************/
+    t_document = 'Document';
+    t_base = 'Base';
+    t_prefix = 'Prefix';
+    t_import = 'Import';
+    t_group = 'Group';
+    t_forall = 'Forall';
+    t_and = 'And';
+    t_implies = ':-';
+    t_or = 'Or';
+    t_exists = 'Exists';
+    t_external = 'External';
+    t_list = 'List';
+    
+    /********************************************************
+     * Built-in operators                                   *
+     ********************************************************/
+    gt = '>';
+    lt = '<';
+    gte = '>=';
+    lte = '=<'; 
+    t_equal = '=';
+    unequal = '!=';
+    add_op = '+';
+    sub_op = '-';
+    star = '*';
+    div_op = '/';
+
+    /********************************************************
+     * identifiers                                          *
+     ********************************************************/      
+    
+    string = dquote string_content* dquote;
+    
+    pos_integer = digit+;
+    pos_decimal = digit+ '.' digit+; 
+    
+    full_iri =  luridel iri_f ruridel;
+    
+    t_ncnamestartchar = ncnamestartchar;
+    t_ncnamechar = ncnamestartchar;
+    t_all = all;
+    t_num = num;
+  	t_lmeta = '(*';
+  	t_rmeta = '*)';
+    language = all;
+		
+/************************************************************
+ * Ignored Tokens                                           *
+ ************************************************************/              
+Ignored Tokens  
+    t_blank, t_comment;  
+
+
+/************************************************************
+ * Productions                                              *
+ ************************************************************/  
+Productions
+
+	/********************************************************
+     * Rule language                                        *
+     ********************************************************/ 
+
+	/*
+	// Document ::= IRIMETA? 'Document' '(' Base? Prefix* Import* Group? ')'
+	document = irimeta? t_document lpar base? prefix* import* group? rpar;
+	
+	// Base ::= 'Base' '(' ANGLEBRACKIRI ')'
+	base = t_base lpar anglebrackiri rpar;
+	
+	// Prefix ::= 'Prefix' '(' NCName ANGLEBRACKIRI ')'
+	prefix = t_prefix lpar ncname anglebrackiri rpar;
+	
+	// Import ::= IRIMETA? 'Import' '(' LOCATOR PROFILE? ')'
+	import = irimeta? t_import lpar locator profile? rpar;
+	
+	// Group ::= IRIMETA? 'Group' '(' (RULE | Group)* ')'
+	group_element = {group_rule} rule | {group_group} group;
+	group = irimeta? t_group lpar group_element* rpar;
+	
+	// RULE ::= (IRIMETA? 'Forall' Var+ '(' CLAUSE ')') | CLAUSE
+	rule = {rule_forall} irimeta? t_forall var+ lpar clause rpar
+					| {rule_clause} clause;
+
+	// CLAUSE ::= Implies | ATOMIC
+	clause = {clause_implies} implies
+					| {clause_atomic} atomic;
+					
+	// Implies ::= IRIMETA? (ATOMIC | 'And' '(' ATOMIC* ')') ':-' FORMULA
+	implies_head = {implies_atomic} atomic
+					| {implies_multiple} t_and lpar atomic* rpar;
+	implies = irimeta? [head]:implies_head t_implies [body]:formula;
+	
+	// LOCATOR ::= ANGLEBRACKIRI
+	locator = anglebrackiri;
+	
+	// PROFILE ::= ANGLEBRACKIRI
+	profile = anglebrackiri;
+	*/
+	
+	/********************************************************
+     * Conditional language                                 *
+     ********************************************************/      
+	
+	ncname = t_ncnamestartchar t_ncnamechar*;
+	name = {ncnamename} ncname | {ncnamestring} string;
+	anglebrackiri = full_iri;
+	//pn_prefix = pn_chars_base ((pn_chars | dot)* pn_chars)?;
+	//pn_local = (pn_chars_u | num) ((pn_chars | dot)* pn_chars)?;
+	pn_prefix = t_all;
+	pn_local = t_all;
+	pname_ns = pn_prefix? colon;
+	pname_ln = pname_ns pn_local;
+	curie = {curie_ln} pname_ln | {curie_ns} pname_ns;
+	symspace = {symspace_iri} anglebrackiri | {symspace_curie} curie;
+	
+	constshort = {constshort_iri} anglebrackiri						// shortcut for "..."^^rif:iri
+					| {constshort_curie} curie						// shortcut for "..."^^rif:iri
+					| {constshort_string} string					// shortcut for "..."^^xs:string
+					| {constshort_num} t_num 						// shortcut for "..."^^xs:integer,xs:decimal,xs:double
+					| {constshort_local} underscore ncname			// shortcut for "..."^^rif:local
+					| {constshort_plainliteral} string at language;	// shortcut for "...@..."^^rdf:PlainLiteral
+	
+	// Var ::= '?' Name
+	var = qmark name;
+	
+	// Const ::= '"' UNICODESTRING '"^^' SYMSPACE | CONSTSHORT
+	const = {const_typed} string typedef symspace | {const_constshort} constshort;
+	
+	// IRIMETA ::= '(*' IRICONST? (Frame | 'And' '(' Frame* ')')? '*)'
+	irimeta_frame = {irimeta_frame_single} frame | {irimeta_frame_multiple} t_and lpar frame* rpar;
+	irimeta = t_lmeta full_iri irimeta_frame? t_rmeta;
+	
+	// List ::= 'List' '(' TERM* ')' | 'List' '(' TERM+ '|' TERM ')'
+	list = {list_simple} t_list lpar term* rpar | {list_recursive} t_list lpar [first]:term+ t_pipe [rest]:term rpar;
+	
+	// TERM ::= IRIMETA? (Const | Var | Expr | List | 'External' '(' Expr ')')
+	term = {term_const} irimeta? const
+					| {term_var} irimeta? var
+					| {term_expr} irimeta? expr
+					| {term_list} irimeta? list
+					| {term_external_expr} irimeta? external_expr;
+				
+	// Expr ::= UNITERM
+	expr = uniterm;
+	
+	external_expr = t_external expr;
+	
+	// UNITERM ::= Const '(' (TERM* | (Name '->' TERM)*) ')'
+	uniterm_term = {uniterm_term_multiple} term 
+					| {uniterm_term_attribute} name rarrow term; 
+	uniterm = const lpar uniterm_term* rpar;
+	
+	// Frame ::= TERM '[' (TERM '->' TERM)* ']'
+	frame_slot = [name]:term rarrow [value]:term;
+	frame = [object]:term lbracket [slot]:frame_slot* rbracket;
+	
+	// Equal ::= TERM '=' TERM
+	equal = [left]:term t_equal [right]:term;
+	
+	// Member ::= TERM '#' TERM
+	member = [instance]:term hash [clazz]:term;
+	
+	// Subclass ::= TERM '##' TERM
+	subclass = [sub]:term dhash [super]:term;
+	
+	// Atom ::= UNITERM
+	atom = uniterm;
+	
+	// ATOMIC ::= IRIMETA? (Atom | Equal | Member | Subclass | Frame)
+	atomic = {atomic_atom} irimeta? atom
+					| {atomic_equal} irimeta? equal
+					| {atomic_member} irimeta? member
+					| {atomic_subclass} irimeta? subclass
+					| {atomic_frame} irimeta? frame;
+
+	/* FORMULA ::= IRIMETA? 'And' '(' FORMULA* ')' |
+                   IRIMETA? 'Or' '(' FORMULA* ')' |
+                   IRIMETA? 'Exists' Var+ '(' FORMULA ')' |
+                   ATOMIC |
+                   IRIMETA? 'External' '(' Atom ')'
+	*/
+	formula = {formula_and} irimeta? t_and lpar formula* rpar
+					| {formula_or} irimeta? t_or lpar formula* rpar
+					| {formula_exists} irimeta? var+ lpar formula rpar
+					| {formula_atomic} atomic
+					| {formula_external} irimeta? t_external lpar atom rpar; 
+
+	

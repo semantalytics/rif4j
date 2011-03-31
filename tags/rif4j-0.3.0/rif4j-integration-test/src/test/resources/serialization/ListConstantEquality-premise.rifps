@@ -1,0 +1,6 @@
+Document(
+  Group(
+   <http://example.org/example#a>=List(<http://example.org/example#b> <http://example.org/example#c>)
+   <http://example.org/example#p>(<http://example.org/example#a>)
+  )
+ )

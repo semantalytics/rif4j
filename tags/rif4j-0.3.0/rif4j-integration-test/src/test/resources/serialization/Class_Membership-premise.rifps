@@ -1,0 +1,12 @@
+Document(
+ Group ( 
+    Forall ?X ?Y ( 
+       <http://example.org/family#isFatherOf>(?Y ?X) :- And (<http://example.org/family#isChildOf>(?X ?Y) ?Y#<http://example.org/family#Male> )
+    )
+
+    <http://example.org/family#isChildOf>(<http://example.org/family#Adrian> <http://example.org/family#Uwe>)
+
+    <http://example.org/family#Adrian>#<http://example.org/family#Male>
+    <http://example.org/family#Uwe>#<http://example.org/family#Male> 
+ )
+)
