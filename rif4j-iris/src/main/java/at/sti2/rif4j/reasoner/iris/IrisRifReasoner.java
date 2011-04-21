@@ -38,7 +38,6 @@ import at.sti2.rif4j.manager.DocumentManager;
 import at.sti2.rif4j.reasoner.AbstractReasoner;
 import at.sti2.rif4j.reasoner.ReasoningException;
 import at.sti2.rif4j.rule.Document;
-import at.sti2.rif4j.translator.iris.RdfQueryTransformer;
 import at.sti2.rif4j.translator.iris.RifToIrisTranslator;
 import at.sti2.rif4j.translator.iris.visitor.AtomicFormulaTranslator;
 import at.sti2.rif4j.translator.iris.visitor.RuleTranslator;
@@ -97,25 +96,7 @@ public class IrisRifReasoner extends AbstractReasoner {
 		}
 
 		try {
-			Formula rewrittenQuery = query;
-
-			// If the document manager supports the RDF profiles, we rewrite the
-			// query to match the imported frames.
-			if (highestProfile != null
-					&& (DocumentManager.supports(Profile.SIMPLE.toUri())
-							|| DocumentManager.supports(Profile.RDF.toUri()) || DocumentManager
-							.supports(Profile.RDFS.toUri()))) {
-				RdfQueryTransformer transformer = new RdfQueryTransformer();
-				query.accept(transformer);
-
-				if (transformer.getFormula() != null) {
-					rewrittenQuery = transformer.getFormula();
-					logger.debug("Rewritten RIF-BLD query to:\n"
-							+ rewrittenQuery);
-				}
-			}
-
-			List<IQuery> irisQueries = toQueries(rewrittenQuery);
+			List<IQuery> irisQueries = toQueries(query);
 
 			for (IQuery irisQuery : irisQueries) {
 				logger.debug(irisQuery.toString());
@@ -149,6 +130,16 @@ public class IrisRifReasoner extends AbstractReasoner {
 
 		// Add the meta-level rules.
 		newRules.addAll(0, AtomicFormulaTranslator.getMetaLevelRules());
+
+		// If the document manager supports the RDF profiles, we add the RDF
+		// Simple Entailment axioms.
+		if (highestProfile != null
+				&& highestProfile.ordinal() <= Profile.RDFS.ordinal()
+				&& (DocumentManager.supports(Profile.SIMPLE.toUri())
+						|| DocumentManager.supports(Profile.RDF.toUri()) || DocumentManager
+						.supports(Profile.RDFS.toUri()))) {
+			newRules.addAll(RdfSimpleAxioms.getRules());
+		}
 
 		knowledgeBase = toKnowledgeBase(facts, newRules);
 		hasChanged = false;
