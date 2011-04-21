@@ -19,6 +19,7 @@ import at.sti2.rif4j.condition.MemberAtom;
 import at.sti2.rif4j.condition.OrFormula;
 import at.sti2.rif4j.condition.SubclassAtom;
 
+@Deprecated
 public class RdfQueryTransformer implements FormulaVisitor,
 		AtomicFormulaVisitor {
 
