@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">
+ <head>
+   <title>RIF4J</title>
+   <style type="text/css">
+	body {
+		font-family: sans-serif;
+	}
+	
+	a {
+		color: #0056C7;
+	}
+	
+	a:hover {
+		text-decoration: none;
+	}
+	
+	p {
+		line-height: 130%;
+	}
+	
+	.code {
+		border: 1px solid #d0d0d0; 
+		background-color: #f0f0f0;
+		padding: 10px;
+	}
+	
+	.code p {
+		margin: 0;
+		padding: 0;
+	}
+	   
+	#container {
+		margin: auto;
+		width: 700px;
+	}
+	
+	h1, h2, h3 {
+		font-variant: inherit;
+		color: #1D69D1;
+	}
+	
+	/**
+	 * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+	 * (http://qbnz.com/highlighter/ and http://geshi.org/)
+	 */
+	.java  {font-family:monospace;color: #006;}
+	.java a:link {color: #000060;}
+	.java a:hover {background-color: #f0f000;}
+	.java .imp {font-weight: bold; color: red;}
+	.java .kw1 {color: #000000; font-weight: bold;}
+	.java .kw2 {color: #000066; font-weight: bold;}
+	.java .kw3 {color: #003399;}
+	.java .kw4 {color: #000066; font-weight: bold;}
+	.java .co1 {color: #666666; font-style: italic;}
+	.java .co2 {color: #006699;}
+	.java .co3 {color: #008000; font-style: italic; font-weight: bold;}
+	.java .coMULTI {color: #666666; font-style: italic;}
+	.java .es0 {color: #000099; font-weight: bold;}
+	.java .br0 {color: #009900;}
+	.java .sy0 {color: #339933;}
+	.java .st0 {color: #0000ff;}
+	.java .nu0 {color: #cc66cc;}
+	.java .me1 {color: #006633;}
+	.java .me2 {color: #006633;}
+	.java span.xtra { display:block; }
+   </style>
+ </head>
+ <body>
+ 	<div id="container">
+	    <h1>RIF4J</h1>
+	    <h2>Description</h2>
+	    <p>
+	    RIF4J is a reasoning engine for RIF-BLD that provides a Java object model 
+	    for RIF-BLD and supports the parsing and serialization of RIF-BLD formulas. 
+	    Furthermore, it provides a prototype implementation of a RIF-BLD consumer 
+	    based on the Datalog engine <a href="http://www.iris-reasoner.org">IRIS</a>. 
+	    It is an open-source library licensed under the Apache License 2.0 and hosted on 
+	    <a href="http://sourceforge.net/projects/rif4j/">Sourceforge</a>.
+		</p>
+		<h2>Installation</h2>
+		<p>
+		RIF4J is developed as an <a href="http://maven.apache.org/">Apache Maven</a> 
+		project and is being deployed on a daily basis to the STI Maven repository. 
+		To get releases and snapshots of RIF4J and the dependent components, the following 
+		repositories have to be added to the project object model (POM) file:
+		</p>
+		<div class="code">
+		<p>
+		<code>
+		&lt;repositories&gt;<br />
+		&nbsp;&nbsp;&lt;repository&gt;<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&lt;id&gt;sti2-archiva-external&lt;/id&gt;<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&lt;url&gt;http://maven.sti2.at/archiva/repository/external&lt;/url&gt;<br />
+		&nbsp;&nbsp;&lt;/repository&gt;<br />
+		&nbsp;&nbsp;&lt;repository&gt;<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&lt;id&gt;sti2-archiva-snapshots&lt;/id&gt;<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&lt;url&gt;http://maven.sti2.at/archiva/repository/snapshots&lt;/url&gt;<br />
+		&nbsp;&nbsp;&lt;/repository&gt;<br />
+		&lt;/repositories&gt;<br />
+		</code>
+		</p>
+		</div>
+		<p>
+		The object model, parser and serializers can be used by by adding 
+		<code>at.sti2.rif4j:rif4j-impl</code> as dependency to the POM file:
+		</p>
+		<div class="code">
+		<p>
+		<code>
+		&lt;dependency&gt;<br />
+		&nbsp;&nbsp;&lt;groupId&gt;at.sti2.rif4j&lt;/groupId&gt;<br />
+		&nbsp;&nbsp;&lt;artifactId&gt;rif4j-impl&lt;/artifactId&gt;<br />
+		&nbsp;&nbsp;&lt;version&gt;0.3.1&lt;/version&gt;<br />
+		&lt;/dependency&gt;
+		</code>
+		</p>
+		</div>
+		<p>
+		In order to use the prototype reasoner based on IRIS, 
+		the following dependency needs to be added to the POM file:
+		</p>
+		<div class="code">
+		<p>
+		<code>
+		&lt;dependency&gt;<br />
+		&nbsp;&nbsp;&lt;groupId&gt;at.sti2.rif4j&lt;/groupId&gt;<br />
+		&nbsp;&nbsp;&lt;artifactId&gt;rif4j-iris&lt;/artifactId&gt;<br />
+		&nbsp;&nbsp;&lt;version&gt;0.3.1&lt;/version&gt;<br />
+		&lt;/dependency&gt;
+		</code>
+		</p>
+		</div>
+		<p>
+		For reasoning with combinations of RIF and RDF under the Simple Entailment
+		semantics, the following dependency needs to be included:  
+		</p>
+		<div class="code">
+		<p>
+		<code>
+		&lt;dependency&gt;<br />
+		&nbsp;&nbsp;&lt;groupId&gt;at.sti2.rif4j&lt;/groupId&gt;<br />
+		&nbsp;&nbsp;&lt;artifactId&gt;rif4j-rdf&lt;/artifactId&gt;<br />
+		&nbsp;&nbsp;&lt;version&gt;0.3.1&lt;/version&gt;<br />
+		&lt;/dependency&gt;
+		</code>
+		</p>
+		</div>
+		<h2>Usage Example</h2>
+		<div class="code">
+			<div class="java"><span class="kw1">import</span> <span class="co2">java.net.URI</span><span class="sy0">;</span><br />
+			<br />
+			<span class="kw1">import</span> <span class="co2">at.sti2.rif4j.condition.Formula</span><span class="sy0">;</span><br />
+			<span class="kw1">import</span> <span class="co2">at.sti2.rif4j.manager.DocumentLoadingException</span><span class="sy0">;</span><br />
+			<span class="kw1">import</span> <span class="co2">at.sti2.rif4j.manager.DocumentManager</span><span class="sy0">;</span><br />
+			<span class="kw1">import</span> <span class="co2">at.sti2.rif4j.reasoner.Reasoner</span><span class="sy0">;</span><br />
+			<span class="kw1">import</span> <span class="co2">at.sti2.rif4j.reasoner.ReasonerFactory</span><span class="sy0">;</span><br />
+			<span class="kw1">import</span> <span class="co2">at.sti2.rif4j.reasoner.ReasoningException</span><span class="sy0">;</span><br />
+			<span class="kw1">import</span> <span class="co2">at.sti2.rif4j.reasoner.iris.IrisRifReasonerFactory</span><span class="sy0">;</span><br />
+			<span class="kw1">import</span> <span class="co2">at.sti2.rif4j.rule.Document</span><span class="sy0">;</span><br />
+			<br />
+			<span class="kw1">public</span> <span class="kw1">class</span> Example <span class="br0">&#123;</span><br />
+			<br />
+			&nbsp; &nbsp; <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw4">void</span> main<span class="br0">&#40;</span><span class="kw3">String</span><span class="br0">&#91;</span><span class="br0">&#93;</span> args<span class="br0">&#41;</span> <span class="kw1">throws</span> DocumentLoadingException,<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ReasoningException <span class="br0">&#123;</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// The URI of the premise document.</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; URI premiseUri <span class="sy0">=</span> URI<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .<span class="me1">create</span><span class="br0">&#40;</span><span class="st0">&quot;http://www.w3.org/2005/rules/test/repository/&quot;</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">+</span> <span class="st0">&quot;tc/Class_Membership/Class_Membership-premise.rif&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+			<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// The URI of the conclusion formula.</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; URI conclusionUri <span class="sy0">=</span> URI<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .<span class="me1">create</span><span class="br0">&#40;</span><span class="st0">&quot;http://www.w3.org/2005/rules/test/repository/&quot;</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy0">+</span> <span class="st0">&quot;tc/Class_Membership/Class_Membership-conclusion.rif&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+			<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// Use the DocumentManager to load the premise and the conclusion.</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; DocumentManager manager <span class="sy0">=</span> <span class="kw1">new</span> DocumentManager<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw3">Document</span> premise <span class="sy0">=</span> manager.<span class="me1">loadDocument</span><span class="br0">&#40;</span>premiseUri<span class="br0">&#41;</span><span class="sy0">;</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; Formula conclusion <span class="sy0">=</span> manager.<span class="me1">loadFormula</span><span class="br0">&#40;</span>conclusionUri<span class="br0">&#41;</span><span class="sy0">;</span><br />
+			<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// Create a RIF-BLD reasoner based on the IRIS Datalog system.</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; ReasonerFactory factory <span class="sy0">=</span> <span class="kw1">new</span> IrisRifReasonerFactory<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; Reasoner reasoner <span class="sy0">=</span> factory.<span class="me1">createReasoner</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span><br />
+			<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// Register the premise document.</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; reasoner.<span class="me1">register</span><span class="br0">&#40;</span>premise<span class="br0">&#41;</span><span class="sy0">;</span><br />
+			<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// Check if the premise entails the conclusion.</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw4">boolean</span> entails <span class="sy0">=</span> reasoner.<span class="me1">entails</span><span class="br0">&#40;</span>conclusion<span class="br0">&#41;</span><span class="sy0">;</span><br />
+			<br />
+			&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span>entails<span class="br0">&#41;</span> <span class="br0">&#123;</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// Do something.</span><br />
+			&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span><br />
+			&nbsp; &nbsp; <span class="br0">&#125;</span><br />
+			<br />
+			<span class="br0">&#125;</span></div>
+			</div>
+	</div>
+</body>
+</html>
