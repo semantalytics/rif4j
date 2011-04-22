@@ -4,7 +4,7 @@
 
 	<groupId>at.sti2.rif4j</groupId>
 	<artifactId>rif4j</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>0.3.1</version>
 	<packaging>pom</packaging>
 	<name>RIF4J</name>
 	<description>RIF framework for Java</description>
