@@ -1,0 +1,6 @@
+Document(
+   Group (
+    <http://example.org/people#john>#<http://example.org/concepts#Person>
+    <http://example.org/concepts#Person>[<http://example.org/scientific-classification#phylum> -> <http://example.org/scientific-classification#Chordata>]       
+  )
+)

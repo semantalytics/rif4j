@@ -1,0 +1,13 @@
+Document(
+ Group ( 
+  Forall ?Customer (
+   <http://example.org/example#discount>(value -> "10"^^<http://www.w3.org/2001/XMLSchema#integer> customer -> ?Customer) :- <http://example.org/example#gold>(customer -> ?Customer)
+  )
+
+  Forall ?Customer (
+   <http://example.org/example#discount>(customer -> ?Customer value -> "5"^^<http://www.w3.org/2001/XMLSchema#integer>) :- <http://example.org/example#silver>(customer -> ?Customer)
+  )
+
+  <http://example.org/example#gold>(customer -> "John Doe"^^<http://www.w3.org/2001/XMLSchema#string>)
+ )
+)

@@ -1,0 +1,9 @@
+Document(
+     Import(<http://www.w3.org/2005/rules/test/repository/tc/RDF_Combination_Member_1/RDF_Combination_Member_1-import001> <http://www.w3.org/ns/entailment/Simple>)
+
+     Group
+     (
+        <http://example.org/example#A> ## <http://example.org/example#B>
+        <http://example.org/example#k> # <http://example.org/example#A>
+     )
+  )

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Document( Group( Forall ?x ?y (?x[rdf:type -> ?y] :- ?x # ?y) Forall 
+	?x ?y (?x # ?y :- ?x[rdf:type -> ?y]) Forall ?x ?y (?x[rdfs:subClassOf -> 
+	?y] :- ?x ## ?y]) )) -->
+<!DOCTYPE Document [
+  <!ENTITY rif  "http://www.w3.org/2007/rif#">
+  <!ENTITY xs   "http://www.w3.org/2001/XMLSchema#">
+  <!ENTITY rdf  "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+]>
+<Document xmlns="&rif;">
+	<payload>
+		<Group>
+			<sentence>
+				<Forall>
+					<declare>
+						<Var>X</Var>
+					</declare>
+					<declare>
+						<Var>Y</Var>
+					</declare>
+					<formula>
+						<Implies>
+							<if>
+								<Member>
+									<instance>
+										<Var>X</Var>
+									</instance>
+									<class>
+										<Var>Y</Var>
+									</class>
+								</Member>
+							</if>
+							<then>
+								<Frame>
+									<object>
+										<Var>X</Var>
+									</object>
+									<slot ordered="yes">
+										<Const type="&rif;iri">&rdf;type
+										</Const>
+										<Var>Y</Var>
+									</slot>
+								</Frame>
+							</then>
+						</Implies>
+					</formula>
+				</Forall>
+			</sentence>
+			<sentence>
+				<Forall>
+					<declare>
+						<Var>X</Var>
+					</declare>
+					<declare>
+						<Var>Y</Var>
+					</declare>
+					<formula>
+						<Implies>
+							<if>
+								<Frame>
+									<object>
+										<Var>X</Var>
+									</object>
+									<slot ordered="yes">
+										<Const type="&rif;iri">&rdf;type
+										</Const>
+										<Var>Y</Var>
+									</slot>
+								</Frame>
+							</if>
+							<then>
+								<Member>
+									<instance>
+										<Var>X</Var>
+									</instance>
+									<class>
+										<Var>Y</Var>
+									</class>
+								</Member>
+							</then>
+						</Implies>
+					</formula>
+				</Forall>
+			</sentence>
+			<sentence>
+				<Forall>
+					<declare>
+						<Var>X</Var>
+					</declare>
+					<declare>
+						<Var>Y</Var>
+					</declare>
+					<formula>
+						<Implies>
+							<if>
+								<Subclass>
+									<sub>
+										<Var>X</Var>
+									</sub>
+									<super>
+										<Var>Y</Var>
+									</super>
+								</Subclass>
+							</if>
+							<then>
+								<Frame>
+									<object>
+										<Var>X</Var>
+									</object>
+									<slot ordered="yes">
+										<Const type="&rif;iri">&rdfs;subClassOf
+										</Const>
+										<Var>Y</Var>
+									</slot>
+								</Frame>
+							</then>
+						</Implies>
+					</formula>
+				</Forall>
+			</sentence>
+		</Group>
+	</payload>
+</Document>
+ 

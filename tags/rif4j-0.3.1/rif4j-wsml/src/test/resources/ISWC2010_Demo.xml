@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE Document [
+  <!ENTITY rif  "http://www.w3.org/2007/rif#">
+  <!ENTITY pred  "http://www.w3.org/2007/rif-builtin-predicate#">
+  <!ENTITY xs   "http://www.w3.org/2001/XMLSchema#">
+  <!ENTITY rdf  "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs  "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY dbo  "http://dbpedia.org/ontology/">
+  <!ENTITY dbp  "http://dbpedia.org/property/">
+  <!ENTITY ex  "http://www.example.org/iswc#">
+]>
+
+<Document xmlns="&rif;">
+	<payload>
+		<Group>
+			<sentence>
+				<Forall>
+					<declare>
+						<Var>Movie</Var>
+					</declare>
+					<formula>
+						<Implies>
+							<if>
+								<And xmlns="http://www.w3.org/2007/rif#">
+									<formula>
+										<Member>
+											<instance>
+												<Var>Movie</Var>
+											</instance>
+											<class>
+												<Const type="&rif;iri">&dbo;Film
+												</Const>
+											</class>
+										</Member>
+									</formula>
+									<formula>
+										<Frame>
+											<object>
+												<Var>Movie</Var>
+											</object>
+											<slot ordered="yes">
+												<Const type="&rif;iri">&dbp;released
+												</Const>
+												<Var>Date</Var>
+											</slot>
+										</Frame>
+									</formula>
+									<formula>
+										<External>
+											<content>
+												<Atom>
+													<op>
+														<Const type="&rif;iri">&pred;date-less-than
+														</Const>
+													</op>
+													<args ordered="yes">
+														<Var>Date</Var>
+														<Const type="&xs;date">1930-01-01</Const>
+													</args>
+												</Atom>
+											</content>
+										</External>
+									</formula>
+								</And>
+							</if>
+							<then>
+								<Member>
+									<instance>
+										<Var>Movie</Var>
+									</instance>
+									<class>
+										<Const type="&rif;iri">&ex;BlackWhiteMovie
+										</Const>
+									</class>
+								</Member>
+							</then>
+						</Implies>
+					</formula>
+				</Forall>
+			</sentence>
+
+			<sentence>
+				<Forall>
+					<declare>
+						<Var>Movie</Var>
+					</declare>
+					<formula>
+						<Implies>
+							<if>
+								<And xmlns="http://www.w3.org/2007/rif#">
+									<formula>
+										<Member>
+											<instance>
+												<Var>Movie</Var>
+											</instance>
+											<class>
+												<Const type="&rif;iri">&dbo;Film
+												</Const>
+											</class>
+										</Member>
+									</formula>
+									<formula>
+										<Frame>
+											<object>
+												<Var>Movie</Var>
+											</object>
+											<slot ordered="yes">
+												<Const type="&rif;iri">&dbp;budget
+												</Const>
+												<Var>Budget</Var>
+											</slot>
+										</Frame>
+									</formula>
+									<formula>
+										<External>
+											<content>
+												<Atom>
+													<op>
+														<Const type="&rif;iri">&pred;numeric-less-than
+														</Const>
+													</op>
+													<args ordered="yes">
+														<Var>Budget</Var>
+														<Const type="&xs;float">5000000</Const>
+													</args>
+												</Atom>
+											</content>
+										</External>
+									</formula>
+								</And>
+							</if>
+							<then>
+								<Member>
+									<instance>
+										<Var>Movie</Var>
+									</instance>
+									<class>
+										<Const type="&rif;iri">&ex;LowBudgetMovie
+										</Const>
+									</class>
+								</Member>
+							</then>
+						</Implies>
+					</formula>
+				</Forall>
+			</sentence>
+
+
+			<sentence>
+				<Member>
+					<instance>
+						<Const type="&rif;iri">&ex;pr
+						</Const>
+					</instance>
+					<class>
+						<Const type="&rif;iri">&dbo;Film
+						</Const>
+					</class>
+				</Member>
+			</sentence>
+			<sentence>
+				<Frame>
+					<object>
+						<Const type="&rif;iri">&ex;pr
+						</Const>
+					</object>
+					<slot ordered="yes">
+						<Const type="&rif;iri">&rdfs;label
+						</Const>
+						<Const type="&xs;string">Primer</Const>
+					</slot>
+					<slot ordered="yes">
+						<Const type="&rif;iri">&dbp;released
+						</Const>
+						<Const type="&xs;date">2004-10-08</Const>
+					</slot>
+					<slot ordered="yes">
+						<Const type="&rif;iri">&dbp;budget
+						</Const>
+						<Const type="&xs;float">7000.0</Const>
+					</slot>
+				</Frame>
+			</sentence>
+			<sentence>
+				<Member>
+					<instance>
+						<Const type="&rif;iri">&ex;gr
+						</Const>
+					</instance>
+					<class>
+						<Const type="&rif;iri">&dbo;Film
+						</Const>
+					</class>
+				</Member>
+			</sentence>
+			<sentence>
+				<Frame>
+					<object>
+						<Const type="&rif;iri">&ex;gr
+						</Const>
+					</object>
+					<slot ordered="yes">
+						<Const type="&rif;iri">&rdfs;label
+						</Const>
+						<Const type="&xs;string">The Gold Rush</Const>
+					</slot>
+					<slot ordered="yes">
+						<Const type="&rif;iri">&dbp;released
+						</Const>
+						<Const type="&xs;date">1925-06-26</Const>
+					</slot>
+					<slot ordered="yes">
+						<Const type="&rif;iri">&dbp;budget
+						</Const>
+						<Const type="&xs;float">923000.0</Const>
+					</slot>
+				</Frame>
+			</sentence>
+		</Group>
+	</payload>
+</Document>
